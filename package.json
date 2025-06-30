@@ -1,0 +1,48 @@
+{
+  "name": "quran_website",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "author": {
+    "name": "Ryan Almalki",
+    "email": "rn0x.me@gmail.com",
+    "url": "https://github.com/rn0x/quran_website"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@material-tailwind/react": "^3.0.0-beta.24",
+    "@mui/icons-material": "^7.1.2",
+    "@mui/joy": "^5.0.0-beta.52",
+    "@mui/material": "^7.1.2",
+    "dotenv": "^16.5.0",
+    "embla-carousel": "^8.6.0",
+    "embla-carousel-autoplay": "^8.6.0",
+    "embla-carousel-react": "^8.6.0",
+    "fs-extra": "^11.3.0",
+    "next": "14.2.21",
+    "node-fetch": "^3.3.2",
+    "react": "^18",
+    "react-audio-player": "^0.17.0",
+    "react-dom": "^18",
+    "react-icons": "^5.3.0",
+    "react-player": "^3.0.0",
+    "swr": "^2.3.3"
+  },
+  "devDependencies": {
+    "eslint": "^8.52.0",
+    "eslint-config-next": "14.2.7",
+    "jest": "^30.0.2",
+    "prettier": "^3.1.0",
+    "prettier-eslint": "^16.1.2",
+    "typescript": "^5.8.3",
+    "vitest": "^2.0.5"
+  },
+  "type": "module"
+}

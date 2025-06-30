@@ -1,0 +1,395 @@
+/* Search Component */
+/*
+.searchContainer {
+  position: relative;
+  border-radius: var(--shape-borderRadius);
+  background-color: rgba(255, 255, 255, 0.15);
+  margin-left: 0;
+  width: 100%;
+}
+
+.searchContainer:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+@media (min-width: 600px) {
+  .searchContainer {
+    margin-left: 8px;
+    width: auto;
+  }
+}
+/* Search Icon */
+/*
+.searchIconWrapper {
+  padding: 0 16px;
+  height: 100%;
+  position: absolute;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* Input Field */
+/*
+.searchInput {
+  color: inherit;
+  padding: 8px 8px 8px 0;
+  padding-right: calc(1em + 32px);
+  transition: width 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  width: 100%;
+}
+
+@media (min-width: 600px) {
+  .searchInput {
+    width: 20ch;
+  }
+  .searchInput:focus {
+    width: 30ch;
+  }
+}
+/* Toolbar */
+/*
+.styledToolbar {
+  position: fixed;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  min-height: 64px;
+  max-width: 900px;
+ bottom: 20%;
+  width: 100%;
+}
+
+.styledToolbar .buttonRoot {
+  text-transform: none;
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-top: 3rem;
+  text-decoration: none !important;
+}
+
+.styledToolbar .buttonRoot:hover,
+.styledToolbar .buttonRoot:focus,
+.styledToolbar .buttonRoot:active {
+  text-decoration: none !important;
+  background-color: transparent !important;
+}
+
+.styledToolbar .buttonRoot::before,
+.styledToolbar .buttonRoot::after {
+  display: none !important;
+}
+/* Logo Container */
+/*
+.logoContainer {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+ border:5px  solid green;
+  text-decoration: none;
+  padding: 8px 0;
+}
+
+.logoImage {
+  height: 40px;
+  width: auto;
+  transition: transform 0.3s ease;
+  border: 3px solid red;
+}
+
+.logoContainer:hover .logoImage {
+    transform: scale(1.05);
+
+}
+/* Bismillah Section */
+/*
+.bismillahSection {
+  text-align: center;
+  padding: 1rem 0;
+  margin-top: 8rem;
+}
+
+@media (max-width: 600px) {
+  .bismillahSection {
+    margin-top: 60px;
+  }
+}
+/* Bismillah Text */
+/*
+.bismillahText {
+  font-family: bismillah, Arial, sans-serif;
+  font-size: 3rem;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  margin-top: 5rem;
+}
+
+.light .bismillahText {
+  color: #11151c;
+}
+
+dark .bismillahText {
+  color: transparent;
+  background: radial-gradient(circle, rgba(58, 83, 133, 0.8), rgb(40, 35, 35));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@media (max-width: 600px) {
+  .bismillahText {
+    font-size: 2rem;
+    margin-top: 22px;
+  }
+}
+/* Surah Text */
+/*
+.surahText {
+  font-family: bismillah, Arial, sans-serif;
+  font-size: 6rem;
+  font-weight: 900;
+  margin-top: 22px;
+  line-height: 1.5;
+}
+
+.light .surahText {
+  color: #e0e1dd;
+}
+
+.dark .surahText {
+  color: transparent;
+  background: radial-gradient(circle, rgba(58, 83, 133, 0.8), rgba(255, 255, 255, 1));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@media (max-width: 600px) {
+  .surahText {
+    font-size: 4rem;
+  }
+}
+/* Navigation Buttons */
+/*
+.navButton {
+  color: #fff ;
+  background-color: #1b1b1b !important;
+  border-bottom:3px solid #1b1b1b !important;
+  font-weight: 500;
+  font-size: 0.9375rem;
+  text-decoration: none !important;
+  transition: all 0.3s ease;
+  padding: 8px 12px;
+  border-radius: 4px;
+  gap: 3;
+}
+
+.light .navButton {
+  color: #dbdada;
+  font-family: hafs;  
+  font-weight: 700;
+  font-size: 17px !important;
+  gap: 5; 
+  margin-left: 44px; 
+}
+
+.navButton:hover {
+
+  background-color: rgba(15, 21, 26, 0.929);
+}
+
+.light .navButton:hover {
+  background-color: rgba(158, 150, 150, 0.05);
+}
+/* App Bar */
+/*
+.appBar {
+  position: fixed;
+  background: #beb1b18d;
+  width: 70%;
+  margin: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 1100;
+  padding: 0 24px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(15px);
+}
+
+.light .appBar {
+  background: #1b1b1b74;
+  border-bottom: 1px solid #e0e0e0a2;
+  color: #f1f1f1 ;
+}
+
+dark .appBar {
+  background: #121212;
+  border-bottom: 1px solid #333;
+}
+/* Toolbar Content */
+/*
+.toolbarContent {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 3px;
+  direction: rtl;
+  border-top: 3px solid white;
+  z-index: 1000;
+
+}
+/* Logo Box */
+/*
+.logoBox {
+  position: relative;
+  z-index: 1;
+  top: 50px;
+  display: flex;
+  border-radius: 29%;
+  overflow: hidden;
+  align-items: center;
+  margin-right: 22;
+  border-top: 3px solid white;
+
+}
+/* Navigation Box */
+/*
+.navBox {
+  display: flex;
+  align-items: center;
+  margin: 2px;
+  padding: 2px;
+  direction: rtl;
+  bottom:12% !important;
+  border-top: 3px solid white;
+
+} 
+/* Actions Box */
+/*
+.actionsBox {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2px;
+}
+/* Mobile Menu Button */
+/*
+.mobileMenuButton {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .mobileMenuButton {
+    display: block;
+  }
+  .navBox {
+    display: none;
+  }
+}
+/* Drawer */
+/*
+.drawer {
+  direction: rtl;
+}
+
+.drawerPaper {
+  width: 280px;
+  background-color: var(--palette-background-paper);
+}
+
+.drawerHeader {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  justify-content: space-between;
+  min-height: 64px;
+}
+
+.drawerContent {
+  width: 100%;
+  padding: 8px 0;
+}
+
+.drawerButton {
+  width: 100%;
+  justify-content: flex-start;
+  padding: 12px 24px;
+  text-transform: none;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--palette-text-primary);
+}
+
+.drawerButton:hover {
+  background-color: var(--palette-action-hover);
+}
+/* Search Container */
+/*
+.searchContainer {
+  margin: 0 16px 16px;
+}
+/* Theme Toggle */
+/*
+.themeToggle {
+  margin-left: 16px;
+}
+/* RTL Support */
+/*
+.rtl {
+  direction: rtl;
+}
+/* Responsive Adjustments */
+/*
+@media (max-width: 1200px) {
+  .appBar {
+    width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+  }
+}
+
+@media (max-width: 900px) {
+  .appBar {
+    margin-top: 16px;
+  }
+  
+  .bismillahText {
+    font-size: 2.5rem;
+    margin-top: 5rem;
+  }
+  
+  .surahText {
+    font-size: 3.5rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .appBar {
+    margin-top: 8px;
+    width: 95%;
+    margin-left: 2.5%;
+    margin-right: 2.5%;
+  }
+  
+  .bismillahText {
+    font-size: 2rem;
+    margin-top: 4rem;
+  }
+  
+  .surahText {
+    font-size: 3rem;
+  }
+  
+  .navButton {
+    font-size: 1rem;
+    padding: 6px 12px;
+  }
+}
+*/
+

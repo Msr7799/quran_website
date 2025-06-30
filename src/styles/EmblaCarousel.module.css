@@ -1,0 +1,26 @@
+.embla {
+    overflow: hidden;
+  }
+  
+  .embla__container {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .embla__slide {
+    flex: 0 0 auto;
+    min-width: 250px;
+    padding: 1rem;
+    background: #fff;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  
+  /* مثال لتعديل المسافات على الشاشات الكبيرة */
+  @media (min-width: 768px) {
+    .embla__slide {
+      min-width: 300px;
+    }
+  }
+  

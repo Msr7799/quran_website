@@ -1,0 +1,19 @@
+
+
+:root {
+  --primary-color: #2325aead;
+  --secondary-color: #11151c;
+  --tertiary-color: #77d7d0;
+  --text-color-2: #4a4e69;
+  --card-bg-color: rgba(255,255,255,0.95);
+  --border-color: #e0e7ef;
+  --card-shadow: 0 4px 24px 0 rgba(80, 61, 114, 0.08);
+  --button-bg-color: #00bcd4;
+  --button-text-color: #fff;
+  --button-hover-bg-color: #7c3aed;
+  --button-hover-text-color: #fff;
+  --link-hover-color: #7c3aed;
+  --header-bg-color: rgba(255,255,255,0.85);
+}
+
+
