@@ -23,6 +23,7 @@ export default function MakkahLive({ apiKey, channelId }) {
         frameBorder="0"
         allow="autoplay; encrypted-media"
         allowFullScreen
+        title="البث المباشر من مكة المكرمة"
       />
     </div>
   );

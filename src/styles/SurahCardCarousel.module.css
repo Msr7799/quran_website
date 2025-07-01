@@ -38,7 +38,7 @@
 }
 
 .searchInput:focus {
-  border-color: #4CAF50;
+  border-color: #060c0f;
   box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
   background: white;
 }
@@ -367,7 +367,7 @@
 
 /* الوضع المظلم */
 [data-theme='dark'] .instagramCard {
-  background: linear-gradient(145deg, #1e293b, #334155);
+  background: #030608;
   border-color: #475569;
 }
 

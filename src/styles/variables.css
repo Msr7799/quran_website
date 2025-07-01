@@ -1,19 +1,39 @@
-
-
-:root {
-  --primary-color: #2325aead;
-  --secondary-color: #11151c;
-  --tertiary-color: #77d7d0;
-  --text-color-2: #4a4e69;
-  --card-bg-color: rgba(255,255,255,0.95);
-  --border-color: #e0e7ef;
-  --card-shadow: 0 4px 24px 0 rgba(80, 61, 114, 0.08);
-  --button-bg-color: #00bcd4;
-  --button-text-color: #fff;
-  --button-hover-bg-color: #7c3aed;
-  --button-hover-text-color: #fff;
-  --link-hover-color: #7c3aed;
-  --header-bg-color: rgba(255,255,255,0.85);
+/* :root {
+  --primary-color: #b5875a;
+  --secondary-color: #11203a11;
+  --tertiary-color: #77b6ea;
+  --text-color: #333333;
+  --text-color-2: #bfcad7;
+  --card-bg-color: src("https://images.unsplash.com/profile-1502669002421-a8d274ad2897?dpr=2&auto=format&fit=crop&w=400&q=80");
+  --border-color: #c7d0e0;
+  --card-shadow: 0 4px 24px 0 rgba(53, 55, 58, 0.258);
+  --button-bg-color: #0a0a0aa4;
+  --button-text-color: #0e0e0e;
+  --button-hover-bg-color: #00000038;
+  --button-hover-text-color: #0c0b0bfc;
+  --link-hover-color: #4176b7;
+  --header-bg-color: #eaf0f6;
+  --background-color: #E4E4E4;
+  --paper-bg-color: #FFFFFF;
 }
 
+[data-theme="dark"] {
+  --primary-color: #bfc8e2;
+  --secondary-color: #bcc539ac;
+  --tertiary-color: #f7f7f72d;
+  --text-color: #ffffff;
+  --text-color-2: #bfc8e2;
+  --card-bg-color: #1a2233;
+  --border-color: #2d3147;
+  --card-shadow: 0 4px 24px 0 rgba(35, 57, 93, 0.18);
+  --button-bg-color: #23395d;
+  --button-text-color: #fff;
+  --button-hover-bg-color: #4176b7;
+  --button-hover-text-color: #fff;
+  --link-hover-color: #77b6ea;
+  --header-bg-color: #232b3e;
+  --background-color: #060c0f;
+  --paper-bg-color: #030608;
+}
 
+ */

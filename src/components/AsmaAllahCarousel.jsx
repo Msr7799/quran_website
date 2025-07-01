@@ -1,61 +1,133 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
-import { Box, Typography, Card, CardContent } from '@mui/material';
+import { Box, Typography, Card, CardContent, IconButton } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 const CarouselContainer = styled(Box)(({ theme }) => ({
   overflow: 'hidden',
   borderRadius: '12px',
-  backgroundColor: 'rgba(255,255,255,0.05)',
-  border: '1px solid rgba(255,255,255,0.1)',
+  backgroundColor: 'var(--secondary-color)',
+  border: '1px solid var(--border-color)',
+  position: 'relative',
+  width: '100%',
+  maxWidth: '1000px',
+  margin: '0 auto',
 }));
 
 const SlideCard = styled(Card)(({ theme }) => ({
-  minWidth: '200px',
-  margin: '0 8px',
-  backgroundColor: 'rgba(255,255,255,0.1)',
+  minWidth: '100%',
+  width: '100%',
+  margin: '0',
+  backgroundColor: 'var(--card-bg-color)',
   backdropFilter: 'blur(10px)',
-  border: '1px solid rgba(255,255,255,0.2)',
+  border: '2px solid var(--border-color)',
   borderRadius: '12px',
   transition: 'all 0.3s ease',
   cursor: 'pointer',
+  boxShadow: 'var(--card-shadow)',
   '&:hover': {
-    backgroundColor: 'rgba(255,255,255,0.2)',
+    backgroundColor: 'var(--button-hover-bg-color)',
+    color: 'var(--button-hover-text-color)',
     transform: 'translateY(-4px)',
-    boxShadow: '0 8px 25px rgba(0,0,0,0.2)',
+    boxShadow: '0 8px 25px rgba(0,0,0,0.3)',
   },
 }));
 
 const ArabicName = styled(Typography)(({ theme }) => ({
   fontFamily: 'Amiri, serif',
-  fontSize: '1.5rem',
+  fontSize: '2rem',
   fontWeight: 'bold',
-  color: '#fff',
+  color: 'var(--primary-color)',
   textAlign: 'center',
-  marginBottom: '8px',
-  textShadow: '0 2px 4px rgba(0,0,0,0.3)',
+  marginBottom: '12px',
+  textShadow: '0 2px 4px rgba(0,0,0,0.15)',
 }));
 
 const Meaning = styled(Typography)(({ theme }) => ({
-  fontSize: '0.8rem',
-  color: 'rgba(255,255,255,0.8)',
+  fontSize: '1rem',
   textAlign: 'center',
-  lineHeight: 1.4,
+  lineHeight: 1.5,
+  fontWeight: 'medium',
+  color: 'var(--text-color-2)',
+}));
+
+const NavigationButton = styled(IconButton)(({ theme }) => ({
+  backgroundColor: 'var(--button-bg-color)',
+  color: 'var(--button-text-color)',
+  '&:hover': {
+    backgroundColor: 'var(--button-hover-bg-color)',
+    color: 'var(--button-hover-text-color)',
+  },
+  width: '40px',
+  height: '40px',
+  margin: '0 8px',
+}));
+
+const DotsContainer = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'center',
+  marginTop: '12px',
+}));
+
+const Dot = styled(Box)(({ theme }) => ({
+  width: '8px',
+  height: '8px',
+  borderRadius: '50%',
+  backgroundColor: 'var(--border-color)',
+  margin: '0 4px',
+  transition: 'all 0.3s ease',
+  cursor: 'pointer',
+  transform: 'scale(1)',
+  '&[data-active="true"]': {
+    backgroundColor: 'var(--primary-color)',
+    transform: 'scale(1.2)',
+  },
 }));
 
 const AsmaAllahCarousel = () => {
-  const [emblaRef] = useEmblaCarousel(
-    { 
-      loop: true, 
-      align: 'start',
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    {
+      loop: true,
+      align: 'center',
       slidesToScroll: 1,
-      containScroll: 'trimSnaps',
+      containScroll: false,
+      draggable: true,
+      direction: 'rtl'
     },
-    [Autoplay({ delay: 3000, stopOnInteraction: false })]
+    [Autoplay({ delay: 7000, stopOnInteraction: false, stopOnMouseEnter: true })]
   );
   
   const [names, setNames] = useState([]);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  
+  const scrollPrev = useCallback(() => {
+    if (emblaApi) emblaApi.scrollPrev();
+  }, [emblaApi]);
+
+  const scrollNext = useCallback(() => {
+    if (emblaApi) emblaApi.scrollNext();
+  }, [emblaApi]);
+  
+  const scrollTo = useCallback((index) => {
+    if (emblaApi) emblaApi.scrollTo(index);
+  }, [emblaApi]);
+  
+  // Update selected index when slide changes
+  useEffect(() => {
+    if (!emblaApi) return;
+    
+    const onSelect = () => {
+      setSelectedIndex(emblaApi.selectedScrollSnap());
+    };
+    
+    emblaApi.on('select', onSelect);
+    onSelect(); // Call once initially
+    
+    return () => {
+      emblaApi.off('select', onSelect);
+    };
+  }, [emblaApi]);
 
   useEffect(() => {
     // أسماء الله الحسنى الـ 99
@@ -107,29 +179,71 @@ const AsmaAllahCarousel = () => {
 
   return (
     <CarouselContainer>
-      <div ref={emblaRef}>
-        <Box
-          sx={{
-            display: 'flex',
-            gap: 0,
-            py: 2,
-            px: 1,
-          }}
-        >
-          {names.map((item, index) => (
-            <SlideCard key={index} elevation={0}>
-              <CardContent sx={{ p: 2, '&:last-child': { pb: 2 } }}>
-                <ArabicName variant="h6">
-                  {item.name}
-                </ArabicName>
-                <Meaning variant="body2">
-                  {item.meaning}
-                </Meaning>
-              </CardContent>
-            </SlideCard>
-          ))}
+      <Box sx={{ position: 'relative' }}>
+        <Box sx={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', zIndex: 2 }}>
+          <NavigationButton onClick={scrollPrev} aria-label="السابق">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+            </svg>
+          </NavigationButton>
         </Box>
-      </div>
+        
+        <div className="embla__viewport" ref={emblaRef}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexWrap: 'nowrap',
+              py: 2,
+              px: 1,
+            }}
+            className="embla__container"
+          >
+            {names.map((item, index) => (
+              <Box
+                key={index}
+                sx={{
+                  flex: '0 0 100%',
+                  minWidth: '100%',
+                  maxWidth: '100%',
+                  padding: '0.5rem',
+                  position: 'relative'
+                }}
+                className="embla__slide"
+              >
+                <SlideCard elevation={0}>
+                  <CardContent sx={{ p: 3, '&:last-child': { pb: 3 } }}>
+                    <ArabicName variant="h5">
+                      {item.name}
+                    </ArabicName>
+                    <Meaning variant="body1">
+                      {item.meaning}
+                    </Meaning>
+                  </CardContent>
+                </SlideCard>
+              </Box>
+            ))}
+          </Box>
+        </div>
+        
+        <Box sx={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', zIndex: 2 }}>
+          <NavigationButton onClick={scrollNext} aria-label="التالي">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+            </svg>
+          </NavigationButton>
+        </Box>
+      </Box>
+      
+      <DotsContainer>
+        {names.map((_, index) => (
+          <Dot
+            key={index}
+            data-active={index === selectedIndex}
+            onClick={() => scrollTo(index)}
+            aria-label={`انتقل إلى الاسم ${index + 1}`}
+          />
+        ))}
+      </DotsContainer>
     </CarouselContainer>
   );
 };

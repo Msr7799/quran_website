@@ -3,11 +3,13 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 interface ThemeContextType {
   darkMode: boolean;
   toggleDarkMode: () => void;
+  setDarkMode: (value: boolean) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType>({
   darkMode: false,
   toggleDarkMode: () => {},
+  setDarkMode: () => {},
 });
 
 // Alias useThemeMode as useTheme for backward compatibility
@@ -20,7 +22,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const savedMode = localStorage.getItem('darkMode');
-    if (savedMode) {
+    if (savedMode !== null) {
       setDarkMode(JSON.parse(savedMode));
     }
   }, []);
@@ -39,7 +41,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <ThemeContext.Provider value={{ darkMode, toggleDarkMode }}>
+    <ThemeContext.Provider value={{ darkMode, toggleDarkMode, setDarkMode }}>
       {children}
     </ThemeContext.Provider>
   );

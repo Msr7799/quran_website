@@ -67,6 +67,20 @@
   /* Animation */
   --transition-speed: 0.3s;
   --transition-easing: cubic-bezier(0.4, 0, 0.2, 1);
+
+  --background-light: #f8fafc;
+  --card-bg-light: #ffffff;
+  --background-dark: #060c0f;
+  --card-bg-dark: #030608;
+}
+
+[data-theme="dark"] {
+  --background-color: var(--background-dark);
+  --card-bg: var(--card-bg-dark);
+}
+[data-theme="light"] {
+  --background-color: var(--background-light);
+  --card-bg: var(--card-bg-light);
 }
 
 * {

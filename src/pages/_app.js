@@ -5,6 +5,7 @@ import { Box } from '@mui/material';
 import AppAppBar from '../components/AppAppBar';
 import Footer from '../components/Footer';
 import { ThemeProvider } from '../components/ThemeContext';
+import { ThemeSync } from '../components/ThemeSync';
 import Layout from '../components/Layout';
 
 export default function MyApp({ Component, pageProps }) {
@@ -12,6 +13,7 @@ export default function MyApp({ Component, pageProps }) {
     <Box className="siteWrapper">
       <AppTheme>
         <ThemeProvider>
+          <ThemeSync />
           <Layout>
             <Component {...pageProps} />
           </Layout>

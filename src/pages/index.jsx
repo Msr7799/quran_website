@@ -87,15 +87,17 @@ export default function Home({ initialSurahs = [], error }) {
         {/* Hero Background */}
         <Box
           sx={{
+            position: 'relative', 
             backgroundImage: 'url(./liner.svg)',
-            height: '70vh',
+            height: '50vh',
             width: '100%',
+            bottom: '10%',
             backgroundSize: 'cover',
-            backgroundPosition: 'center',
+            backgroundPosition: 'top',
             backgroundRepeat: 'no-repeat',
             filter: 'contrast(1) brightness(0.9) drop-shadow(0 0 2px rgba(207, 193, 193, 0.356))',
             display: 'flex',
-            alignItems: 'center',
+            alignItem: 'top',
             justifyContent: 'center',
           }}
         />
@@ -119,6 +121,8 @@ export default function Home({ initialSurahs = [], error }) {
           position: 'absolute',
           top: '50%',
           left: '50%',
+          bottom: '100%',
+          marginTop: '200px',
           transform: 'translate(-50%, -50%)',
           zIndex: 10
         }}>
@@ -128,13 +132,33 @@ export default function Home({ initialSurahs = [], error }) {
             style={{
               maxWidth: '60vw',
               height: 'auto',
-              filter: 'contrast(1) brightness(2) saturate(2) drop-shadow(10px 10px 50px rgba(0, 0, 0, 0.58))'
+              filter: 'contrast(1.4) brightness(0.9) saturate(2) drop-shadow(10px 10px 50px rgba(0, 0, 0, 0.58))'
             }}
           />
         </Box>
       </Box>
 
       {/* المحتوى العادي مع Container */}
+
+
+
+
+        {/* Hadith Carousel Section */}
+        <Container maxWidth="lg" sx={{ mt: 6, mb: 4 }}>
+          <Typography
+            variant="h4"
+            sx={{
+              mb: 3,
+              textAlign: 'center',
+              fontWeight: 'bold',
+              color: 'primary.main'
+            }}
+          >
+            الأحاديث الشريفة
+          </Typography>
+          
+          <HadithCarousel />
+        </Container>
       <main className={styles.main}>
         {/* Audio Player Section */}
         <Container maxWidth="lg" sx={{ mt: 4 }}>
@@ -151,49 +175,22 @@ export default function Home({ initialSurahs = [], error }) {
 
         {/* Asma Allah Carousel Section */}
         <Container maxWidth="lg" sx={{ mt: 6, mb: 4 }}>
-          <Typography 
-            variant="h4" 
-            sx={{ 
-              mb: 3, 
-              textAlign: 'center', 
+          <Typography
+            variant="h4"
+            sx={{
+              mb: 3,
+              textAlign: 'center',
               fontWeight: 'bold',
               color: 'primary.main'
             }}
           >
             أسماء الله الحسنى
           </Typography>
-          <Box sx={{ 
-            p: 3, 
-            borderRadius: 2, 
-            backgroundColor: 'background.paper',
-            boxShadow: 2
-          }}>
-            <AsmaAllahCarousel />
-          </Box>
+          
+          {/* <AsmaAllahCarousel /> */}
+          
         </Container>
 
-        {/* Hadith Carousel Section */}
-        <Container maxWidth="lg" sx={{ mt: 6, mb: 4 }}>
-          <Typography 
-            variant="h4" 
-            sx={{ 
-              mb: 3, 
-              textAlign: 'center', 
-              fontWeight: 'bold',
-              color: 'primary.main'
-            }}
-          >
-            الأحاديث الشريفة
-          </Typography>
-          <Box sx={{ 
-            p: 3, 
-            borderRadius: 2, 
-            backgroundColor: 'background.paper',
-            boxShadow: 2
-          }}>
-            <HadithCarousel />
-          </Box>
-        </Container>
       </main>
     </>
   );
