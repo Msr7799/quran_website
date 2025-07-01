@@ -9,9 +9,9 @@
     "lint": "next lint"
   },
   "author": {
-    "name": "Ryan Almalki",
-    "email": "rn0x.me@gmail.com",
-    "url": "https://github.com/rn0x/quran_website"
+    "name": "mohamed alromaihi",
+    "email": "alromaihi@gmail.com",
+    "url": "https://github.com/msr7799/quran_website"
   },
   "license": "MIT",
   "dependencies": {
