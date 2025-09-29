@@ -107,7 +107,7 @@ export default function ReciterPage() {
                         <div className={styles.reciterInfoSection}>
                             <div className={styles.reciterImageContainer}>
                                 <img 
-                                    src="/logo.png" 
+                                    src="logo.png" 
                                     alt={selectedReciterData.reciter.ar}
                                     className={styles.reciterImage}
                                 />

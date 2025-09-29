@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Typography,
@@ -22,6 +22,17 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import React from 'react';
 import convertToArabicNumerals from '../../utils/convertToArabicNumerals';
 
+// Types
+interface SearchResult {
+  number: number;
+  text: string;
+  surah: {
+    number: number;
+    name: string;
+  };
+  numberInSurah: number;
+}
+
 // Custom styled components to ensure no underlines
 const StyledMuiLink = styled('a')({
   textDecoration: 'none !important',
@@ -37,22 +48,16 @@ const StyledMuiLink = styled('a')({
   },
 });
 
-const StyledLink = styled('div')({
-  textDecoration: 'none !important',
-  '& a': {
-    textDecoration: 'none !important',
-  },
-});
 
 const RESULTS_PER_PAGE = 10; // Number of results per page
 
 export default function SearchResults() {
   const router = useRouter();
   const { query } = router.query;
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [visibleResults, setVisibleResults] = useState([]);
+  const [error, setError] = useState<string | null>(null);
+  const [visibleResults, setVisibleResults] = useState<SearchResult[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [hasMore, setHasMore] = useState(false);
@@ -70,6 +75,12 @@ export default function SearchResults() {
     }
   }, [query, router.isReady]);
 
+  const updateVisibleResults = useCallback(() => {
+    const endIndex = currentPage * RESULTS_PER_PAGE;
+    setVisibleResults(results.slice(0, endIndex));
+    setHasMore(endIndex < results.length);
+  }, [results, currentPage]);
+
   useEffect(() => {
     if (results.length > 0) {
       const total = Math.ceil(results.length / RESULTS_PER_PAGE);
@@ -78,13 +89,7 @@ export default function SearchResults() {
     } else {
       setVisibleResults([]);
     }
-  }, [results, currentPage]);
-
-  const updateVisibleResults = () => {
-    const endIndex = currentPage * RESULTS_PER_PAGE;
-    setVisibleResults(results.slice(0, endIndex));
-    setHasMore(endIndex < results.length);
-  };
+  }, [results, currentPage, updateVisibleResults]);
 
   const loadMoreResults = () => {
     if (currentPage < totalPages) {
@@ -98,16 +103,38 @@ export default function SearchResults() {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(
-        `https://api.alquran.cloud/v1/search/${encodeURIComponent(searchTerm)}/all/ar`
-      );
+      // Load metadata first
+      const metadataResponse = await fetch('/json/metadata.json');
+      const metadata = await metadataResponse.json();
       
-      if (!response.ok) {
-        throw new Error('فشل في جلب نتائج البحث');
+      const searchResults: SearchResult[] = [];
+      
+      // Search through all surahs
+      for (const surah of metadata) {
+        try {
+          const surahResponse = await fetch(`/json/surah/surah_${surah.number}.json`);
+          const surahData = await surahResponse.json();
+          
+          // Search verses that contain the search term
+          surahData.verses.forEach((verse: { number: number; text: { ar: string } }) => {
+            if (verse.text.ar.includes(searchTerm)) {
+              searchResults.push({
+                number: verse.number,
+                text: verse.text.ar,
+                surah: {
+                  number: surah.number,
+                  name: surah.name.ar
+                },
+                numberInSurah: verse.number
+              });
+            }
+          });
+        } catch (surahErr) {
+          console.error(`Error loading surah ${surah.number}:`, surahErr);
+        }
       }
       
-      const data = await response.json();
-      setResults(data.data?.matches || []);
+      setResults(searchResults);
     } catch (err) {
       console.error('Error fetching search results:', err);
       setError('حدث خطأ أثناء جلب نتائج البحث. يرجى المحاولة مرة أخرى.');
@@ -210,7 +237,7 @@ export default function SearchResults() {
                           color="text.secondary"
                           sx={{ mt: 1 }}
                         >
-                          سورة {result.surah.englishName} - الآية {convertToArabicNumerals(result.numberInSurah)}
+                          سورة {result.surah.name} - الآية {convertToArabicNumerals(result.numberInSurah)}
                         </Typography>
                       }
                     />

@@ -86,7 +86,7 @@ export const WarpBackground: React.FC<WarpBackgroundProps> = ({
   ...props
 }) => {
   const generateBeams = useCallback(() => {
-    const beams = []
+    const beams: Array<{ x: number; delay: number }> = []
     const cellsPerSide = Math.floor(100 / beamSize)
     const step = cellsPerSide / beamsPerSide
 
