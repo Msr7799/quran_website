@@ -41,9 +41,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Windsurf IDE
-.windsurf/
-.augment/
 
 # IDE and editors
 .vscode/

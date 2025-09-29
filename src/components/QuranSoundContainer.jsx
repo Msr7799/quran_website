@@ -1,7 +1,7 @@
 // src/components/QuranSoundContainer.jsx - مع إصلاح التوقيت وموضع الآيات
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Box, Typography, TextField, List, ListItem, ListItemText, ListItemButton, Paper, Chip } from '@mui/material';
+import { Box, Typography, TextField, List, ListItemText, ListItemButton, Paper, Chip, ThemeProvider, createTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import PersonIcon from '@mui/icons-material/Person';
@@ -12,35 +12,94 @@ import surahsData from '../../public/json/metadata.json';
 import EnhancedAudioPlayer from './EnhancedAudioPlayer';
 import VerseDisplay from './VerseDisplay';
 
+// إنشاء Theme ليلي
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: '#bb86fc',
+      light: '#e8b4ff',
+      dark: '#8858c8',
+    },
+    secondary: {
+      main: '#03dac6',
+      light: '#66fff9',
+      dark: '#00a895',
+    },
+    background: {
+      default: '#121212',
+      paper: '#1e1e1e',
+    },
+    text: {
+      primary: '#ffffff',
+      secondary: '#aaaaaa',
+    },
+    divider: '#333333',
+  },
+  typography: {
+    fontFamily: '"Roboto", "Arial", sans-serif',
+    h4: {
+      fontFamily: 'hafs',
+      fontWeight: 'bold',
+    },
+    h6: {
+      fontFamily: 'hafs',
+    },
+  },
+  components: {
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundImage: 'linear-gradient(145deg, #1e1e1e 0%, #2d2d30 100%)',
+          borderRadius: '12px',
+          border: '1px solid #333',
+        },
+      },
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          '& .MuiOutlinedInput-root': {
+            backgroundColor: 'rgba(255, 255, 255, 0.05)',
+            '&:hover': {
+              backgroundColor: 'rgba(255, 255, 255, 0.08)',
+            },
+          },
+        },
+      },
+    },
+  },
+});
+
 // Styled Components
 const Container = styled(Box)(({ theme }) => ({
   width: '100%',
   minHeight: '100vh',
-  background: 'var(--background-color)',
-  padding: '20px',
-  fontFamily: 'Arial, sans-serif',
+  background: theme.palette.background.default,
+  padding: theme.spacing(2.5),
+  fontFamily: theme.typography.fontFamily,
   position: 'relative',
   overflow: 'hidden',
   [theme.breakpoints.down('sm')]: {
-    padding: '10px',
-    paddingBottom: '200px',
+    padding: theme.spacing(1.25),
+    paddingBottom: theme.spacing(25),
   },
 }));
 
 const HeaderSection = styled(Box)(({ theme }) => ({
   textAlign: 'center',
-  marginBottom: '30px',
-  paddingTop: '10px',
+  marginBottom: theme.spacing(3.75),
+  paddingTop: theme.spacing(1.25),
 }));
 
 const Title = styled(Typography)(({ theme }) => ({
   fontFamily: 'hafs',
   fontSize: '2rem',
   fontWeight: 'bold',
-  color: 'var(--text-primary)',
-  marginBottom: '10px',
-  textShadow: '2px 5px 7px 5px rgba(0,0,0,0.1)',
-  '@media (max-width: 768px)': {
+  color: theme.palette.text.primary,
+  marginBottom: theme.spacing(1.25),
+  textShadow: '2px 5px 7px 5px rgba(0,0,0,0.3)',
+  [theme.breakpoints.down('md')]: {
     fontSize: '1.7rem',
   },
 }));
@@ -48,9 +107,9 @@ const Title = styled(Typography)(({ theme }) => ({
 const Subtitle = styled(Typography)(({ theme }) => ({
   fontFamily: 'hafs',
   fontSize: '0.9rem',
-  color: 'var(--text-secondary)',
-  marginBottom: '20px',
-  '@media (max-width: 768px)': {
+  color: theme.palette.text.secondary,
+  marginBottom: theme.spacing(2.5),
+  [theme.breakpoints.down('md')]: {
     fontSize: '0.8rem',
   },
 }));
@@ -59,7 +118,7 @@ const Subtitle = styled(Typography)(({ theme }) => ({
 const VerseDisplayContainer = styled(Box)(({ theme }) => ({
 width: '100%',
 minHeight: '350px',
-margin: '30px 0 40px 0',
+margin: theme.spacing(3.75, 0, 5, 0),
 position: 'relative',
 zIndex: 10000,
 display: 'flex',
@@ -67,9 +126,9 @@ flexDirection: 'column',
 alignItems: 'center',
 justifyContent: 'center',
 overflow: 'visible',
-backgroundColor: 'var(--background-paper)',
-borderRadius: '10px',
-border: '2px dashed var(--border-color)',
+backgroundColor: theme.palette.background.paper,
+borderRadius: theme.spacing(1.25),
+border: `2px dashed ${theme.palette.divider}`,
 transition: 'all 0.3s ease',
 boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
 gap: '20px',
@@ -95,50 +154,50 @@ const ReciterSection = styled(Box)(({ theme }) => ({
   flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'center',
-  padding: '20px',
-  backgroundColor: 'var(--background-paper)',
-  borderRadius: '15px',
+  padding: theme.spacing(2.5),
+  backgroundColor: theme.palette.background.paper,
+  borderRadius: theme.spacing(1.875),
   backdropFilter: 'blur(10px)',
-  border: '1px solid var(--border-color)',
-  gap: '20px',
+  border: `1px solid ${theme.palette.divider}`,
+  gap: theme.spacing(2.5),
   width: '100%',
   maxWidth: '600px',
-  '@media (max-width: 768px)': {
+  [theme.breakpoints.down('md')]: {
     flexDirection: 'column',
-    padding: '15px',
-    gap: '15px',
+    padding: theme.spacing(1.875),
+    gap: theme.spacing(1.875),
   },
-  '@media (max-width: 480px)': {
-    padding: '10px',
-    gap: '10px',
+  [theme.breakpoints.down('sm')]: {
+    padding: theme.spacing(1.25),
+    gap: theme.spacing(1.25),
   },
 }));
 
 const ReciterImage = styled('img')(({ theme }) => ({
-  width: '80px',
-  height: '80px',
+  width: theme.spacing(10),
+  height: theme.spacing(10),
   borderRadius: '50%',
-  border: '3px solid var(--border-color)',
-  boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)',
-  transition: 'transform 0.3s ease',
+  border: `3px solid ${theme.palette.divider}`,
+  boxShadow: theme.shadows[4],
+  transition: theme.transitions.create('transform'),
   '&:hover': {
     transform: 'scale(1.05)',
   },
-  '@media (max-width: 768px)': {
-    width: '70px',
-    height: '70px',
-    marginBottom: '12px',
+  [theme.breakpoints.down('md')]: {
+    width: theme.spacing(8.75),
+    height: theme.spacing(8.75),
+    marginBottom: theme.spacing(1.5),
   },
-  '@media (max-width: 480px)': {
-    width: '60px',
-    height: '60px',
-    marginBottom: '10px',
+  [theme.breakpoints.down('sm')]: {
+    width: theme.spacing(7.5),
+    height: theme.spacing(7.5),
+    marginBottom: theme.spacing(1.25),
   },
 }));
 
 const ReciterInfo = styled(Box)(({ theme }) => ({
   textAlign: 'center',
-  color: 'var(--text-primary)',
+  color: theme.palette.text.primary,
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
@@ -148,14 +207,14 @@ const ReciterInfo = styled(Box)(({ theme }) => ({
 const ReciterName = styled(Typography)(({ theme }) => ({
   fontFamily: 'hafs',
   fontSize: '1.4rem',
-  fontWeight: '800',
-  color: 'var(--text-primary)',
-  textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)',
-  marginBottom: '8px',
-  '@media (max-width: 768px)': {
+  fontWeight: 800,
+  color: theme.palette.text.primary,
+  textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)',
+  marginBottom: theme.spacing(1),
+  [theme.breakpoints.down('md')]: {
     fontSize: '1.2rem',
   },
-  '@media (max-width: 480px)': {
+  [theme.breakpoints.down('sm')]: {
     fontSize: '1rem',
   },
 }));
@@ -359,7 +418,7 @@ const TimingInfo = styled(Box)(({ theme }) => ({
   gap: '8px',
 }));
 
-export default function QuranSoundContainer() {
+function QuranSoundContainer() {
   // الحالات الأساسية
   const [selectedReciter, setSelectedReciter] = useState(null);
   const [selectedSurah, setSelectedSurah] = useState(null);
@@ -843,3 +902,14 @@ export default function QuranSoundContainer() {
     </Container>
   );
 }
+
+// تغليف المكون بـ ThemeProvider
+const ThemedQuranSoundContainer = (props) => {
+  return (
+    <ThemeProvider theme={darkTheme}>
+      <QuranSoundContainer {...props} />
+    </ThemeProvider>
+  );
+};
+
+export default ThemedQuranSoundContainer;

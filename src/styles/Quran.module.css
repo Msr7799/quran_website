@@ -1,4 +1,12 @@
-/* إضافة خط Hafs القرآني */
+/* إضافة خط Hafs القرآني الجديد */
+@font-face {
+  font-family: 'Uthmanic Hafs';
+  src: url('./fonts/uthmanic_hafs.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @font-face {
   font-family: 'Hafs';
   src: url('./fonts/hafs/uthmanic_hafs_v22.woff') format('woff');
@@ -24,7 +32,7 @@
   margin: 0 auto;
   background: transparent;
   color:black;
-  font-family: 'Hafs', 'Amiri', serif;
+  font-family: 'Uthmanic Hafs', 'Hafs', 'Amiri', serif;
   line-height: 1.6;
 }
 
@@ -34,7 +42,7 @@
   text-align: center;
   color: var( --text-color-2);
   font-weight: 400;
-  font-family: 'Hafs', 'Amiri', serif;
+  font-family: 'Uthmanic Hafs', 'Hafs', 'Amiri', serif;
   text-shadow: 0 2px 8px rgba(60, 44, 89, 0.4);
   letter-spacing: 1px;
   line-height: 1.8;
@@ -117,7 +125,7 @@
 
 /* اسم السورة */
 .surahName {
-  font-family: 'hafs', Arial, sans-serif;
+  font-family: 'Uthmanic Hafs', 'hafs', Arial, sans-serif;
   color: var(--text-color-2);
   text-shadow: 0 1px 3px rgba(230, 218, 218, 0.388);
 }
@@ -132,7 +140,7 @@
   font-size: 0.8rem;
   font-weight: 800;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  font-family: 'hafs', Arial, sans-serif;
+  font-family: 'Uthmanic Hafs', 'hafs', Arial, sans-serif;
   letter-spacing: 0.2px;
 }
 .loadMoreButton {
@@ -165,7 +173,7 @@
 
 /* اسم السورة (عربي) بمركز الكارت */
 .surahNameAr{
-  font-family: "hafs", Arial, sans-serif;
+  font-family: 'Uthmanic Hafs', "hafs", Arial, sans-serif;
   order: 1;
   margin: 10px 0 0;
   font-size: 3rem;

@@ -1,5 +1,5 @@
 // مكون محسن لعرض صفحة القرآن
-import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense } from 'react';
+import React, { useState, useEffect, useCallback, lazy, Suspense } from 'react';
 import { useRouter } from 'next/router';
 import { Box, Container, Typography, IconButton } from '@mui/material';
 import { VolumeUp, VolumeOff } from '@mui/icons-material';
@@ -35,7 +35,7 @@ const OptimizedQuranPage = () => {
     svg: false
   });
   
-  const { loading: contentLoading, Loader: ContentLoader } = useAsyncLoading(
+  const { Loader: ContentLoader } = useAsyncLoading(
     loadingState.page,
     800
   );
@@ -156,7 +156,7 @@ const OptimizedQuranPage = () => {
         
         {/* نافذة التفسير - Lazy Loaded */}
         <Suspense fallback={null}>
-          {/* سيتم إضافة TafseerPopup عند الحاجة */}
+          <TafseerPopup />
         </Suspense>
       </Container>
     </>

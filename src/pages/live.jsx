@@ -23,7 +23,6 @@ const LivePage = () => {
 
   const videoRef = useRef(null);
   const hlsRef = useRef(null);
-  const [isDarkMode, setIsDarkMode] = useState(false);
   
 
   // Component mount check
@@ -31,40 +30,6 @@ const LivePage = () => {
     setMounted(true);
   }, []);
 
-  // متابعة تغييرات الثيم
-  useEffect(() => {
-    if (!mounted) return;
-    
-    // متابعة تغييرات الثيم من localStorage
-    const handleStorageChange = () => {
-      const currentTheme = localStorage.getItem('theme');
-      if (currentTheme) {
-        setIsDarkMode(currentTheme === 'dark');
-      }
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-    
-    // متابعة تغييرات data-theme attribute
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.type === 'attributes' && mutation.attributeName === 'data-theme') {
-          const theme = document.documentElement.getAttribute('data-theme');
-          setIsDarkMode(theme === 'dark');
-        }
-      });
-    });
-
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['data-theme']
-    });
-
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      observer.disconnect();
-    };
-  }, [mounted]);
   // Load radio stations
   useEffect(() => {
     const loadRadios = async () => {
@@ -116,38 +81,44 @@ const LivePage = () => {
       try {
         setIsLoading(true);
         
-        // استخدام YouTube للبث المباشر
+        // استخدام YouTube للبث المباشر من مكة المكرمة
         const youtubeChannels = [
           {
             id: 1,
-            name: "البث المباشر - القرآن الكريم",
-            url: "https://www.youtube.com/embed/AdAmNe2OQbI?autoplay=1&mute=0",
+            name: "بث مباشر - قناة القرآن الكريم من مكة",
+            url: "https://www.youtube.com/embed/CmppEPGps1w?autoplay=1&mute=0",
             type: "youtube"
           },
           {
             id: 2,
-            name: "قناة القرآن الكريم - احتياطي",
-            url: "https://www.youtube.com/embed/7opN4Gopoio?autoplay=1&mute=0",
+            name: "بث مباشر - قناة القرآن الكريم (احتياطي)",
+            url: "https://www.youtube.com/embed/zIl0NYIsBCE?autoplay=1&mute=0",
             type: "youtube"
           }
         ];
         setChannels(youtubeChannels);
         setCurrentChannel(youtubeChannels[0]);
-        
         setError(null);
       } catch (err) {
         console.error('Error loading channels:', err);
         setError(`خطأ في تحميل القنوات: ${err.message}`);
         
-        // Use fallback channels on error
+        // Use fallback channels on error - قنوات إضافية
         const fallbackChannels = [
           {
             id: 3,
-            name: "قناة القرآن الكريم",
-            url: "https://win.holol.com/live/quran/playlist.m3u8"
+            name: "قناة القرآن الكريم - السعودية",
+            url: "https://aloula.sba.sa/75169250-ff59-42ea-bab6-e5a5bb3cb860",
+            type: "video"
           },
           {
             id: 4,
+            name: "بث مباشر - مكة المكرمة (إضافي)",
+            url: "https://www.youtube.com/embed/CmppEPGps1w?autoplay=1&mute=0",
+            type: "youtube"
+          },
+          {
+            id: 5,
             name: "قناة السنة النبوية",
             url: "https://win.holol.com/live/sunnah/playlist.m3u8"
           }
@@ -333,22 +304,63 @@ const LivePage = () => {
                 }}
               />
             ) : (
-              <video
-                ref={videoRef}
-                className="video-player"
-                controls={false}
-                autoPlay={false}
-                muted={isMuted}
-                onPlay={() => setIsPlaying(true)}
-                onPause={() => setIsPlaying(false)}
-                onLoadStart={() => setIsLoading(true)}
-                onLoadedData={() => setIsLoading(false)}
-                onError={(e) => {
-                  console.error('Video error:', e);
-                  setError('خطأ في تشغيل الفيديو');
-                  setConnectionStatus('error');
-                }}
-              />
+              <div className="video-wrapper">
+                <video
+                  ref={videoRef}
+                  className="video-player"
+                  controls={false}
+                  autoPlay={false}
+                  muted={isMuted}
+                  onPlay={() => setIsPlaying(true)}
+                  onPause={() => setIsPlaying(false)}
+                  onLoadStart={() => setIsLoading(true)}
+                  onLoadedData={() => setIsLoading(false)}
+                  onError={(e) => {
+                    console.error('Video error:', e);
+                    setError('خطأ في تشغيل الفيديو');
+                    setConnectionStatus('error');
+                  }}
+                />
+                
+                {/* Custom Video Controls */}
+                <div className="video-controls">
+                  <div className="controls-left">
+                    <button
+                      className="control-btn play-pause"
+                      onClick={togglePlayPause}
+                      title={isPlaying ? 'إيقاف مؤقت' : 'تشغيل'}
+                    >
+                      {isPlaying ? <Pause size={20} /> : <Play size={20} />}
+                    </button>
+                    
+                    <button
+                      className="control-btn mute-btn"
+                      onClick={toggleMute}
+                      title={isMuted ? 'إلغاء الكتم' : 'كتم الصوت'}
+                    >
+                      {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+                    </button>
+                    
+                    <div className="volume-control">
+                      <input
+                        type="range"
+                        min="0"
+                        max="1"
+                        step="0.1"
+                        value={volume}
+                        onChange={handleVolumeChange}
+                        className="volume-slider"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="controls-right">
+                    <span className="time-display">
+                      {connectionStatus === 'connected' ? 'مباشر' : 'غير متصل'}
+                    </span>
+                  </div>
+                </div>
+              </div>
             )}
             
             {isLoading && (
@@ -486,9 +498,15 @@ const LivePage = () => {
           box-shadow: 0 8px 24px rgba(0,0,0,0.3);
         }
 
-        .video-player {
+        .video-wrapper {
+          position: relative;
           width: 100%;
           height: 400px;
+        }
+
+        .video-player {
+          width: 100%;
+          height: 100%;
           object-fit: cover;
         }
 
@@ -497,6 +515,100 @@ const LivePage = () => {
           height: 400px;
           border: none;
           border-radius: 12px;
+        }
+
+        .video-controls {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: linear-gradient(transparent, rgba(0,0,0,0.8));
+          padding: 20px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          transition: opacity 0.3s ease;
+        }
+
+        .controls-left {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+        }
+
+        .control-btn {
+          background: rgba(255,255,255,0.2);
+          border: none;
+          color: white;
+          padding: 10px;
+          border-radius: 50%;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          backdrop-filter: blur(10px);
+        }
+
+        .control-btn:hover {
+          background: rgba(255,255,255,0.3);
+          transform: scale(1.1);
+        }
+
+        .play-pause {
+          background: rgba(25,118,210,0.8);
+        }
+
+        .play-pause:hover {
+          background: rgba(25,118,210,1);
+        }
+
+        .volume-control {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .volume-slider {
+          width: 80px;
+          height: 4px;
+          background: rgba(255,255,255,0.3);
+          outline: none;
+          border-radius: 2px;
+          cursor: pointer;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+          appearance: none;
+          width: 12px;
+          height: 12px;
+          background: #1976d2;
+          border-radius: 50%;
+          cursor: pointer;
+        }
+
+        .volume-slider::-moz-range-thumb {
+          width: 12px;
+          height: 12px;
+          background: #1976d2;
+          border-radius: 50%;
+          cursor: pointer;
+          border: none;
+        }
+
+        .controls-right {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+        }
+
+        .time-display {
+          color: white;
+          font-size: 0.9rem;
+          font-weight: 500;
+          background: rgba(0,0,0,0.5);
+          padding: 4px 12px;
+          border-radius: 20px;
         }
 
         .loading-overlay {
@@ -731,8 +843,21 @@ const LivePage = () => {
           }
 
           .video-player,
-          .youtube-player {
+          .youtube-player,
+          .video-wrapper {
             height: 300px;
+          }
+
+          .video-controls {
+            padding: 15px;
+          }
+
+          .controls-left {
+            gap: 10px;
+          }
+
+          .volume-slider {
+            width: 60px;
           }
 
           .channel-info {
@@ -768,8 +893,17 @@ const LivePage = () => {
           }
 
           .video-player,
-          .youtube-player {
+          .youtube-player,
+          .video-wrapper {
             height: 250px;
+          }
+
+          .video-controls {
+            padding: 10px;
+          }
+
+          .volume-control {
+            display: none; /* إخفاء volume slider على الشاشات الصغيرة جداً */
           }
 
           .channel-info {

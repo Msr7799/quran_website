@@ -1,7 +1,3 @@
-// ===================================
-// src/components/AppAppBar.jsx - النسخة المحسنة مع التثبيت الدائم
-// ===================================
-
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -15,11 +11,11 @@ import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import LiveTvIcon from '@mui/icons-material/LiveTv';
 import InfoIcon from '@mui/icons-material/Info';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-import ErrorIcon from '@mui/icons-material/Error';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import CloseIcon from '@mui/icons-material/Close';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
+import ImportContactsIcon from '@mui/icons-material/ImportContacts';
 
 // نفس بيانات التنقل الحالية - لم يتم تغييرها
 const navigationItems = [
@@ -40,6 +36,12 @@ const navigationItems = [
     icon: MenuBookIcon,
     href: '/quran/1',
     color: '#9C27B0'
+  },
+  {
+    text: 'قارئ القرآن',
+    icon: ImportContactsIcon,
+    href: '/quran-reader?page=1',
+    color: '#00BCD4'
   },
   {
     text: 'الصوتيات',
@@ -88,7 +90,6 @@ function AppAppBar() {
 
   useEffect(() => {
     setMounted(true);
-    console.log('🚀 AppAppBar mounted');
 
     // التحقق من sessionStorage (يُمسح عند إغلاق التاب)
     const hasSeenMenuInThisTab = sessionStorage.getItem('hasSeenMenuInThisTab');
@@ -100,9 +101,11 @@ function AppAppBar() {
         setShouldShakeLogo(true);
       }, 2000);
 
-      return () => {
-        clearTimeout(timer);
-      };
+      return () => clearTimeout(timer);
+    } else {
+      // رأى القائمة من قبل في هذا التاب - لا اهتزاز
+      console.log('✅ المستخدم رأى القائمة من قبل في هذا التاب - لا اهتزاز');
+      setShouldShakeLogo(false);
     }
   }, []);
 
@@ -270,6 +273,7 @@ function AppAppBar() {
           >
             {isSearchExpanded ? <CloseIcon /> : <SearchIcon />}
           </button>
+
         </div>
 
         {/* عناصر التنقل */}
@@ -1083,16 +1087,9 @@ function AppAppBar() {
             animation: none;
           }
         }
-
-        /* إخفاء AppAppBar في وضع الشاشة الكاملة */
-        body.quran-fullscreen .logo-menu-button,
-        body.quran-fullscreen .fixed-sidebar {
-          display: none !important;
-          visibility: hidden !important;
-          opacity: 0 !important;
-          pointer-events: none !important;
-        }
       `}</style>
+       
+
     </>
   );
 }

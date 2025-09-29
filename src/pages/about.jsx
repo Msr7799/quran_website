@@ -2,8 +2,23 @@
 import SeoHead from '../components/SeoHead';
 import styles from '../styles/About.module.css';
 import { FaInfoCircle, FaHome, FaEnvelope } from 'react-icons/fa';
+import { useTheme } from 'next-themes';
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 export default function About() {
+  const { theme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  // حل مشكلة hydration
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null; // أو يمكنك إرجاع loader
+  }
+
   return (
     <>
       <SeoHead
@@ -13,7 +28,7 @@ export default function About() {
         image={`${process.env.NEXT_PUBLIC_BASE_URL}/images/about-image.jpg`}
         keywords="موقع القرآن الكريم, معلومات عنا, رؤية الموقع"
       />
-      <main className={styles.container}>
+      <main className={`${styles.container} ${theme === 'dark' ? styles.darkTheme : styles.lightTheme}`}>
         <section className={styles.section}>
           <h1 className={styles.title}><FaHome className={styles.titleIcon} title='من نحن' aria-label='من نحن' /> من نحن</h1>
           <p className={styles.paragraph} title='بحمد الله وتوفيقه نقدم موقع القرآن الكريم' aria-label='بحمد الله وتوفيقه نقدم موقع القرآن الكريم'>
@@ -34,13 +49,17 @@ export default function About() {
 
         <section className={styles.section}>
           <h2 className={styles.title}><FaEnvelope className={styles.titleIcon} title='معلومات المطور' aria-label='معلومات المطور' /> المطور</h2>
-          <div style={{ marginBottom: 16 }}>
-            <img
-              src="/quran_data_website.gif"
+          <div style={{ marginBottom: 16, position: 'relative', width: '100%', height: '300px' }}>
+            <Image
+              src="/quran_data_website.png"
               alt="Quran Data Website"
-              style={{ maxWidth: '100%', height: 'auto', borderRadius: 8 }}
+              fill
+              style={{ 
+                objectFit: 'contain',
+                borderRadius: 8 
+              }}
               title='معلومات عن المطور'
-              aria-label='معلومات عن المطور'
+              priority
             />
           </div>
           <p className={styles.paragraph}>

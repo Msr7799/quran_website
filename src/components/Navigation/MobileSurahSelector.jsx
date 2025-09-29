@@ -2,13 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import {
-  Box,
   Autocomplete,
-  TextField,
-  Paper,
-  Typography,
-  useTheme,
-  useMediaQuery
+  TextField
 } from '@mui/material';
 import { MenuBook } from '@mui/icons-material';
 
@@ -17,16 +12,23 @@ import surahsData from '../../../public/json/metadata.json';
 import { getSurahPage } from '../../utils/surahPageMapping';
 
 const MobileSurahSelector = ({ 
-  currentPage = 1,
-  isDarkMode = false,
   onPageChange,
   isFullscreen = false
 }) => {
   const router = useRouter();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  
   const [surahInput, setSurahInput] = useState('');
+  const [isMobile, setIsMobile] = useState(false);
+
+  // فحص حجم الشاشة بدلاً من useMediaQuery
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 960); // md breakpoint
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // إعداد قائمة السور للبحث
   const surahOptions = surahsData.map(surah => ({
@@ -61,14 +63,13 @@ const MobileSurahSelector = ({
     setSurahInput(newValue);
   };
 
-  // إخفاء المكون إذا لم يكن في الموبايل أو في وضع الشاشة الكاملة
   if (!isMobile || isFullscreen) {
     return null;
   }
 
   return (
-    <Box
-      sx={{
+    <div 
+      style={{
         position: 'fixed',
         top: '50px',
         left: '50%',
@@ -78,15 +79,7 @@ const MobileSurahSelector = ({
         maxWidth: '300px'
       }}
     >
-      <Paper
-        elevation={3}
-        sx={{
-          p: 1,
-          bgcolor: isDarkMode ? 'grey.800' : 'white',
-          borderRadius: 2,
-          border: isDarkMode ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(0, 0, 0, 0.1)'
-        }}
-      >
+      <div className="theme-paper" style={{ padding: '8px' }}>
         <Autocomplete
           options={surahOptions}
           getOptionLabel={(option) => option.label}
@@ -100,90 +93,52 @@ const MobileSurahSelector = ({
               placeholder="اختر السورة للانتقال إليها"
               variant="outlined"
               size="small"
+              className="theme-input"
               InputProps={{
                 ...params.InputProps,
                 startAdornment: (
                   <MenuBook 
-                    sx={{ 
-                      color: isDarkMode ? 'grey.400' : 'grey.600',
-                      mr: 1,
-                      fontSize: '1.2rem'
-                    }} 
+                    className="theme-icon"
+                    style={{ marginRight: '8px', fontSize: '1.2rem' }}
                   />
                 )
               }}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  bgcolor: isDarkMode ? 'grey.700' : 'grey.50',
-                  '& fieldset': {
-                    borderColor: 'transparent'
-                  },
-                  '&:hover fieldset': {
-                    borderColor: isDarkMode ? 'grey.500' : 'grey.400'
-                  },
-                  '&.Mui-focused fieldset': {
-                    borderColor: 'primary.main'
-                  }
-                },
-                '& .MuiInputBase-input': {
-                  color: isDarkMode ? 'white' : 'inherit',
-                  fontSize: '0.9rem',
-                  textAlign: 'center'
-                },
-                '& .MuiInputBase-input::placeholder': {
-                  color: isDarkMode ? 'grey.400' : 'grey.600',
-                  opacity: 1
-                }
+              style={{
+                width: '100%'
               }}
             />
           )}
           renderOption={(props, option) => (
-            <Box
-              component="li"
+            <li
               {...props}
-              sx={{
+              style={{
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                py: 1,
-                bgcolor: isDarkMode ? 'grey.800' : 'white',
-                color: isDarkMode ? 'white' : 'inherit',
-                '&:hover': {
-                  bgcolor: isDarkMode ? 'grey.700' : 'grey.50'
-                }
+                padding: '8px',
+                backgroundColor: 'var(--theme-bg-paper)',
+                color: 'var(--theme-text-primary)',
+                borderBottom: '1px solid var(--theme-border)'
               }}
             >
-              <Typography variant="body2">
+              <span style={{ fontSize: '0.9rem' }}>
                 {option.label}
-              </Typography>
-              <Typography 
-                variant="caption" 
-                sx={{ 
-                  color: isDarkMode ? 'grey.400' : 'grey.600',
-                  ml: 1
-                }}
-              >
+              </span>
+              <span style={{ 
+                fontSize: '0.8rem',
+                color: 'var(--theme-text-secondary)',
+                marginLeft: '8px'
+              }}>
                 صفحة {option.page}
-              </Typography>
-            </Box>
+              </span>
+            </li>
           )}
-          ListboxProps={{
-            sx: {
-              bgcolor: isDarkMode ? 'grey.800' : 'white',
-              maxHeight: '200px',
-              '& .MuiAutocomplete-option': {
-                bgcolor: isDarkMode ? 'grey.800' : 'white',
-                color: isDarkMode ? 'white' : 'inherit'
-              }
-            }
-          }}
-          noOptionsText="لا توجد نتائج"
+          noOptionsText="لا توجد سور"
           clearOnEscape
           blurOnSelect
-          size="small"
         />
-      </Paper>
-    </Box>
+      </div>
+    </div>
   );
 };
 

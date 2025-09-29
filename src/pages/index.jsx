@@ -1,10 +1,9 @@
 // src/pages/index.jsx - الصفحة الرئيسية المحدثة
+import { useTheme } from "next-themes"
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import Image from 'next/image';
-import QuranLoader from '../components/QuranLoader';
-// استيراد انتقائي لتحسين الأداء
+import Image from 'next/image';// استيراد انتقائي لتحسين الأداء
 import { 
   BookOpen, 
   Volume2, 
@@ -18,7 +17,21 @@ import {
   Mic, 
   ArrowLeft 
 } from 'lucide-react';
+import QuranLoader from '../components/QuranLoader';
+import QuranSearchWidget from '../components/QuranSearchWidget';
+import { ShineBorder } from '@/registry/magicui/shine-border';
+import { WordRotate } from  '@registry/magicui/word-rotate';
+import dynamic from 'next/dynamic';
 
+// تحميل SwipeCarousel ديناميكياً للشاشات الكبيرة فقط (مخفي في الشاشات الصغيرة)
+const SwipeCarousel = dynamic(() => import('../components/SwipCarsouel').then(mod => mod.SwipeCarousel), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-screen bg-slate-900 flex items-center justify-center">
+      <div className="text-white text-2xl font-uthmanic animate-pulse">جاري التحميل...</div>
+    </div>
+  )
+});
 /**
  * الصفحة الرئيسية المحدثة باستخدام النظام الجديد
  * تدعم التصميم المتجاوب وتستخدم CSS المتغيرات
@@ -28,10 +41,7 @@ const HomePage = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  
-  // حالة AppAppBar للتحكم بالقائمة الجانبية
-  const [isVisible, setIsVisible] = useState(false);
-  const [shouldShakeLogo, setShouldShakeLogo] = useState(false);
+  // حالة AppAppBar للتحكم بالقائمة الجانبية - تم إزالة المتغيرات غير المستخدمة
 
   // تأكد من تحميل المكون قبل العرض
   useEffect(() => {
@@ -210,7 +220,7 @@ const HomePage = () => {
     }, getDelay());
 
     return () => clearTimeout(timeout);
-  }, [mounted, heroImages.length, currentImageIndex, isMobile]);
+  }, [mounted, heroImages, currentImageIndex, isMobile]);
 
   // الميزات الرئيسية للموقع
   const features = [
@@ -265,6 +275,8 @@ const HomePage = () => {
     { number: '30', label: 'جزء', icon: Book },
     { number: '153', label: 'قارئ', icon: Mic }
   ];
+  const theme = useTheme()
+
 
   // لا نعرض loader كـ early return لحل مشكلة SSR
 
@@ -276,19 +288,17 @@ const HomePage = () => {
         <meta name="keywords" content="القرآن الكريم, تلاوة القرآن, تصفح القرآن, استماع القرآن, القرآن الإلكتروني, القرآن الكريم الإلكتروني" />
       </Head> 
 
-      <div className="homepage" style={{
-        opacity: mounted && !isLoading ? 1 : 0,
-        transition: 'opacity 0.8s ease-in-out'
+      <div className="w-full bg-[var(--sidebar-primary)] min-h-screen  transition-opacity duration-700 ease-in-out" style={{
+        opacity: mounted && !isLoading ? 1 : 0
       }}>
         {/* البسملة في أعلى الموقع */}
-        <div className="basmala-header">
-          {mounted && (
+        <div className="flex justify-center mb-15 items-center py-5 w-full  mb-0 rounded-[10px] relative -bottom-10 border-[3px] border-solid border-[var(--muted-foreground)]/50">          
+           {mounted && (
             <Image
-              src={isDarkMode ? "/basmalh-dark.svg" : "/basmalh-light.svg"}
+              src={isDarkMode ? "/basmalh-dark.svg" : "/basmalh-dark.svg"}
               alt="بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ"
-              width={400}
-              height={100}
-              className="basmala-image"
+              width={500}
+              height={200}
               priority
               quality={95}
               key={`basmala-${isDarkMode ? 'dark' : 'light'}`}
@@ -296,7 +306,6 @@ const HomePage = () => {
               }}
               onError={(e) => {
                 console.log('خطأ في تحميل البسملة:', e.target.src);
-                console.log('الثيم الحالي:', isDarkMode);
               }}
             />
           )}
@@ -318,10 +327,16 @@ const HomePage = () => {
           )}
         </div>
 
-        {/* Hero Section */}
-        <section className="hero">
-          <div className="hero-background">
-            <div className="hero-image-container">
+        {/* SwipeCarousel Hero للشاشات الكبيرة فقط - مخفي في الشاشات الصغيرة */}
+        <section className="hidden lg:block w-full h-screen relative ">
+          <SwipeCarousel />
+          
+        </section>
+
+        {/* Hero Section العادي للهواتف والتابلت */}
+        <section className="lg:hidden relative h-screen w-full flex items-center justify-center text-center text-white overflow-hidden will-change-transform contain-layout-style-paint">
+          <div className="absolute inset-0 z-[1] w-full h-full">
+            <div className="absolute inset-0 w-full h-full overflow-hidden will-change-transform">
               {heroImages[currentImageIndex] && (
                 <Image
                   src={heroImages[currentImageIndex].src.startsWith('/') ? heroImages[currentImageIndex].src : `/${heroImages[currentImageIndex].src}`}
@@ -333,18 +348,16 @@ const HomePage = () => {
                 />
               )}
             </div>
-            <div className="hero-overlay"></div>
+            <div className="absolute inset-0 bg-transparent z-[2]"></div>
           </div>
-          
-     
 
           {/* مؤشرات الصور */}
-          <div className="hero-indicators">
+          <div className="absolute bottom-[3rem] left-1/2 transform -translate-x-1/2 flex gap-[0.5rem] z-[4]">
             {heroImages.map((_, index) => (
               <button
                 key={index}
                 type="button"
-                className={`indicator ${index === currentImageIndex ? 'active' : ''}`}
+                className={`w-3 h-3 rounded-full border-2 border-white bg-white/90 cursor-pointer transition-all duration-300 ${index === currentImageIndex ? 'bg-white' : 'hover:bg-white/70'}`}
                 onClick={() => setCurrentImageIndex(index)}
                 aria-label={`صورة ${index + 1}`}
                 aria-pressed={index === currentImageIndex}
@@ -354,80 +367,92 @@ const HomePage = () => {
         </section>
 
 {/* Navigation section — تصحيح الفتح والإغلاق */}
-<section className="Navigation">
-  <div className="hero-content">
-    <h1 className="hero-title">
-      بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ
-    </h1>
-    <h2 className="hero-subtitle"></h2>
-    <p className="hero-description">
-      {heroImages[currentImageIndex]?.title || 'القرآن الكريم'}
-    </p>
+<section className="md:mt-80 justify-center items-center ">
+  <div className="relative p-6 z-[3] text-center text-card/90 bg-black/50 rounded-2xl backdrop-blur-[15px] border border-[var(--muted-foreground)]/50 shadow-[0_8px_32px_rgba(0,0,0,0.4)]  md:right-50 md:left-50 md:max-w-[calc(80vw-40px)] sm:max-w-[calc(80vw-30px)]  mb-4 sm:p-4">
+  <ShineBorder shineColor={theme.theme === "dark" ? "white" : "black"} />  
+  <WordRotate
+      className="md:text-6xl text-2xl px-6 md:mb-6 font-semibold  [text-shadow:2px_2px_4px_rgba(0,0,0,0.5)] "
+      words={['القرآن الكريم', 'كتاب أٌحكمت آياته', 'النور المبين', 'شفاءُ للناس', 'القرآن المجيد', 'يهدي للحق' , 'صحفٍٍ مكرمة', 'تنزيلٌ من رب العالمين']}
+    />
 
-    <div className="hero-actions">
-      <Link href="/quran-pages/1" className="btn btn-primary hero-btn">
+    {/* شريط البحث في القرآن */}
+    <div className="mb-8 px-4">
+      <QuranSearchWidget />
+    </div>
+
+    <div className="flex gap-3 sm:mt-7 md:gap-4 md:flex-col mt-5 items-center sm:flex-col sm:gap-2 justify-center flex-wrap">
+      <Link href="/quran-pages/1" className=" md:mb-3 overflow-hidden  md:ml-10 text-center px-5 py-3 md:py-3 md:px-6 md:w-[200px] sm:py-3 sm:w-full border-2 border-chart-4/20 text-lg md:text-2xl font-semibold rounded-lg transition-all duration-400 no-underline bg-transparent text-white/60  hover:bg-[var(--chart-4)]/10 hover:text-[var(--muted-foreground)]/50 hover:text-white hover:translate-y-[-2px] shadow-[var(--shadow-lg)] hover:shadow-[var(--shadow-xl)]">
         ابدأ التصفح
       </Link>
-      <Link href="/quran-sound" className="btn btn-secondary hero-btn">
+      <Link href="/quran-sound" className="relative  md:mb-3 overflow-hidden  md:ml-10 items-center px-5 py-3 md:py-2 md:px-4 md:w-[200px] sm:py-3 sm:w-full text-lg md:text-2xl font-semibold rounded-lg transition-all duration-500 no-underline bg-transparent text-[var(--muted-foreground)]/50 border hover:border-[var(--chart-3)] hover:bg-[var(--chart-3)]/15 hover:text-white hover:translate-y-[-2px] shadow-[var(--shadow-lg)] hover:shadow-[var(--shadow-xl)]">
         استمع الآن
       </Link>
     </div>
   </div>
+
 </section>
 
 
         {/* الإحصائيات */}
-        <section className="stats-section">
-          <div className="container">
-            <div className="stats-grid">
+        <section className="py-15 mt-4 bg-[var(--muted)]/20 justfy-center">
+
+  
+          <div className="max-w-6xl md:mx-80 px-6 md:px-4 justify-center">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-20 md:grid-cols-2 sm:grid-cols-1 md:gap-4 rounded-xl transition-all duration-400 ">
               {stats.map((stat, index) => {
                 const IconComponent = stat.icon;
                 return (
-                  <div key={index} className="stat-card">
-                    <div className="stat-icon">
+                  <div key={index} className="relative text-center px-8 py-8 md:px-4 bg-[var(--sidebar-primary)]/20 rounded-xl border-[2px] border-[var(--muted-foreground)]/10 shadow-[var(--shadow-md)] transition-all duration-300 hover:translate-y-[-4px] hover:shadow-[var(--shadow-lg)] group">
+                    <ShineBorder
+                     shineColor={[ "#aec6ff"]}
+                     borderWidth= "1"
+                     duration= "11"
+
+                     />
+                    <div className="mb-4 text-[var(--chart-4)] flex justify-center items-center transition-all duration-300 group-hover:scale-[1.2] group-hover:text-[var(--primary-dark)]">
                       <IconComponent size={40} strokeWidth={1.5} />
                     </div>
-                    <div className="stat-number">{stat.number}</div>
-                    <div className="stat-label">{stat.label}</div>
+                    <div className="text-3xl md:text-4xl font-bold text-[var(--muted)] mb-2">{stat.number}</div>
+                    <div className="text-xl md:text-base text-[var(--text-secondary)]">{stat.label}</div>
                   </div>
                 );
               })}
             </div>
           </div>
-        </section>
+         </section>
 
         {/* الميزات الرئيسية */}
-        <section className="features-section">
-          <div className="container">
-            <div className="section-header">
-              <h2 className="section-title">ميزات الموقع</h2>
-              <p className="section-description">
+        <section className="py-16 bg-[var(--background-color)]">
+          <div className="max-w-6xl mx-auto px-6 md:px-4">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-2xl font-bold text-[var(--text-primary)] mb-4">ميزات الموقع</h2>
+              <p className="text-lg text-[var(--text-secondary)] max-w-2xl mx-auto">
                 اكتشف جميع الخدمات التي يوفرها موقع القرآن الكريم
               </p>
             </div>
             
-            <div className="features-grid">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-8 md:grid-cols-1 md:gap-4">
               {features.map((feature, index) => {
                 const IconComponent = feature.icon;
                 return feature.href.startsWith('http') ? (
-                  <a key={index} href={feature.href} target="_blank" rel="noopener noreferrer" className="feature-card">
-                    <div className="feature-icon" style={{ color: feature.color }}>
+                  <a key={index} href={feature.href} target="_blank" rel="noopener noreferrer" className="bg-[var(--background-paper)] rounded-xl p-8 md:p-6 no-underline text-white transition-all duration-300 border border-[var(--border-color)] relative overflow-hidden group hover:translate-y-[-8px] hover:shadow-[var(--shadow-2xl)] before:content-[''] before:absolute before:top-0 before:left-0 before:right-0 before:h-1 before:bg-gradient-to-r before:from-[var(--primary-color)] before:to-[var(--primary-light)] before:transform before:scale-x-0 before:transition-transform before:duration-300 hover:before:scale-x-100">
+                    <div className="mb-4 flex justify-center items-center w-20 h-20 bg-white/10 rounded-xl transition-all duration-300 group-hover:bg-white/20 group-hover:scale-110" style={{ color: feature.color }}>
                       <IconComponent size={48} strokeWidth={1.5} />
                     </div>
-                    <h3 className="feature-title">{feature.title}</h3>
-                    <p className="feature-description">{feature.description}</p>
-                    <div className="feature-arrow">
+                    <h3 className="text-2xl text-accent font-semibold mb-4">{feature.title}</h3>
+                    <p className="text-3xl text-space/70 text-chart-4/70 text-shadow-[0px_2px_2px_rgba(221,255,255,.08)] leading-relaxed mb-6">{feature.description}</p>
+                    <div className="absolute bottom-6 left-6 text-[var(--primary-color)] transition-all duration-300 flex items-center justify-center w-8 h-8 rounded-full bg-[rgba(52,73,94,0.1)] group-hover:translate-x-[-4px] group-hover:bg-[rgba(52,73,94,0.2)]">
                       <ArrowLeft size={20} strokeWidth={2} />
                     </div>
                   </a>
                 ) : (
-                  <Link key={index} href={feature.href} className="feature-card">
-                    <div className="feature-icon" style={{ color: feature.color }}>
+                  <Link key={index} href={feature.href} className="bg-neutral-900 rounded-xl p-8 md:p-6 no-underline text-[var(--text-primary)] transition-all duration-300 border border-[var(--muted-foreground)] relative overflow-hidden group hover:translate-y-[-8px] hover:shadow-[var(--shadow-2xl)] before:content-[''] before:absolute before:top-0 before:left-0 before:right-0 before:h-1 before:bg-gradient-to-r before:from-[var(--primary-color)] before:to-[var(--primary-light)] before:transform before:scale-x-0 before:transition-transform before:duration-300 hover:before:scale-x-100">
+                    <div className="mb-4 flex justify-center items-center w-20 h-20 bg-white/10 rounded-xl transition-all duration-300 group-hover:bg-white/20 group-hover:scale-110" style={{ color: feature.color }}>
                       <IconComponent size={48} strokeWidth={1.5} />
                     </div>
-                    <h3 className="feature-title">{feature.title}</h3>
-                    <p className="feature-description">{feature.description}</p>
-                    <div className="feature-arrow">
+                    <h3 className="text-2xl text-space/70 text-accent font-semibold mb-4">{feature.title}</h3>
+                    <p className="text-base text-chart-4/70 leading-relaxed mb-6">{feature.description}</p>
+                    <div className="absolute bottom-6 left-6 text-[var(--muted-foreground)] transition-all duration-300 flex items-center justify-center w-8 h-8 rounded-full bg-[rgba(52,73,94,0.1)] group-hover:translate-x-[-4px] group-hover:bg-[rgba(52,73,94,0.2)]">
                       <ArrowLeft size={20} strokeWidth={2} />
                     </div>
                   </Link>
@@ -438,18 +463,18 @@ const HomePage = () => {
         </section>
 
         {/* قسم الدعوة للعمل */}
-        <section className="cta-section">
-          <div className="container">
-            <div className="cta-content">
-              <h2 className="cta-title">ابدأ رحلتك مع القرآن الكريم</h2>
-              <p className="cta-description">
+        <section className="py-16 bg-gradient-to-br from-[var(--secondary-color)] to-[var(--secondary-dark)] text-white">
+          <div className="max-w-6xl mx-auto px-6 md:px-4">
+            <div className="text-center max-w-4xl mx-auto">
+              <h2 className="text-3xl md:text-2xl font-bold mb-4">ابدأ رحلتك مع القرآن الكريم</h2>
+              <p className="text-lg leading-relaxed mb-8 opacity-90">
                 انضم إلى الملايين الذين يستخدمون موقعنا لتلاوة وتصفح القرآن الكريم
               </p>
-              <div className="cta-actions">
-                <Link href="/quran-pages/1" className="btn btn-primary cta-btn">
+              <div className="flex gap-4 justify-center flex-wrap md:flex-col md:items-center">
+                <Link href="/quran-pages/1" className="inline-flex items-center px-8 py-4 md:py-3 text-xl md:text-xl bg-chart-3 font-semibold rounded-xl transition-all duration-300 no-underline shadow-[var(--shadow-lg)] hover:translate-y-[-2px] hover:shadow-[var(--shadow-xl)] bg-[var(--primary-color)] text-white border-none hover:bg-[var(--primary-dark)] hover:text-rose-500 md:w-full md:max-w-72 md:justify-center">
                   ابدأ الآن
                 </Link>
-                <Link href="/about" className="btn btn-secondary cta-btn">
+                <Link href="/about" className="inline-flex items-center px-8 py-4 md:py-3 text-lg text-muted-foreground font-semibold rounded-xl transition-all duration-300 no-underline shadow-[var(--shadow-lg)] hover:translate-y-[-2px] hover:shadow-[var(--shadow-xl)] bg-transparent text-[var(--primary-color)] border-2 border-[var(--primary-color)] hover:bg-[var(--primary-color)] hover:text-white md:w-full md:max-w-72 md:justify-center">
                   اعرف المزيد
                 </Link>
               </div>
@@ -460,7 +485,7 @@ const HomePage = () => {
 
       {/* Loader overlay لحل مشكلة SSR */}
       {(!mounted || isLoading) && (
-        <div className="page-loader-overlay" aria-hidden={!isLoading}>
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-[rgba(250,250,250,0.95)] backdrop-blur-[4px] transition-opacity duration-500 ease-out" aria-hidden={!isLoading}>
           <QuranLoader
             size={80}
             text="مرحباً بك في موقع القرآن الكريم..."
@@ -469,592 +494,6 @@ const HomePage = () => {
         </div>
       )}
 
-      {/* أنماط الصفحة الرئيسية */}
-      <style jsx>{`
-        .homepage {
-          width: 100%;
-          min-height: 100vh;
-          background-color: var(--background-color);
-        }
-
-        /* Loader overlay للـ SSR */
-        .page-loader-overlay {
-          position: fixed;
-          inset: 0;
-          z-index: 9999;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: rgba(250, 250, 250, 0.95);
-          backdrop-filter: blur(4px);
-          transition: opacity 0.5s ease-out;
-        }
-
-        /* البسملة في أعلى الموقع */
-        .basmala-header {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          padding: 20px 0;
-          margin-bottom: 0;
-          border-radius: 10px;
-          position: relative;
-          bottom: 40px;
-          border: 3px ridge #4a4a4a;
-        }
-
-        .basmala-image {
-          border-radius: 30px;
-          background: rgba(255, 255, 255, 0.1);
-          padding: 15px;
-          backdrop-filter: blur(10px);
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-          transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .basmala-image:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-        }
-
-        @media (max-width: 768px) {
-          .basmala-header {
-            padding: 15px 10px;
-          }
-          
-          .basmala-image {
-            width: 300px !important;
-            height: 75px !important;
-            padding: 10px;
-            border-radius: 22px;
-          }
-        }
-
-        @media (max-width: 480px) {
-          .basmala-image {
-            width: 250px !important;
-            height: 60px !important;
-            padding: 8px;
-            border-radius: 10px;
-          }
-        }
-
-        /* Hero Section - محسن للاستجابة */
-        .hero {
-          position: relative;
-          height: 100vh;
-          width: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          text-align: center;
-          color: white;
-          overflow: hidden;
-          
-        }
-
-        .hero-background {
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          z-index: 1;
-          width: 100%;
-          height: 100%;
-        }
-
-        .hero-image-container {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          overflow: hidden;
-        }
-
-        .hero-overlay {
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: transparent;
-          z-index: 2;
-        }
-
-        .hero-content {
-          position: absolute;
-          bottom: 80px;
-          right: 40px;
-          z-index: 3;
-          text-align: center;
-          color: white;
-          width: 350px;
-          max-width: 90vw;
-          padding: 1.5rem;
-          background: rgba(0, 0, 0, 0.5);
-          border-radius: 16px;
-          backdrop-filter: blur(15px);
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-        }
-
-        .hero-title {
-          font-size: clamp(1.2rem, 2.5vw, 1.8rem);
-          font-weight: 600;
-          margin-bottom: 0.8rem;
-          font-family: var(--font-family-arabic);
-          text-shadow: 2px 2px 8px rgba(22, 22, 22, 0.9);
-          color: #e0e1dd;
-          line-height: 1.4;
-        }
-
-        .hero-subtitle {
-          font-size: clamp(1.5rem, 4vw, 2.5rem);
-          font-weight: 600;
-          margin-bottom: var(--spacing-lg);
-          font-family: var(--font-family-arabic);
-          color: #ffffff;
-          text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
-          opacity: 0.95;
-        }
-
-        .hero-description {
-          font-size: clamp(0.9rem, 1.8vw, 1.1rem);
-          line-height: 1.6;
-          margin-bottom: 1.2rem;
-          font-family: var(--font-family-arabic);
-          color: #ffffff;
-          text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-          opacity: 0.95;
-        }
-
-        .hero-actions {
-          display: flex;
-          gap: 0.8rem;
-          justify-content: center;
-          flex-wrap: wrap;
-        }
-
-        .hero-btn {
-          padding: 0.7rem 1.2rem;
-          font-size: 0.9rem;
-          font-weight: 600;
-          border-radius: 8px;
-          transition: all var(--transition-base);
-          text-decoration: none;
-          display: inline-flex;
-          align-items: center;
-          box-shadow: var(--shadow-lg);
-        }
-
-        .hero-btn:hover {
-          transform: translateY(-2px);
-          box-shadow: var(--shadow-xl);
-        }
-
-        .hero-indicators {
-          position: absolute;
-          bottom: var(--spacing-2xl);
-          left: 50%;
-          transform: translateX(-50%);
-          display: flex;
-          gap: var(--spacing-sm);
-          z-index: 4;
-        }
-
-        .indicator {
-          width: 12px;
-          height: 12px;
-          border-radius: var(--border-radius-full);
-          border: 2px solid white;
-          background: rgba(255, 255, 255, 0.9);
-          cursor: pointer;
-          transition: all var(--transition-base);
-        }
-
-        .indicator.active {
-          background: white;
-        }
-
-        .indicator:hover {
-          background: rgba(255, 255, 255, 0.7);
-        }
-
-        /* Stats Section */
-        .stats-section {
-          padding: var(--spacing-3xl) 0;
-          background: var(--background-paper);
-        }
-
-        .stats-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-          gap: var(--spacing-xl);
-          border-radius: var(--border-radius-xl);
-          transition: all var(--transition-base);
-        
-        }
-
-        .stat-card {
-          text-align: center;
-          padding: var(--spacing-xl);
-          background: var(--background-color);
-          border-radius: var(--border-radius-xl);
-          border: 7px solid rgba( 11, 55, 22, 0.2);
-          box-shadow: var(--shadow-md);
-          transition: all var(--transition-base);
-        }
-
-        .stat-card:hover {
-          transform: translateY(-4px);
-          box-shadow: var(--shadow-lg);
-        }
-
-        .stat-card:hover .stat-icon {
-          transform: scale(1.2);
-          color: var(--primary-dark);
-        }
-
-        .stat-icon {
-          margin-bottom: var(--spacing-md);
-          color: #96ae73ff;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          transition: all var(--transition-base);
-        }
-
-        .stat-number {
-          font-size: clamp(2rem, 5vw, 3rem);
-          font-weight: 700;
-          color: var(--primary-color);
-          margin-bottom: var(--spacing-sm);
-        }
-
-        .stat-label {
-          font-size: clamp(1.2rem, 3vw, 5rem);
-          color: var(--text-secondary);
-          font-family: var(--font-family-arabic);
-        }
-
-        /* Features Section */
-        .features-section {
-          padding: var(--spacing-3xl) 0;
-          background: var(--background-color);
-        }
-
-        .section-header {
-          text-align: center;
-          margin-bottom: var(--spacing-3xl);
-        }
-
-        .section-title {
-          font-size: clamp(2rem, 4vw, 3rem);
-          font-weight: 700;
-          color: var(--text-primary);
-          margin-bottom: var(--spacing-md);
-          font-family: var(--font-family-arabic);
-        }
-
-        .section-description {
-          font-size: var(--font-size-lg);
-          color: var(--text-secondary);
-          max-width: 600px;
-          margin: 0 auto;
-          font-family: var(--font-family-arabic);
-        }
-
-        .features-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-          gap: var(--spacing-xl);
-        }
-
-        .feature-card {
-          background: var(--background-paper);
-          border-radius: var(--border-radius-xl);
-          padding: var(--spacing-2xl);
-          text-decoration: none;
-          color: var(--text-primary);
-          transition: all var(--transition-base);
-          border: 1px solid var(--border-color);
-          position: relative;
-          overflow: hidden;
-        }
-
-        .feature-card::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          height: 4px;
-          background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
-          transform: scaleX(0);
-          transition: transform var(--transition-base);
-        }
-
-        .feature-card:hover::before {
-          transform: scaleX(1);
-        }
-
-        .feature-card:hover {
-          transform: translateY(-8px);
-          box-shadow: var(--shadow-2xl);
-        }
-
-        .feature-card:hover .feature-icon {
-          background: rgba(255, 255, 255, 0.2);
-          transform: scale(1.1);
-        }
-
-        .feature-icon {
-          margin-bottom: var(--spacing-md);
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          width: 80px;
-          height: 80px;
-          background: rgba(255, 255, 255, 0.1);
-          border-radius: var(--border-radius-xl);
-          transition: all var(--transition-base);
-        }
-
-        .feature-title {
-          font-size: var(--font-size-xl);
-          font-weight: 600;
-          margin-bottom: var(--spacing-md);
-          font-family: var(--font-family-arabic);
-        }
-
-        .feature-description {
-          font-size: var(--font-size-base);
-          color: var(--text-secondary);
-          line-height: 1.7;
-          margin-bottom: var(--spacing-lg);
-          font-family: var(--font-family-arabic);
-        }
-
-        .feature-arrow {
-          position: absolute;
-          bottom: var(--spacing-lg);
-          left: var(--spacing-lg);
-          color: var(--primary-color);
-          transition: all var(--transition-base);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 32px;
-          height: 32px;
-          border-radius: var(--border-radius-full);
-          background: rgba(52, 73, 94, 0.1);
-        }
-
-        .feature-card:hover .feature-arrow {
-          transform: translateX(-4px);
-          background: rgba(52, 73, 94, 0.2);
-        }
-
-        /* CTA Section */
-        .cta-section {
-          padding: var(--spacing-3xl) 0;
-          background: linear-gradient(135deg, var(--secondary-color) 0%, var(--secondary-dark) 100%);
-          color: white;
-        }
-
-        .cta-content {
-          text-align: center;
-          max-width: 800px;
-          margin: 0 auto;
-        }
-
-        .cta-title {
-          font-size: clamp(2rem, 4vw, 3rem);
-          font-weight: 700;
-          margin-bottom: var(--spacing-md);
-          font-family: var(--font-family-arabic);
-        }
-
-        .cta-description {
-          font-size: var(--font-size-lg);
-          line-height: 1.8;
-          margin-bottom: var(--spacing-2xl);
-          opacity: 0.9;
-          font-family: var(--font-family-arabic);
-        }
-
-        .cta-actions {
-          display: flex;
-          gap: var(--spacing-md);
-          justify-content: center;
-          flex-wrap: wrap;
-        }
-
-        .cta-btn {
-          padding: var(--spacing-md) var(--spacing-2xl);
-          font-size: var(--font-size-lg);
-          font-weight: 600;
-          border-radius: var(--border-radius-xl);
-          transition: all var(--transition-base);
-          text-decoration: none;
-          display: inline-flex;
-          align-items: center;
-          box-shadow: var(--shadow-lg);
-        }
-
-        .cta-btn:hover {
-          transform: translateY(-2px);
-          box-shadow: var(--shadow-xl);
-        }
-
-        /* Responsive Design - محسن للشاشات الصغيرة */
-        @media (max-width: 768px) {
-          .hero {
-            height: 100vh;
-            padding: 0;
-          }
-
-          .hero-content {
-            width: 95%;
-            margin: 0 auto;
-            padding: clamp(1rem, 3vw, 1.5rem);
-            min-height: auto;
-          }
-
-          .hero-title {
-            font-size: clamp(1.8rem, 5vw, 2.5rem);
-            margin-bottom: 1rem;
-          }
-
-          .hero-description {
-            font-size: clamp(0.9rem, 3vw, 1.1rem);
-            margin-bottom: 1.5rem;
-          }
-
-          .hero-actions {
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
-          }
-
-          .hero-btn {
-            width: 100%;
-            max-width: 250px;
-            justify-content: center;
-            padding: 0.8rem 1.5rem;
-            font-size: 1rem;
-          }
-
-          .stats-grid {
-            grid-template-columns: repeat(2, 1fr);
-            gap: var(--spacing-md);
-          }
-
-          .features-grid {
-            grid-template-columns: 1fr;
-            gap: var(--spacing-md);
-          }
-
-          .cta-actions {
-            flex-direction: column;
-            align-items: center;
-          }
-
-          .cta-btn {
-            width: 100%;
-            max-width: 280px;
-            justify-content: center;
-          }
-        }
-
-        @media (max-width: 768px) {
-          .hero-content {
-            bottom: 60px;
-            right: 20px;
-            left: 20px;
-            width: auto;
-            max-width: calc(100vw - 40px);
-            padding: 1.2rem;
-          }
-
-          .hero-title {
-            font-size: clamp(1rem, 4vw, 1.4rem);
-            margin-bottom: 0.6rem;
-          }
-
-          .hero-description {
-            font-size: clamp(0.8rem, 3vw, 1rem);
-            margin-bottom: 1rem;
-          }
-
-          .hero-btn {
-            padding: 0.6rem 1rem;
-            font-size: 0.8rem;
-          }
-        }
-
-        @media (max-width: 480px) {
-          .hero-content {
-            bottom: 40px;
-            right: 15px;
-            left: 15px;
-            width: auto;
-            max-width: calc(100vw - 30px);
-            padding: 1rem;
-          }
-
-          .hero-title {
-            font-size: clamp(0.9rem, 4vw, 1.2rem);
-          }
-
-          .hero-actions {
-            flex-direction: column;
-            gap: 0.6rem;
-          }
-
-          .hero-btn {
-            width: 100%;
-            padding: 0.7rem;
-            font-size: 0.85rem;
-          }
-
-          .stats-grid {
-            grid-template-columns: 1fr;
-          }
-
-          .feature-card {
-            padding: var(--spacing-lg);
-          }
-        }
-
-        /* تحسين الأداء */
-        .hero {
-          will-change: transform;
-          contain: layout style paint;
-        }
-
-        .feature-card {
-          will-change: transform;
-          contain: layout style paint;
-        }
-
-        /* تحسين للطباعة */
-        @media print {
-          .hero-background,
-          .hero-indicators,
-          .cta-section {
-            display: none;
-          }
-          
-          .hero {
-            height: auto;
-            background: white;
-            color: black;
-          }
-        }
-      `}</style>
     </>
   );
 };

@@ -357,8 +357,8 @@ const QuranPageView = () => {
       <Box
         sx={{
           minHeight: '100vh',
-          /* مساحة إضافية للشريط العلوي في الموبايل - فقط عندما لا يكون في وضع الشاشة الكاملة */
-          paddingTop: isFullscreen ? '0' : { xs: '40px', md: '0' },
+          /* مساحة إضافية للشريط العلوي - فقط عندما لا يكون في وضع الشاشة الكاملة */
+          paddingTop: isFullscreen ? '0' : { xs: '110px', md: '80px' },
           background: isFullscreen
             ? (isDarkMode ? '#1a1a1a' : '#f8f9fa') /* خلفية مناسبة في وضع الشاشة الكاملة */
             : isDarkMode
@@ -571,11 +571,11 @@ const QuranPageView = () => {
             justifyContent: 'center',
             height: isFullscreen ? '100vh' : 'auto', /* ملء الشاشة في وضع الشاشة الكاملة */
             width: isFullscreen ? '100vw' : '100%', /* ملء عرض الشاشة في وضع الشاشة الكاملة، عرض كامل في الوضع العادي */
-            /* في الشاشات الصغيرة - ترك مساحة لشريط التحكم السفلي */
-            '@media (max-width: 758px)': {
-              marginTop: '20px',
-              marginRight: '-3px ',
-              marginBottom: showAudioPlayer ? '80px' : '20px', /* مساحة للمشغل المضغوط */
+            /* في الشاشات الصغيرة - ترك مساحة لجميع العناصر العلوية */
+            '@media (max-width: 768px)': {
+              marginTop: '150px', /* مساحة كافية لـ MobileTopBar (40px) + MobileSurahSelector (60px) + مساحة إضافية */
+              marginRight: '-3px',
+              marginBottom: showAudioPlayer ? '140px' : '80px', /* مساحة للمشغل المضغوط وشريط التحكم */
               paddingBottom: '20px'
             }
           }}
@@ -662,7 +662,7 @@ const QuranPageView = () => {
                 title="الصفحة التالية"
                 sx={(theme) => ({
                   position: 'fixed',
-                  left: '20px',
+                  left: '-10px', /* إخراج الزر للخارج أكثر */
                   top: '50%',
                   transform: 'translateY(-50%)',
                   width: '50px',
@@ -701,7 +701,7 @@ const QuranPageView = () => {
                 title="الصفحة السابقة"
                 sx={(theme) => ({
                   position: 'fixed',
-                  right: '20px',
+                  right: '-10px', /* إخراج الزر للخارج أكثر */
                   top: '50%',
                   transform: 'translateY(-50%)',
                   width: '50px',

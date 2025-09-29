@@ -11,7 +11,6 @@ export default function ReciterPage() {
     const router = useRouter();
     const { reciter } = router.query; // الحصول على slug من مسار URL
 
-    const [selectedReciter, setSelectedReciter] = useState(null);
     const [currentAudio, setCurrentAudio] = useState(null);
     const [currentSurahIndex, setCurrentSurahIndex] = useState(null);
 

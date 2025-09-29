@@ -1,36 +1,128 @@
 /* styles/About.module.css */
 .container {
-    max-width: 800px;
-    margin: 0 auto;
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: var(--theme-bg-primary);
+  color: var(--theme-text-primary);
+  transition: var(--theme-transition);
+  padding: 2rem;
+  border-radius: 12px;
+}
+
+.section {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: var(--theme-bg-paper);
+  border: 1px solid var(--theme-border);
+  border-radius: 12px;
+  box-shadow: var(--theme-shadow);
+  transition: var(--theme-transition);
+}
+
+.section:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.title {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  color: var(--theme-text-primary);
+  transition: var(--theme-transition);
+}
+
+.titleIcon {
+  margin: 0.5rem;
+  color: var(--theme-primary);
+  transition: var(--theme-transition);
+}
+
+.titleIcon:hover {
+  color: var(--theme-primary-hover);
+  transform: scale(1.1);
+}
+
+.paragraph {
+  line-height: 1.8;
+  color: var(--theme-text-primary);
+  font-size: 1.1rem;
+  transition: var(--theme-transition);
+}
+
+.link {
+  color: var(--theme-primary);
+  text-decoration: none;
+  font-weight: 600;
+  transition: var(--theme-transition);
+  position: relative;
+}
+
+.link:hover {
+  color: var(--theme-primary-hover);
+  text-decoration: underline;
+}
+
+.link::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -2px;
+  left: 0;
+  background-color: var(--theme-primary);
+  transition: width 0.3s ease;
+}
+
+.link:hover::after {
+  width: 100%;
+}
+
+/* إضافة أنماط للوضع الليلي والنهاري */
+.darkTheme .section:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+}
+
+.lightTheme .section:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* تحسين الصورة */
+.container img {
+  border-radius: 12px;
+  box-shadow: var(--theme-shadow);
+  transition: var(--theme-transition);
+  border: 2px solid var(--theme-border);
+}
+
+.container img:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.darkTheme img:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+/* استجابة للشاشات الصغيرة */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+    margin: 1rem;
   }
   
   .section {
-    margin-bottom: 2rem;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
   }
   
   .title {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-  }
-  
-  .titleIcon {
-    margin: 0.5rem;
-    color: var(--primary-color);
-
+    font-size: 1.5rem;
   }
   
   .paragraph {
+    font-size: 1rem;
     line-height: 1.6;
   }
-  
-  .link {
-    color: var(--primary-color);
-    text-decoration: none;
-  }
-  
-  .link:hover {
-    text-decoration: underline;
-  }
+}
   

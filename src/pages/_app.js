@@ -1,11 +1,13 @@
 // src/pages/_app.js - النسخة الجديدة بدون theme folder
 import Head from 'next/head';
 import React, { useEffect } from 'react';
+import { ThemeProvider } from 'next-themes';
 
 // استيراد ملفات CSS الموحدة
 import '../styles/variables.css';
 import '../styles/globals.css';
 import '../styles/loaders.css';
+
 
 // استيراد المكونات
 import AppAppBar from '../components/AppAppBar';
@@ -40,33 +42,21 @@ export default function MyApp({ Component, pageProps }) {
   }, []);
 
   return (
-    <>
+    <ThemeProvider
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange={false}
+    >
       <Head>
-        {/* تحسين الأداء */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
-        
-        {/* الخطوط العربية */}
-   
-        
-        {/* أيقونات Material */}
-        <link 
-          href="https://fonts.googleapis.com/icon?family=Material+Icons" 
-          rel="stylesheet" 
-        />
-        
-        {/* Meta tags أساسية */}
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes" />
-        <meta name="theme-color" content="#1976d2" />
-        <meta name="color-scheme" content="light dark" />
-        
-        {/* معلومات أساسية محسنة للـ SEO */}
+        {/* Meta tags للـ SEO */}
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        <meta name="description" content="موقع القرآن الكريم - اقرأ واستمع للقرآن الكريم بجودة عالية" />
+        <meta name="keywords" content="القرآن الكريم، قراءة القرآن، الاستماع للقرآن، المصحف الشريف" />
         <meta name="description" content="موقع القرآن الكريم الإلكتروني - تلاوة، تصفح، واستماع القرآن الكريم بأصوات أشهر القراء مع تصميم جميل ومتجاوب" />
         <meta name="keywords" content="القرآن الكريم, تلاوة القرآن, تصفح المصحف, استماع القرآن, القراء, تفسير, إسلام, مسلمون, قرآن إلكتروني" />
         <meta name="author" content="mohamed alromaihi" />
         <meta name="creator" content="mohamed alromaihi" />
         <meta name="publisher" content="موقع القرآن الكريم" />
-        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
         <meta name="googlebot" content="index, follow" />
         <meta name="language" content="Arabic" />
         <meta name="geo.region" content="SA" />
@@ -137,8 +127,10 @@ export default function MyApp({ Component, pageProps }) {
       </Head>
 
       {/* ضع الـ AppAppBar هنا ليكون دائماً فوق كل شيء */}
-      <AppAppBar />
-
+        
+        {/* تأثيرات BorderBeam حول AppAppBar */}
+        <AppAppBar /> 
+    
       <div className="app-container">
         {/* المحتوى الرئيسي للتطبيق */}
         <Layout>
@@ -146,9 +138,10 @@ export default function MyApp({ Component, pageProps }) {
         </Layout>
         
         {/* التذييل */}
-        <Footer />
+      <Footer />
       </div>
-
+   
+   
       {/* الأنماط العامة للتطبيق */}
       <style jsx>{`
 
@@ -204,6 +197,6 @@ export default function MyApp({ Component, pageProps }) {
           }
         }
       `}</style>
-    </>
+    </ThemeProvider>
   );
 }

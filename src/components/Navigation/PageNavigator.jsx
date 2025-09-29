@@ -8,14 +8,11 @@ import {
   Typography,
   Paper,
   IconButton,
-  Tooltip,
-  useMediaQuery,
-  useTheme
+  Tooltip
 } from '@mui/material';
 import {
   NavigateNext,
   NavigateBefore,
-  Search,
   MenuBook
 } from '@mui/icons-material';
 
@@ -30,8 +27,7 @@ const PageNavigator = ({
   onPageChange 
 }) => {
   const router = useRouter();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const [isMobile, setIsMobile] = useState(false);
   
   const [pageInput, setPageInput] = useState('');
   const [surahInput, setSurahInput] = useState('');
@@ -46,6 +42,17 @@ const PageNavigator = ({
     transliteration: surah.name.transliteration,
     page: getSurahPage(surah.number)
   }));
+
+  // فحص حجم الشاشة
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 960); // md breakpoint
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // تحديث قيمة الصفحة عند تغيير الصفحة الحالية
   useEffect(() => {
@@ -125,12 +132,12 @@ const PageNavigator = ({
       sx={{
         display: 'flex',
         alignItems: 'center',
-        gap: { xs: 0.5, md: 1 },
-        p: { xs: 0.5, md: 1 },
+        gap: { xs: 1.5, md: 3 }, /* زيادة المسافة بين الأسهم والمحتوى */
+        p: { xs: 1, md: 1.5 }, /* زيادة الحشو الداخلي */
         bgcolor: isDarkMode ? 'grey.800' : 'white',
         borderRadius: 2,
         minWidth: 'fit-content',
-        maxWidth: { xs: '280px', md: 'none' }
+        maxWidth: { xs: '320px', md: 'none' } /* زيادة العرض الأقصى للموبايل */
       }}
     >
       {/* زر الصفحة السابقة */}
