@@ -451,7 +451,7 @@ const HomePage = () => {
                       <IconComponent size={48} strokeWidth={1.5} />
                     </div>
                     <h3 className="text-2xl text-space/70 text-accent font-semibold mb-4">{feature.title}</h3>
-                    <p className="text-base text-chart-4/70 leading-relaxed mb-6">{feature.description}</p>
+                    <p className="text-3xl text-chart-4/70 leading-relaxed mb-6">{feature.description}</p>
                     <div className="absolute bottom-6 left-6 text-[var(--muted-foreground)] transition-all duration-300 flex items-center justify-center w-8 h-8 rounded-full bg-[rgba(52,73,94,0.1)] group-hover:translate-x-[-4px] group-hover:bg-[rgba(52,73,94,0.2)]">
                       <ArrowLeft size={20} strokeWidth={2} />
                     </div>

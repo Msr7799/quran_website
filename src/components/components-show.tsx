@@ -23,6 +23,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "./ui/alert-dialog";
 import { AlertCircle } from "lucide-react";
 import React from "react";
+import { BorderBeam } from "../registry/magicui/border-beam";
 
 const tabs = ["النماذج", "التخطيط", "التنقل", "عرض البيانات", "التغذية الراجعة"];
 
@@ -41,13 +42,13 @@ const ComponentsShow = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+    <div className="min-h-screen bg-gradient-to-br from-neutral-700 to-neutral-800 dark:from-slate-900 dark:to-slate-800">
       <div className="container mx-auto px-4 py-8">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-violet-600 to-indigo-600 bg-clip-text text-transparent mb-2">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-white/80 to-sky-100 bg-clip-text text-transparent mb-2">
             معرض مكونات الواجهة
           </h1>
-          <p className="text-slate-600 dark:text-slate-400">استكشف جميع مكونات الواجهة المتاحة</p>
+          <p className="text-muted/50 dark:text-slate-400">استكشف جميع مكونات الواجهة المتاحة</p>
         </div>
         <ChipTabs selected={selected} setSelected={setSelected} />
         <div className="mt-8">{renderContent()}</div>
@@ -73,7 +74,7 @@ const Chip = ({ text, selected, setSelected }: { text: string; selected: boolean
       className={`${
         selected
           ? "text-white"
-          : "text-slate-600 hover:text-slate-800 hover:bg-slate-200 dark:text-slate-300 dark:hover:text-slate-200 dark:hover:bg-slate-700"
+          : "text-slate-600 hover:text-slate-800 hover:bg-slate-200 dark:text-slate-300 dark:hover:text-slate-200 dark:hover:bg-chart-4"
       } text-sm transition-colors px-4 py-2 rounded-lg relative font-medium`}
     >
       <span className="relative z-10">{text}</span>
@@ -81,7 +82,7 @@ const Chip = ({ text, selected, setSelected }: { text: string; selected: boolean
         <motion.span
           layoutId="pill-tab"
           transition={{ type: "spring", duration: 0.5 }}
-          className="absolute inset-0 z-0 bg-gradient-to-r from-violet-600 to-indigo-600 rounded-lg shadow-lg"
+          className="absolute inset-0 z-0 bg-gradient-to-r from-chart-3 to-indigo-600 rounded-lg shadow-lg"
         />
       )}
     </button>
@@ -200,8 +201,11 @@ const FormComponents = () => (
 );
 
 const LayoutComponents = () => (
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <ComponentCard title="Card" description="بطاقات المحتوى">
+  <div className="relative grid grid-cols-1 md:grid-cols-2 gap-6">
+    <ComponentCard 
+
+    
+    title="Card" description="بطاقات المحتوى">
       <Card>
         <CardHeader>
           <CardTitle>عنوان البطاقة</CardTitle>
@@ -210,10 +214,19 @@ const LayoutComponents = () => (
         <CardContent>
           <p>محتوى البطاقة هنا</p>
         </CardContent>
-        <CardFooter>
-          <Button className="w-full">إجراء</Button>
+        <CardFooter
+        color="!#212121"
+        >
+          <Button className=" relative bg-[#212121] w-full">إجراء
+            <BorderBeam 
+            colorTo= "#ffff"
+            size={80}
+            duration={14}
+            />
+          </Button>
         </CardFooter>
       </Card>
+      <BorderBeam />
     </ComponentCard>
 
     <ComponentCard title="Separator" description="فواصل">
