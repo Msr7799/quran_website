@@ -29,7 +29,8 @@ export default function SignUp() {
       if (result?.error) {
         setError('حدث خطأ أثناء إنشاء الحساب. يرجى المحاولة مرة أخرى.');
       }
-    } catch (error) {
+    } catch (err) {
+      console.error('Sign up error:', err);
       setError('حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.');
     } finally {
       setLoading(false);

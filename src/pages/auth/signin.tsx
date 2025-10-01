@@ -29,7 +29,8 @@ export default function SignIn() {
       if (result?.error) {
         setError('حدث خطأ أثناء تسجيل الدخول. يرجى المحاولة مرة أخرى.');
       }
-    } catch (error) {
+    } catch (err) {
+      console.error('Sign in error:', err);
       setError('حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.');
     } finally {
       setLoading(false);

@@ -1,4 +1,4 @@
-
+import React from "react"
 import { motion, MotionStyle, Transition } from "motion/react"
 
 import { cn } from "../../lib/utils"
@@ -55,8 +55,8 @@ export const BorderBeam = ({
   size = 50,
   delay = 0,
   duration = 6,
-  colorFrom = "#ffaa40",
-  colorTo = "#9c40ff",
+  colorFrom = "#9ca3af",
+  colorTo = "#6b7280",
   transition,
   style,
   reverse = false,

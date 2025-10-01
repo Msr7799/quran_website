@@ -14,6 +14,12 @@ const authOptions = {
   pages: {
     signIn: '/auth/signin',
     error: '/auth/signin',
+    verifyRequest: '/auth/signin',
+  },
+  theme: {
+    logo: '/logo.png',
+    brandColor: '#4F46E5',
+    colorScheme: 'light',
   },
   callbacks: {
     async session({ token, session }) {
