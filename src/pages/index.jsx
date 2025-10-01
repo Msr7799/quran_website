@@ -394,11 +394,11 @@ const HomePage = () => {
 
 
         {/* الإحصائيات */}
-        <section className="py-15 mt-4 bg-[var(--muted)]/20 justfy-center">
+        <section className="md:py-15 mt-4 bg-[var(--muted)]/20 justfy-center">
 
   
-          <div className="max-w-6xl md:mx-80 px-6 md:px-4 justify-center">
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-20 md:grid-cols-2 sm:grid-cols-1 md:gap-4 rounded-xl transition-all duration-400 ">
+          <div className="sm:max-w-2xl md:max-w-6xl px-5 py-5 md:min-w-2xl items-center justify-center">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-10 md:grid-cols-2 sm:grid-cols-1 md:gap-4 rounded-xl transition-all duration-400 ">
               {stats.map((stat, index) => {
                 const IconComponent = stat.icon;
                 return (
@@ -431,7 +431,7 @@ const HomePage = () => {
               </p>
             </div>
             
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-8 md:grid-cols-1 md:gap-4">
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] gap-8 md:grid-cols-1 md:gap-4">
               {features.map((feature, index) => {
                 const IconComponent = feature.icon;
                 return feature.href.startsWith('http') ? (

@@ -21,6 +21,8 @@ const VerticalAccordion = () => {
               title={item.title}
               imgSrc={item.imgSrc}
               description={item.description}
+              downloadUrl={item.downloadUrl}
+              fileSize={item.fileSize}
             />
           );
         })}
@@ -67,7 +69,7 @@ const Panel = ({
           }}
           className="hidden lg:block md:text-2xl  rotate-180"
         >
-          {title}
+          
         </span>
         <span className=" lg:hidden text-xl font-light">{title}</span>
       
@@ -76,6 +78,7 @@ const Panel = ({
         </div>
         <span className="w-4 h-4 bg-black/50 group-hover:bg-muted/30 transition-colors border-r-[1px] border-b-[1px] lg:border-b-0 lg:border-t-[1px] border-slate-200 rotate-45 absolute bottom-0 lg:bottom-[50%] right-[50%] lg:right-0 translate-y-[50%] translate-x-[50%] z-20" />
       </button>
+
 
       <AnimatePresence>
         {isOpen && (
@@ -91,14 +94,19 @@ const Panel = ({
               backgroundSize: "cover",
               cursor: "pointer"
             }}
-            className="w-full h-full overflow-hidden relative bg-black flex items-end hover:scale-102 transition-transform duration-300"
+            className="w-full h-full overflow-hidden relative pb-3 bg-black flex items-end hover:scale-102 transition-transform duration-300 hover:shadow-2xl group"
             onClick={() => {
               if (downloadUrl) {
-                window.open(downloadUrl, '_blank');
+                window.open(downloadUrl, '_blank', 'noopener,noreferrer');
               }
             }}
             title={`اضغط لتحميل ${title}`}
           >
+            {/* أيقونة التحميل */}
+            <div className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <FiDownload className="text-white text-xl" />
+            </div>
+            
             <motion.div
               variants={descriptionVariants}
               initial="closed"
@@ -113,7 +121,7 @@ const Panel = ({
                   onClick={(e) => {
                     e.stopPropagation();
                     if (downloadUrl) {
-                      window.open(downloadUrl, '_blank');
+                      window.open(downloadUrl, '_blank', 'noopener,noreferrer');
                     }
                   }}
                   className="flex items-center gap-2 bg-white/20 hover:bg-black/20 px-3 py-1 rounded-md transition-colors"
