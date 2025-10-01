@@ -22,6 +22,7 @@ import QuranSearchWidget from '../components/QuranSearchWidget';
 import { ShineBorder } from '@/registry/magicui/shine-border';
 import { WordRotate } from  '@registry/magicui/word-rotate';
 import dynamic from 'next/dynamic';
+import LoginButton from '../components/auth/LoginButton';
 
 // تحميل SwipeCarousel ديناميكياً للشاشات الكبيرة فقط (مخفي في الشاشات الصغيرة)
 const SwipeCarousel = dynamic(() => import('../components/SwipCarsouel').then(mod => mod.SwipeCarousel), {
@@ -378,6 +379,11 @@ const HomePage = () => {
     {/* شريط البحث في القرآن */}
     <div className="mb-8 px-4">
       <QuranSearchWidget />
+    </div>
+
+    {/* زر تسجيل الدخول */}
+    <div className="mb-6 px-4">
+      <LoginButton />
     </div>
 
     <div className="flex gap-3 sm:mt-7 md:gap-4 md:flex-col mt-5 items-center sm:flex-col sm:gap-2 justify-center flex-wrap">

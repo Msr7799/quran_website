@@ -13,6 +13,7 @@ import '../styles/loaders.css';
 import AppAppBar from '../components/AppAppBar';
 import Layout from '../components/Layout';
 import Footer from '../components/Footer';
+import AuthProvider from '../components/auth/AuthProvider';
 
 /**
  * المكون الأساسي للتطبيق
@@ -42,12 +43,13 @@ export default function MyApp({ Component, pageProps }) {
   }, []);
 
   return (
-    <ThemeProvider
-      defaultTheme="system"
-      enableSystem
-      disableTransitionOnChange={false}
-    >
-      <Head>
+    <AuthProvider session={pageProps.session}>
+      <ThemeProvider
+        defaultTheme="system"
+        enableSystem
+        disableTransitionOnChange={false}
+      >
+        <Head>
         {/* Meta tags للـ SEO */}
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         <meta name="description" content="موقع القرآن الكريم - اقرأ واستمع للقرآن الكريم بجودة عالية" />
@@ -197,6 +199,7 @@ export default function MyApp({ Component, pageProps }) {
           }
         }
       `}</style>
-    </ThemeProvider>
+      </ThemeProvider>
+    </AuthProvider>
   );
 }
