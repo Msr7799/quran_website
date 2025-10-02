@@ -334,7 +334,7 @@ const HomePage = () => {
                 href="/quran-reader?page=1" 
                 className="group relative w-full sm:w-auto px-8 py-4 text-lg md:text-xl font-bold rounded-xl transition-all duration-300 bg-gradient-to-br from-[#4a5568] via-[#2d3748] to-[#1a202c] hover:from-[#5a6578] hover:via-[#4a5568] hover:to-[#2d3748] text-white shadow-2xl shadow-black/40 hover:shadow-[0_20px_40px_rgba(0,0,0,0.6)] hover:scale-105 hover:-translate-y-1 border border-[#606060]/30 hover:border-[#707070]/50 overflow-hidden"
               >
-                <span>تفسير القرآن أيه بآيه</span>
+                <span>تفسير القرآن آيه بآيه</span>
                 {/* TOP - الخط العلوي */}
                 <span className="absolute left-0 top-0 h-[1px] w-0 border-t-2 border-white/60 transition-all duration-200 group-hover:w-full" />
                 {/* RIGHT - الخط الأيمن */}
@@ -374,13 +374,13 @@ const HomePage = () => {
                     key={index} 
                     className="relative group"
                   >
-                    <div className="relative bg-gradient-to-br from-[#252525]/80 via-[#252526]/80 to-[#22262d]/80 backdrop-blur-md rounded-2xl p-6 md:p-8 border-2 border-[#3e3e42]/30 shadow-xl hover:shadow-2xl hover:shadow-[#565656]/20 transition-all duration-300 hover:scale-105 hover:border-[#565656]/40">
+                    <div className="relative bg-gradient-to-br from-[#252525]/80 via-[#252526]/80 to-[#22262d]/80 backdrop-blur-md rounded-2xl p-6 md:p-8 border-2 border-[#3e3e42]/30 shadow-xl hover:shadow-2xl hover:shadow-[#565656]/20 ">
                       <ShineBorder
                         shineColor={["#565656", "#25344e", "#a28c8b"]}
                         borderWidth={1}
                         duration={12}
                       />
-                      <div className="mb-4 text-[#a28c8b]/90 flex justify-center items-center transition-all duration-300 group-hover:scale-110 group-hover:text-[#565656]">
+                      <div className="mb-4 text-chart-10 flex justify-center items-center  group-hover:text-chart-20">
                         <IconComponent size={48} strokeWidth={1.5} className="drop-shadow-lg" />
                       </div>
                       <div className="text-4xl md:text-5xl font-bold text-white mb-2 drop-shadow-lg">
@@ -401,10 +401,10 @@ const HomePage = () => {
         <section className="relative z-10 py-16 md:py-20 px-4 md:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-12 md:mb-16">
-              <h2 className="text-4xl md:text-5xl pb-5 font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#f9f9f9] via-[#f9f9f9] to-[#25344e] mb-4 drop-shadow-xl">
+              <h2 className="text-3xl md:text-4xl pb-5 font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#f9f9f9] via-[#f9f9f9] to-[#25344e] mb-4 drop-shadow-xl">
                 ميزات الموقع
               </h2>
-              <p className="text-lg md:text-xl text-[#cccccc]/70 max-w-2xl mx-auto">
+              <p className="text-xl md:text-2xl text-chart-10 max-w-2xl mx-auto">
                 اكتشف جميع الخدمات التي يوفرها موقع القرآن الكريم
               </p>
             </div>
@@ -436,10 +436,10 @@ const HomePage = () => {
                       >
                         <IconComponent size={32} strokeWidth={1.5} className="sm:w-10 sm:h-10" />
                       </div>
-                      <h3 className="text-xl sm:text-2xl lg:text-2xl font-bold mb-3 sm:mb-4 text-white group-hover:text-[#a28c8b] transition-colors text-center">
+                      <h3 className="text-2xl sm:text-2xl lg:text-2xl font-bold mb-3 sm:mb-4 text-white group-hover:text-chart-20 transition-colors text-center">
                         {feature.title}
                       </h3>
-                      <p className="text-2xl text-chart-4 leading-relaxed text-center">
+                      <p className="text-xl text-chart-10 leading-relaxed text-center">
                         {feature.description}
                       </p>
                       <div className="mt-4 sm:mt-6 flex items-center justify-center text-[#565656] group-hover:text-[#a28c8b] transition-all duration-300 group-hover:translate-x-[-8px]">
