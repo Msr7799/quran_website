@@ -327,12 +327,12 @@ const HomePage = () => {
             <div className="mb-6 bg-[#252525]/90 rounded-2xl p-6 md:p-8 border-2 border-[#565656]/30 shadow-2xl shadow-[#565656]/10 md:mb-8 px-2 md:px-4">
               <LoginButton />
             </div>
-            <div className="mb-6 flex flex-col sm:flex-row lg:flex-row gap-4 md:gap-6 items-center justify-center">
+            <div className="mb-6 flex flex-col arabic-font sm:flex-row lg:flex-row gap-4 md:gap-6 items-center justify-center">
               <DrawOutlineButton>ابدأ التصفح</DrawOutlineButton>
               
               <Link 
                 href="/quran-reader?page=1" 
-                className="group relative w-full sm:w-auto px-8 py-4 text-lg md:text-xl font-bold rounded-xl transition-all duration-300 bg-gradient-to-br from-[#4a5568] via-[#2d3748] to-[#1a202c] hover:from-[#5a6578] hover:via-[#4a5568] hover:to-[#2d3748] text-white shadow-2xl shadow-black/40 hover:shadow-[0_20px_40px_rgba(0,0,0,0.6)] hover:scale-105 hover:-translate-y-1 border border-[#606060]/30 hover:border-[#707070]/50 overflow-hidden"
+                className="group relative w-full arabic-font sm:w-auto px-8 py-4 text-lg md:text-xl font-bold rounded-xl transition-all duration-300 bg-gradient-to-br from-[#4a5568] via-[#2d3748] to-[#1a202c] hover:from-[#5a6578] hover:via-[#4a5568] hover:to-[#2d3748] text-white shadow-2xl shadow-black/40 hover:shadow-[0_20px_40px_rgba(0,0,0,0.6)] hover:scale-105 hover:-translate-y-1 border border-[#606060]/30 hover:border-[#707070]/50 overflow-hidden"
               >
                 <span>تفسير القرآن آيه بآيه</span>
                 {/* TOP - الخط العلوي */}
@@ -347,11 +347,11 @@ const HomePage = () => {
               
               <Link 
                 href="/quran-sound" 
-                className="group relative w-full sm:w-auto px-8 py-4 text-lg md:text-xl font-bold rounded-xl transition-all duration-300 bg-gradient-to-br from-[#4a5568] via-[#2d3748] to-[#1a202c] hover:from-[#5a6578] hover:via-[#4a5568] hover:to-[#2d3748] text-white shadow-2xl shadow-black/40 hover:shadow-[0_20px_40px_rgba(0,0,0,0.6)] hover:scale-105 hover:-translate-y-1 border border-[#606060]/30 hover:border-[#707070]/50 overflow-hidden"
+                className="group relative w-full sm:w-auto px-8  py-4 text-lg md:text-xl font-bold rounded-xl transition-all duration-300 bg-gradient-to-br from-[#4a5568] via-[#2d3748] to-[#1a202c] hover:from-[#5a6578] hover:via-[#4a5568] hover:to-[#2d3748] text-white shadow-2xl shadow-black/40 hover:shadow-[0_20px_40px_rgba(0,0,0,0.6)] hover:scale-105 hover:-translate-y-1 border border-[#606060]/30 hover:border-[#707070]/50 overflow-hidden"
               >
                 <span>استمع الآن</span>
                 {/* TOP - الخط العلوي */}
-                <span className="absolute left-0 top-0 h-[1px] w-0 border-t-2 border-white/60 transition-all duration-200 group-hover:w-full" />
+                <span className="absolute left-0 top-0 h-[1px]  w-0 border-t-2 border-white/60 transition-all duration-200 group-hover:w-full" />
                 {/* RIGHT - الخط الأيمن */}
                 <span className="absolute right-0 top-0 h-0 w-[1px] border-r-2 border-white/60 transition-all delay-100 duration-200 group-hover:h-full" />
                 {/* BOTTOM - الخط السفلي */}
@@ -436,13 +436,13 @@ const HomePage = () => {
                       >
                         <IconComponent size={32} strokeWidth={1.5} className="sm:w-10 sm:h-10" />
                       </div>
-                      <h3 className="text-2xl sm:text-2xl lg:text-2xl font-bold mb-3 sm:mb-4 text-white group-hover:text-chart-20 transition-colors text-center">
+                      <h3 className="text-2xl sm:text-2xl lg:text-2xl font-bold mb-3 sm:mb-4 text-white group-hover:text-chart-4 transition-colors text-center">
                         {feature.title}
                       </h3>
-                      <p className="text-xl text-chart-10 leading-relaxed text-center">
+                      <p className="text-xl text-chart-10 leading-relaxed text-bold text-center arabic-font">
                         {feature.description}
                       </p>
-                      <div className="mt-4 sm:mt-6 flex items-center justify-center text-[#565656] group-hover:text-[#a28c8b] transition-all duration-300 group-hover:translate-x-[-8px]">
+                      <div className="mt-4 sm:mt-6 flex items-center justify-center text-[#565656] group-hover:text-chart-16 transition-all duration-300 group-hover:translate-x-[-8px] arabic-font">
                         <ArrowLeft size={20} strokeWidth={2} className="sm:w-6 sm:h-6" />
                         <span className="mr-2 font-semibold text-sm sm:text-base">اكتشف المزيد</span>
                       </div>
@@ -472,7 +472,7 @@ const HomePage = () => {
               </Link>
               <Link 
                 href="/about" 
-                className="w-full sm:w-auto px-10 py-5 text-xl md:text-2xl font-bold rounded-xl transition-all duration-300 bg-transparent border-2 border-[#565656] hover:bg-[#565656]/10 text-[#a28c8b] hover:text-white shadow-lg hover:shadow-xl hover:scale-105"
+                className="w-full sm:w-auto px-10 py-5 text-xl md:text-2xl font-bold rounded-xl transition-all duration-300 bg-transparent border-2 border-chart-10 bg-chart-17 text-chart-10 hover:bg-chart-17 shadow-lg hover:shadow-xl hover:scale-105"
               >
                 اعرف المزيد
               </Link>

@@ -14,6 +14,15 @@
   font-display: swap;
 }
 
+/* إضافة الخط العربي الجديد */
+@font-face {
+  font-family: 'Arabic Font';
+  src: url('./fonts/arabic-font.ttf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.13 0.028 261.692);
@@ -362,4 +371,11 @@ body {
 [lang="en"], .ltr {
   direction: ltr;
   text-align: left;
+}
+
+/* كلاس للخط العربي الجديد */
+.arabic-font {
+  font-family: 'Arabic Font', 'Uthmanic Hafs', 'Amiri', 'Traditional Arabic', 'Noto Sans Arabic', 'Arial', sans-serif;
+  font-weight: normal;
+  text-rendering: optimizeLegibility;
 }
