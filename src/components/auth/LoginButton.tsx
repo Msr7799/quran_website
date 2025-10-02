@@ -7,18 +7,18 @@ export default function LoginButton() {
 
   if (status === "loading") {
     return (
-      <div className="flex items-center justify-center p-4">
+      <div className="flex  items-center justify-center p-4">
         <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
-        <span className="mr-2 text-sm text-gray-600">جاري التحميل...</span>
+        <span className="mr-2 text-md text-gray-100">جاري التحميل...</span>
       </div>
     );
   }
 
   if (session) {
     return (
-      <div className="flex items-center space-x-4 rtl:space-x-reverse bg-green-50 p-4 rounded-lg">
+      <div className="flex  items-center space-x-4 rtl:space-x-reverse bg-green-50 p-4 rounded-lg">
         <div className="flex-1">
-          <p className="text-sm font-medium text-gray-900">
+          <p className="text-sm font-medium text-gray-100">
             أهلاً وسهلاً، {session.user?.name || 'المستخدم'}
           </p>
           <p className="text-xs text-gray-600">{session.user?.email}</p>
@@ -43,11 +43,11 @@ export default function LoginButton() {
   }
 
   return (
-    <div className="bg-blue-50 p-4 rounded-lg text-center">
+    <div className="bg-[#363636] p-10 rounded-lg text-center">
       <p className="text-sm text-gray-600 mb-3">لم تسجل دخولك بعد</p>
       <button 
         onClick={() => signIn('google')}
-        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md text-sm font-medium transition-colors flex items-center justify-center mx-auto space-x-2 rtl:space-x-reverse"
+        className="bg-green-700 my-4 py-4 mt-7 hover:bg-blue-700 text-white px-6 py-2 rounded-md text-sm font-medium transition-colors flex items-center justify-center mx-auto space-x-2 rtl:space-x-reverse"
       >
         <svg className="w-4 h-4" viewBox="0 0 24 24">
           <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>

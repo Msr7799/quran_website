@@ -25,6 +25,8 @@ import {
 
 // Import TafseerPopup component
 import TafseerPopup from '../components/AudioPlayer/tafseer_popup.js';
+import DropDownButton from '../components/ui/animate-ui/primitives/buttons/dropdown-button.tsx';
+import { CopyButton } from '../components/ui/animate-ui/primitives/buttons/copy.tsx';
 export default function QuranReader() {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
@@ -41,6 +43,35 @@ export default function QuranReader() {
   const [showTranslation, setShowTranslation] = useState(false);
   const [translationLanguage, setTranslationLanguage] = useState('english');
   const [verseTranslations, setVerseTranslations] = useState({});
+
+  // خيارات اللغات للدروب داون
+  const languageOptions = [
+    { value: 'english', label: 'English' },
+    { value: 'urdu', label: 'اردو' },
+    { value: 'bengali', label: 'বাংলা' }
+  ];
+
+  // خيارات القراء للدروب داون
+  const reciterOptions = [
+    { value: '1', label: 'مشاري العفاسي' },
+    { value: '2', label: 'أبو بكر الشاطري' },
+    { value: '3', label: 'ناصر القطامي' },
+    { value: '4', label: 'ياسر الدوسري' },
+    { value: '5', label: 'هاني الرفاعي' }
+  ];
+
+  // تحديد الخط المناسب حسب اللغة
+  const getFontForLanguage = (language) => {
+    switch (language) {
+      case 'urdu':
+        return 'font-["Noto_Sans_Urdu",_serif]';
+      case 'bengali':
+        return 'font-["Noto_Sans_Bengali",_serif]';
+      case 'english':
+      default:
+        return 'font-["Inter",_sans-serif]';
+    }
+  };
   const audioRef = useRef(null);
   const [showSearch, setShowSearch] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -261,11 +292,18 @@ export default function QuranReader() {
     }
   };
 
-  // 📋 نسخ النص
-  const copyVerseText = (text) => {
-    navigator.clipboard.writeText(text);
-    // يمكن إضافة toast notification هنا
+  // 🎵 التحكم في التشغيل/الإيقاف
+  const toggleAudio = async (surahNo, ayahNo) => {
+    if (isPlaying && audioRef.current) {
+      // إيقاف الصوت
+      audioRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      // تشغيل الصوت
+      await playVerseAudio(surahNo, ayahNo);
+    }
   };
+
 
   // 👆 التعامل مع النقر على الآية
   const handleVerseClick = (verse) => {
@@ -667,8 +705,8 @@ export default function QuranReader() {
                     <label className="text-base text-gray-300">إظهار أرقام الآيات</label>
                     <button
                       onClick={() => setShowVerseNumbers(!showVerseNumbers)}
-                      className={`flex items-center gap-2 px-3 py-2 rounded transition-colors ${
-                        showVerseNumbers ? 'bg-green-600' : 'bg-gray-600'
+                      className={`flex items-center gap-2 px-3 py-2 m-2 border-2 border-chart-13 shadow-md shadow-chart-17 rounded transition-colors ${
+                        showVerseNumbers ? 'bg-chart-18' : 'bg-chart-19'
                       }`}
                     >
                       {showVerseNumbers ? <Eye size={16} /> : <EyeOff size={16} />}
@@ -681,8 +719,8 @@ export default function QuranReader() {
                     <label className="text-base text-gray-300">تمييز عند التمرير</label>
                     <button
                       onClick={() => setHighlightOnHover(!highlightOnHover)}
-                      className={`flex items-center gap-2 px-3 py-2 rounded transition-colors ${
-                        highlightOnHover ? 'bg-purple-600' : 'bg-gray-600'
+                      className={`flex items-center shadow-md shadow-[#000] border-2 border-chart-17  gap-2 px-3 py-2 m-3 rounded transition-colors ${
+                        highlightOnHover ? 'bg-chart-13' : 'bg-gray-600'
                       }`}
                     >
                       <Palette size={16} />
@@ -692,8 +730,8 @@ export default function QuranReader() {
                 </div>
 
                 {/* Keyboard Shortcuts Info */}
-                <div className="mt-4 p-3 bg-chart-4 rounded-lg">
-                  <h4 className="text-sm font-bold text-gray-300 mb-2 flex items-center gap-2">
+                <div className="mt-4 p-3  rounded-lg">
+                  <h4 className="text-sm font-bold text-chart-10 mb-2 flex items-center gap-2">
                     <Keyboard size={16} />
                     اختصارات لوحة المفاتيح
                   </h4>
@@ -708,70 +746,63 @@ export default function QuranReader() {
 
         <div className="flex max-w-7xl mx-auto">
           {/* Sidebar - Desktop */}
-          <aside className={`hidden lg:block w-80 bg-neutral-900 min-h-screen border-r border-neutral-700 p-4`}>
+          <aside className={`hidden lg:block w-80 bg-[#1a1a1a] min-h-screen border-r border-[#333333] mb-2 p-5`}>
             <div className="space-y-6">
-              
-              {/* 🎵 قسم الآية المختارة - Desktop */}
+                            {/* 🎵 قسم الآية المختارة - Desktop */}
               {selectedVerse && (
-                <div className="bg-neutral-700 rounded-lg p-4 border border-neutral-700">
-                  <h4 className="text-base font-semibold text-gray-300 mb-3 flex items-center">
-                    <Book size={16} className="mr-2 text-green-400" />
+                <div className="bg-[#343434] rounded-lg p-4 border border-[#262626]">
+                  <h4 className="text-lg font-semibold text-white mb-3 flex items-center">
+                    <Book size={16} className="mr-2 text-[var(--chart-10)]"/>
                     الآية المختارة
                   </h4>
                   
                   {/* أزرار التحكم */}
-                  <div className="grid grid-cols-2 gap-2 mb-4">
+                  <div className="grid grid-cols-2 gap-3 pb-6">
                     {/* نسخ النص */}
-                    <button
-                      onClick={() => {
-                        const verseKey = selectedVerse;
-                        const verse = pageData?.lines
-                          ?.flatMap(line => line.verses)
-                          ?.find(v => `${v.surahNo}:${v.ayahNo}` === verseKey);
-                        if (verse) copyVerseText(verse.text);
-                      }}
-                      className="flex items-center justify-center p-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
-                      title="نسخ النص"
-                    >
-                      <Copy size={14} className="text-blue-400 mr-1" />
-                      <span className="text-base text-gray-300">نسخ</span>
-                    </button>
+                    <div className="flex items-center justify-center p-1 rounded-lg transition-all duration-300 border-transparent" title="نسخ النص">
+                      <CopyButton
+                        content={(() => {
+                          const verseKey = selectedVerse;
+                          const verse = pageData?.lines
+                            ?.flatMap(line => line.verses)
+                            ?.find(v => `${v.surahNo}:${v.ayahNo}` === verseKey);
+                          return verse ? verse.text : '';
+                        })()}
+                        variant="ghost"
+                        size="sm"
+                        className="text-chart-10 bg-chart-17 hover:bg-chart-13 hover:text-chart-18 py-6 px-8 "
+                      />
+                    </div>
 
                     {/* تشغيل الصوت */}
-                    <button
-                      onClick={() => {
-                        if (typeof selectedVerse === 'string') {
-                          const [surahNo, ayahNo] = selectedVerse.split(':').map(Number);
-                          playVerseAudio(surahNo, ayahNo);
+                    <div className="items-center justify-center rounded-lg transition-all duration-300 border-transparent" title="تشغيل الصوت">
+                      <button
+                        onClick={() => {
+                          if (typeof selectedVerse === 'string') {
+                            const [surahNo, ayahNo] = selectedVerse.split(':').map(Number);
+                            toggleAudio(surahNo, ayahNo);
+                          }
+                        }}
+                        className="flex items-center justify-center bg-chart-13 !px-6 !py-6 rounded-lg transition-all duration-300 border border-transparent hover:border-[var(--chart-10)]/30 text-white px-6 py-8"
+                      >
+                        {isPlaying ? 
+                          <Pause size={18} className="text-chart-20" /> : 
+                          <Play size={18} className="text-chart-18" />
                         }
-                      }}
-                      className="flex items-center justify-center p-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
-                      title="تشغيل الصوت"
-                    >
-                      {isPlaying ? 
-                        <Pause size={14} className="text-green-400 mr-1" /> : 
-                        <Play size={14} className="text-green-400 mr-1" />
-                      }
-                      <span className="text-base text-gray-300">
-                        {isPlaying ? 'إيقاف' : 'تشغيل'}
-                      </span>
-                    </button>
+                      </button>
+                    </div>
                   </div>
 
                   {/* اختيار القارئ */}
                   <div className="mb-4">
-                    <label className="block text-base text-gray-400 mb-1">القارئ</label>
-                    <select
+                    <label className="block text-base text-white mb-2">القارئ</label>
+                    <DropDownButton
+                      options={reciterOptions}
                       value={currentReciter}
-                      onChange={(e) => setCurrentReciter(e.target.value)}
-                      className="w-full bg-gray-700 text-white text-sm rounded px-2 py-1 border border-gray-600"
-                    >
-                      <option value="1">مشاري العفاسي</option>
-                      <option value="2">أبو بكر الشاطري</option>
-                      <option value="3">ناصر القطامي</option>
-                      <option value="4">ياسر الدوسري</option>
-                      <option value="5">هاني الرفاعي</option>
-                    </select>
+                      onChange={(value) => setCurrentReciter(value)}
+                      placeholder="اختر القارئ"
+                      className="w-full bg-[var(--chart-17)]"
+                    />
                   </div>
 
                   {/* زر الترجمة */}
@@ -785,41 +816,38 @@ export default function QuranReader() {
                         }
                       }
                     }}
-                    className={`w-full flex items-center justify-center p-2 rounded-lg transition-colors ${
+                    className={`w-full flex items-center bg-chart-17 justify-center p-3 rounded-lg transition-all duration-300 border ${
                       showTranslation 
-                        ? 'bg-yellow-600 hover:bg-yellow-700 text-white' 
-                        : 'bg-gray-700 hover:bg-gray-600 text-gray-300'
+                        ? 'bg-[#3a3a3a] hover:bg-chart-13 text-white border-[var(--chart-13)]' 
+                        : 'bg-[#262626] hover:bg-[#3a3a] text-white border-transparent hover:border-[var(--chart-18)]/30'
                     }`}
                   >
                     <Languages size={14} className="mr-1" />
-                    <span className="text-sm">
+                    <span className="text-md">
                       {showTranslation ? 'إخفاء الترجمة' : 'عرض الترجمة'}
                     </span>
                   </button>
 
                   {/* عرض الترجمة */}
                   {showTranslation && (
-                    <div className="mt-4 bg-gray-700 rounded-lg p-3">
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="text-base text-gray-400">الترجمة</span>
-                        <select
+                    <div className="mt-4 bg-[#3a3a3a] shadow-md shadow-chart-17 rounded-lg p-4 border border-[#444444]">
+                      <div className="flex justify-between items-center mb-3">
+                        <span className="text-base text-white font-medium">الترجمة</span>
+                        <DropDownButton
+                          options={languageOptions}
                           value={translationLanguage}
-                          onChange={(e) => setTranslationLanguage(e.target.value)}
-                          className="bg-gray-600 text-white text-sm rounded px-1 py-0.5"
-                        >
-                          <option value="english">English</option>
-                          <option value="urdu">اردو</option>
-                          <option value="bengali">বাংলা</option>
-                        </select>
+                          onChange={(value) => setTranslationLanguage(value)}
+                          className="bg-[var(--chart-17)]"
+                        />
                       </div>
-                      <p className="text-base text-gray-200 leading-relaxed">
+                      <p className={`text-sm text-[#cccccc] leading-relaxed ${getFontForLanguage(translationLanguage)}`}>
                         {verseTranslations[selectedVerse] 
                           ? verseTranslations[selectedVerse][translationLanguage] 
                           : 'جاري تحميل الترجمة...'}
                       </p>
                       {!verseTranslations[selectedVerse] && (
-                        <div className="text-base text-gray-400 mt-2">
-                          <div className="animate-pulse">🔄 جاري الاتصال بـ QuranAPI...</div>
+                        <div className="text-sm text-[#999999] mt-2">
+                          <div className="animate-pulse">🔄 loading...</div>
                         </div>
                       )}
                     </div>
@@ -828,24 +856,24 @@ export default function QuranReader() {
               )}
 
               {/* نمط العرض */}
-              <div className="bg-neutral-700 rounded-lg p-4 border border-gray-700">
-                <h3 className="font-bold text-gray-300 mb-4 text-center">نمط العرض</h3>
+              <div className="bg-[#343434] rounded-lg p-4 border border-[#262626]">
+                <h3 className="font-bold text-white mb-4 text-center">نمط العرض</h3>
                 
                 {/* خيارات النمط */}
                 <div className="space-y-3">
                   <div className="grid grid-cols-2 gap-2">
                     <button 
                       onClick={() => setLineSpacing(1.4)}
-                      className={`py-2 px-3 rounded-lg text-sm transition-colors ${
-                        lineSpacing <= 1.5 ? 'bg-gray-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                      className={`py-2 px-3 rounded-lg text-sm transition-all duration-300 border ${
+                        lineSpacing <= 1.5 ? 'bg-[var(--chart-10)] text-white border-[var(--chart-10)]' : 'bg-[#262626] text-white border-transparent hover:bg-[#3a3a3a] hover:border-[var(--chart-10)]/30'
                       }`}
                     >
                       فقرة واحدة
                     </button>
                     <button 
                       onClick={() => setLineSpacing(2.0)}
-                      className={`py-2 px-3 rounded-lg text-sm transition-colors ${
-                        lineSpacing > 1.5 ? 'bg-gray-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                      className={`py-2 px-3 rounded-lg text-sm transition-all duration-300 border ${
+                        lineSpacing > 1.5 ? 'bg-[#311111] text-white border-[#221111]' : 'bg-[#262626] text-white border-transparent hover:bg-[#3a3a3a] hover:border-[#221111]/30'
                       }`}
                     >
                       أسطر متباعدة
@@ -855,16 +883,16 @@ export default function QuranReader() {
                   <div className="grid grid-cols-2 gap-2">
                     <button 
                       onClick={() => setShowVerseNumbers(true)}
-                      className={`py-2 px-3 rounded-lg text-sm transition-colors ${
-                        showVerseNumbers ? 'bg-gray-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                      className={`py-2 px-3 rounded-lg text-sm transition-all duration-300 border ${
+                        showVerseNumbers ? 'bg-[var(--chart-10)] text-white border-[var(--chart-10)]' : 'bg-[#262626] text-white border-transparent hover:bg-[#3a3a3a] hover:border-[var(--chart-10)]/30'
                       }`}
                     >
                       خط أسود
                     </button>
                     <button 
                       onClick={() => setShowVerseNumbers(false)}
-                      className={`py-2 px-3 rounded-lg text-sm transition-colors ${
-                        !showVerseNumbers ? 'bg-gray-600 text-white' : 'bg-chart-4 text-gray-800 hover:bg-gray-600'
+                      className={`py-2 px-3 rounded-lg text-sm transition-all duration-300 border ${
+                        !showVerseNumbers ? 'bg-[var(--chart-10)] text-white border-[var(--chart-10)]' : 'bg-[#262626] text-white border-transparent hover:bg-[#3a3a3a] hover:border-[var(--chart-10)]/30'
                       }`}
                     >
                       ملون (تجويد)
@@ -874,8 +902,8 @@ export default function QuranReader() {
               </div>
 
               {/* انتقال سريع */}
-              <div className="bg-neutral-700 rounded-lg p-4 border border-gray-700">
-                <h3 className="font-bold text-gray-300 mb-4 text-center">انتقال سريع</h3>
+              <div className="bg-[#343434] rounded-lg p-4 border border-[#262626]">
+                <h3 className="font-bold text-white mb-4 text-center">انتقال سريع</h3>
                 
                 {/* شريط البحث */}
                 <div className="mb-4">
@@ -964,7 +992,7 @@ export default function QuranReader() {
                   return (
                     <div key={item.id} className="mb-6 mt-8 first:mt-0">
                       <div className="text-center">
-                        <div className="inline-flex items-center justify-center bg-transparent border border-gray-700 backdrop-blur-sm bg-gradient-to-r from-chart-2 to-chart-3 text-white px-6 py-1 rounded-sm shadow-lg">
+                        <div className="inline-flex items-center justify-center bg-chart-17 border border-gray-700 backdrop-blur-sm text-white px-6 py-1 rounded-sm shadow-lg">
                           <div className="text-right">
                             <div className="md:text-2xl text-xl font-semibold">{item.surahInfo.name.ar}</div>
                             <div className="text-base opacity-90">{item.surahInfo.name.en}</div>
@@ -1008,7 +1036,7 @@ export default function QuranReader() {
                                 : 'text-gray-100'
                           } ${
                             searchResults.some(r => r.id === verse.id) 
-                              ? 'bg-yellow-600/20 border border-yellow-500/50' 
+                              ? 'bg-chart-17 ' 
                               : ''
                           } ${
                             selectedVerse === `${verse.surahNo}:${verse.ayahNo}` 
@@ -1071,75 +1099,69 @@ export default function QuranReader() {
         {showSidebar && (
           <div className="lg:hidden fixed inset-0 z-50">
             <div className="absolute inset-0 bg-black/50" onClick={() => setShowSidebar(false)}></div>
-            <div className="absolute left-0 top-0 h-full w-80 bg-gray-900 p-4 overflow-y-auto">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-bold text-gray-100">القائمة</h3>
-                <button onClick={() => setShowSidebar(false)} className="text-gray-400 hover:text-gray-200">
+            <div className="absolute left-0 top-0 h-full w-80 bg-[#1a1a1a] p-5 overflow-y-auto border-r border-[#333333]">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="font-bold text-white">القائمة</h3>
+                <button onClick={() => setShowSidebar(false)} className="text-white hover:text-[var(--chart-10)] transition-colors">
                   <X size={20} />
                 </button>
               </div>
               
               {/* 🎵 قسم الآية المختارة */}
               {selectedVerse && (
-                <div className="bg-neutral-700 rounded-lg p-4 border border-gray-700">
-                  <h4 className="text-base font-semibold text-gray-300 mb-3 flex items-center">
-                    <Book size={16} className="mr-2 text-green-400" />
+                <div className="bg-[#343434] rounded-lg p-4 border border-[#262626] mb-6">
+                  <h4 className="text-lg font-semibold text-white mb-3 flex items-center">
+                    <Book size={16} className="mr-2 text-[var(--chart-10)]" />
                     الآية المختارة
                   </h4>
                   
                   {/* أزرار التحكم */}
-                  <div className="grid grid-cols-2 gap-2 mb-4">
+                  <div className="grid grid-cols-2 gap-3 pb-6">
                     {/* نسخ النص */}
-                    <button
-                      onClick={() => {
-                        const verseKey = selectedVerse;
-                        const verse = pageData?.lines
-                          ?.flatMap(line => line.verses)
-                          ?.find(v => `${v.surahNo}:${v.ayahNo}` === verseKey);
-                        if (verse) copyVerseText(verse.text);
-                      }}
-                      className="flex items-center justify-center p-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
-                      title="نسخ النص"
-                    >
-                      <Copy size={14} className="text-blue-400 mr-1" />
-                      <span className="text-base text-gray-300">نسخ</span>
-                    </button>
+                    <div className="flex items-center justify-center  rounded-lg transition-all duration-300 border border-transparent  " title="نسخ النص">
+                      <CopyButton
+                        content={(() => {
+                          const verseKey = selectedVerse;
+                          const verse = pageData?.lines
+                            ?.flatMap(line => line.verses)
+                            ?.find(v => `${v.surahNo}:${v.ayahNo}` === verseKey);
+                          return verse ? verse.text : '';
+                        })()}
+                        variant="ghost"
+                        size="lg"
+                        className="text-[var(--chart-10)] py-6 px-8 bg-chart-17 hover:bg-chart-13 hover:text-chart-18"
+                      />
+                    </div>
 
                     {/* تشغيل الصوت */}
-                    <button
-                      onClick={() => {
-                        if (typeof selectedVerse === 'string') {
-                          const [surahNo, ayahNo] = selectedVerse.split(':').map(Number);
-                          playVerseAudio(surahNo, ayahNo);
+                    <div className="flex items-center  justify-center rounded-lg transition-all duration-300 border-transparent" title="تشغيل الصوت">
+                      <button
+                        onClick={() => {
+                          if (typeof selectedVerse === 'string') {
+                            const [surahNo, ayahNo] = selectedVerse.split(':').map(Number);
+                            toggleAudio(surahNo, ayahNo);
+                          }
+                        }}
+                        className=" items-center justify-center !px-6 !py-5 bg-chart-13 rounded-lg transition-all duration-300 border border-transparent hover:border-[var(--chart-10)]/30 text-white px-6 py-8"
+                      >
+                        {isPlaying ? 
+                          <Pause size={18} className="text-chart-20" /> : 
+                          <Play size={18} className="text-chart-18" />
                         }
-                      }}
-                      className="flex items-center justify-center p-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
-                      title="تشغيل الصوت"
-                    >
-                      {isPlaying ? 
-                        <Pause size={14} className="text-green-400 mr-1" /> : 
-                        <Play size={14} className="text-green-400 mr-1" />
-                      }
-                      <span className="text-base text-gray-300">
-                        {isPlaying ? 'إيقاف' : 'تشغيل'}
-                      </span>
-                    </button>
+                      </button>
+                    </div>
                   </div>
 
                   {/* اختيار القارئ */}
                   <div className="mb-4">
-                    <label className="block text-base text-gray-400 mb-1">القارئ</label>
-                    <select
+                    <label className="block text-base text-white mb-2">القارئ</label>
+                    <DropDownButton
+                      options={reciterOptions}
                       value={currentReciter}
-                      onChange={(e) => setCurrentReciter(e.target.value)}
-                      className="w-full bg-gray-700 text-white text-sm rounded px-2 py-1 border border-gray-600"
-                    >
-                      <option value="1">مشاري العفاسي</option>
-                      <option value="2">أبو بكر الشاطري</option>
-                      <option value="3">ناصر القطامي</option>
-                      <option value="4">ياسر الدوسري</option>
-                      <option value="5">هاني الرفاعي</option>
-                    </select>
+                      onChange={(value) => setCurrentReciter(value)}
+                      placeholder="اختر القارئ"
+                      className="w-full bg-[var(--chart-17)]"
+                    />
                   </div>
 
                   {/* زر الترجمة */}
@@ -1153,10 +1175,10 @@ export default function QuranReader() {
                         }
                       }
                     }}
-                    className={`w-full flex items-center justify-center p-2 rounded-lg transition-colors ${
+                    className={`w-full flex items-center justify-center p-3 rounded-lg transition-all duration-300 border ${
                       showTranslation 
-                        ? 'bg-yellow-600 hover:bg-yellow-700 text-white' 
-                        : 'bg-gray-700 hover:bg-gray-600 text-gray-300'
+                        ? 'bg-[var(--chart-18)] hover:bg-[var(--chart-18)]/80 text-white border-[var(--chart-18)]' 
+                        : 'bg-[#262626] hover:bg-[#3a3a3a] text-white border-transparent hover:border-[var(--chart-18)]/30'
                     }`}
                   >
                     <Languages size={14} className="mr-1" />
@@ -1167,26 +1189,23 @@ export default function QuranReader() {
 
                   {/* عرض الترجمة */}
                   {showTranslation && (
-                    <div className="mt-4 bg-gray-700 rounded-lg p-3">
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="text-base text-gray-400">الترجمة</span>
-                        <select
+                    <div className="mt-4 bg-[#2a2a2a] rounded-lg p-4 border border-[#444444]">
+                      <div className="flex justify-between items-center mb-3">
+                        <span className="text-base text-white font-medium">الترجمة</span>
+                        <DropDownButton
+                          options={languageOptions}
                           value={translationLanguage}
-                          onChange={(e) => setTranslationLanguage(e.target.value)}
-                          className="bg-gray-600 text-white text-sm rounded px-1 py-0.5"
-                        >
-                          <option value="english">English</option>
-                          <option value="urdu">اردو</option>
-                          <option value="bengali">বাংলা</option>
-                        </select>
+                          onChange={(value) => setTranslationLanguage(value)}
+                          className="bg-[var(--chart-17)]"
+                        />
                       </div>
-                      <p className="text-base text-gray-200 leading-relaxed">
+                      <p className={`text-sm text-[#cccccc] leading-relaxed ${getFontForLanguage(translationLanguage)}`}>
                         {verseTranslations[selectedVerse] 
                           ? verseTranslations[selectedVerse][translationLanguage] 
                           : 'جاري تحميل الترجمة...'}
                       </p>
                       {!verseTranslations[selectedVerse] && (
-                        <div className="text-base text-gray-400 mt-2">
+                        <div className="text-sm text-[#999999] mt-2">
                           <div className="animate-pulse">🔄 جاري الاتصال بـ QuranAPI...</div>
                         </div>
                       )}
@@ -1199,24 +1218,24 @@ export default function QuranReader() {
               <div className="space-y-6">
                 
                 {/* نمط العرض */}
-                <div className="bg-neutral-700 rounded-lg p-4 border border-gray-700">
-                  <h3 className="font-bold text-gray-300 mb-4 text-center">نمط العرض</h3>
+                <div className="bg-[#343434] rounded-lg p-4 border border-[#262626]">
+                  <h3 className="font-bold text-white mb-4 text-center">نمط العرض</h3>
                   
                   {/* خيارات النمط */}
                   <div className="space-y-3">
                     <div className="grid grid-cols-2 gap-2">
                       <button 
                         onClick={() => setLineSpacing(1.4)}
-                        className={`py-2 px-3 rounded-lg text-sm transition-colors ${
-                          lineSpacing <= 1.5 ? 'bg-green-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                        className={`py-2 px-3 rounded-lg text-sm transition-all duration-300 border ${
+                          lineSpacing <= 1.5 ? 'bg-[var(--chart-10)] text-white border-[var(--chart-10)]' : 'bg-[#262626] text-white border-transparent hover:bg-[#3a3a3a] hover:border-[var(--chart-10)]/30'
                         }`}
                       >
                         فقرة واحدة
                       </button>
                       <button 
                         onClick={() => setLineSpacing(2.0)}
-                        className={`py-2 px-3 rounded-lg text-sm transition-colors ${
-                          lineSpacing > 1.5 ? 'bg-green-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                        className={`py-2 px-3 rounded-lg text-sm transition-all duration-300 border ${
+                          lineSpacing > 1.5 ? 'bg-[#221111] text-white border-[#221111]' : 'bg-[#262626] text-white border-transparent hover:bg-[#3a3a3a] hover:border-[#221111]/30'
                         }`}
                       >
                         أسطر متباعدة
@@ -1357,6 +1376,7 @@ export default function QuranReader() {
           onPlay={() => setIsPlaying(true)}
           onPause={() => setIsPlaying(false)}
           onEnded={() => setIsPlaying(false)}
+          onError={() => setIsPlaying(false)}
           preload="none"
         />
 

@@ -1,9 +1,9 @@
-// src/pages/index.jsx - الصفحة الرئيسية المحدثة
+// src/pages/index.jsx - الصفحة الرئيسية المحدثة والمحسّنة
 import { useTheme } from "next-themes"
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import Image from 'next/image';// استيراد انتقائي لتحسين الأداء
+import Image from 'next/image';
 import { 
   BookOpen, 
   Volume2, 
@@ -20,43 +20,43 @@ import {
 import QuranLoader from '../components/QuranLoader';
 import QuranSearchWidget from '../components/QuranSearchWidget';
 import { ShineBorder } from '@/registry/magicui/shine-border';
-import { WordRotate } from  '@registry/magicui/word-rotate';
+import { WordRotate } from '@registry/magicui/word-rotate';
+import { LightRays } from "@/registry/magicui/light-rays";
 import dynamic from 'next/dynamic';
 import LoginButton from '../components/auth/LoginButton';
-
-// تحميل SwipeCarousel ديناميكياً للشاشات الكبيرة فقط (مخفي في الشاشات الصغيرة)
+import DrawOutlineButton from '../components/ui/animated-button';
+// تحميل SwipeCarousel ديناميكياً للشاشات الكبيرة فقط
 const SwipeCarousel = dynamic(() => import('../components/SwipCarsouel').then(mod => mod.SwipeCarousel), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-screen bg-slate-900 flex items-center justify-center">
+    <div className="w-full h-screen bg-[#22262d] flex items-center justify-center">
       <div className="text-white text-2xl font-uthmanic animate-pulse">جاري التحميل...</div>
     </div>
   )
 });
+
 /**
- * الصفحة الرئيسية المحدثة باستخدام النظام الجديد
- * تدعم التصميم المتجاوب وتستخدم CSS المتغيرات
+ * الصفحة الرئيسية المحدثة بتصميم احترافي داكن وكلاسيكي
+ * تدعم التصميم المتجاوب مع تأثيرات Light Rays
  */
 const HomePage = () => {
   const [mounted, setMounted] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [isDarkMode, setIsDarkMode] = useState(false);
-  // حالة AppAppBar للتحكم بالقائمة الجانبية - تم إزالة المتغيرات غير المستخدمة
+  const [isMobile, setIsMobile] = useState(false);
+  const theme = useTheme();
 
   // تأكد من تحميل المكون قبل العرض
   useEffect(() => {
     setMounted(true);
-
-    // إخفاء loader بعد تحميل الصفحة
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 500);
-
     return () => clearTimeout(timer);
   }, []);
 
-  // تطبيق نفس نظام الثيم المستخدم في AppAppBar.jsx
+  // تطبيق نظام الثيم
   useEffect(() => {
     if (mounted) {
       const savedTheme = localStorage.getItem('theme');
@@ -68,7 +68,6 @@ const HomePage = () => {
       }
     }
 
-    // متابعة تغييرات الثيم من localStorage
     const handleStorageChange = () => {
       const currentTheme = localStorage.getItem('theme');
       if (currentTheme) {
@@ -78,7 +77,6 @@ const HomePage = () => {
 
     window.addEventListener('storage', handleStorageChange);
     
-    // متابعة تغييرات data-theme attribute
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.type === 'attributes' && mutation.attributeName === 'data-theme') {
@@ -102,16 +100,12 @@ const HomePage = () => {
   }, [mounted]);
 
   // كشف حجم الشاشة
-  const [isMobile, setIsMobile] = useState(false);
-
   useEffect(() => {
     const checkScreenSize = () => {
       setIsMobile(window.innerWidth <= 768);
     };
-
     checkScreenSize();
     window.addEventListener('resize', checkScreenSize);
-
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
@@ -136,60 +130,18 @@ const HomePage = () => {
 
   // قائمة الصور للهواتف
   const mobileImages = [
-    {
-    src: 'mobile-hero-1.gif',
-    alt: 'quran-hero-mobile',
-    title: 'اول صوره'
-
-    },
-    {
-      src: 'mobile-hero-2.png',
-      alt: 'المصحف الشريف',
-      title: 'كتاب الله العزيز'
-    },
-    {
-      src: 'mobile-hero-3.png',
-      alt: 'آيات القرآن الكريم',
-      title: 'نور وهداية'
-    },
-    {
-      src: 'mobile-hero-4.png',
-      alt: 'الخط العربي الإسلامي',
-      title:'القرآن العظيم'
-    },
-    {
-      src: 'mobile-hero-5.png',
-      alt: 'تلاوة القرآن',
-      title: 'صوت الحق'
-    },
-    {
-      src: 'mobile-hero-6.png',
-      alt: 'المسجد النبوي',
-      title: 'بيت الله الحرام'
-    },
-    {
-      src: 'mobile-hero-7.png',
-      alt: 'الدعاء والذكر',
-      title: 'طمأنينة القلب'
-    },
-    {
-      src: 'mobile-hero-8.png',
-      alt: 'نور الإسلام',
-      title: 'هداية ورحمة'
-    },
-    {
-      src: 'mobile-hero-9.png',
-      alt: 'المصحف والسبحة',
-      title: 'عبادة وتسبيح'
-    },
-    {
-      src: 'mobile-hero-1.gif',
-      alt: 'القرآن الكريم - التلاوة المباركة',
-      title: 'بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ'
-    }
+    { src: 'mobile-hero-1.gif', alt: 'quran-hero-mobile', title: 'اول صوره' },
+    { src: 'mobile-hero-2.png', alt: 'المصحف الشريف', title: 'كتاب الله العزيز' },
+    { src: 'mobile-hero-3.png', alt: 'آيات القرآن الكريم', title: 'نور وهداية' },
+    { src: 'mobile-hero-4.png', alt: 'الخط العربي الإسلامي', title: 'القرآن العظيم' },
+    { src: 'mobile-hero-5.png', alt: 'تلاوة القرآن', title: 'صوت الحق' },
+    { src: 'mobile-hero-6.png', alt: 'المسجد النبوي', title: 'بيت الله الحرام' },
+    { src: 'mobile-hero-7.png', alt: 'الدعاء والذكر', title: 'طمأنينة القلب' },
+    { src: 'mobile-hero-8.png', alt: 'نور الإسلام', title: 'هداية ورحمة' },
+    { src: 'mobile-hero-9.png', alt: 'المصحف والسبحة', title: 'عبادة وتسبيح' },
+    { src: 'mobile-hero-1.gif', alt: 'القرآن الكريم - التلاوة المباركة', title: 'بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ' }
   ];
 
-  // اختيار الصور حسب نوع الجهاز
   const heroImages = isMobile ? mobileImages : desktopImages;
 
   // إعادة تعيين الفهرس عند تغيير نوع الجهاز
@@ -204,20 +156,15 @@ const HomePage = () => {
     if (!mounted || !heroImages.length) return;
     
     const currentImage = heroImages[currentImageIndex];
-    
-    // تحديد المدة الزمنية حسب نوع الصورة
     const getDelay = () => {
-      // إذا كانت الصورة الحالية هي GIF (آخر صورة في قائمة الهاتف)
       if (isMobile && currentImage?.src === 'mobile-hero-1.gif') {
-        return 11000; // 10 ثوان + ثانية إضافية
+        return 11000;
       }
-      return 10000; // المدة العادية
+      return 10000;
     };
 
     const timeout = setTimeout(() => {
-      setCurrentImageIndex((prevIndex) => 
-        (prevIndex + 1) % heroImages.length
-      );
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % heroImages.length);
     }, getDelay());
 
     return () => clearTimeout(timeout);
@@ -230,42 +177,42 @@ const HomePage = () => {
       title: 'تصفح المصحف',
       description: 'تصفح القرآن الكريم صفحة بصفحة بتصميم جميل وواضح',
       href: '/quran-pages/1',
-      color: '#34495e'
+      color: '#2196F3'
     },
     {
       icon: Volume2,
       title: 'الصوتيات',
       description: 'استمع للقرآن الكريم بأصوات أشهر القراء',
       href: '/quran-sound',
-      color: '#27ae60'
+      color: '#FF9800'
     },
     {
       icon: FileText,
       title: 'المصحف PDF',
       description: 'حمل المصحف الشريف بصيغة PDF لتصفحه في أي وقت',
       href: '/quran-pdf',
-      color: '#f39c12'
+      color: '#F44336'
     },
     {
       icon: Radio,
       title: 'الإذاعة المباشرة',
       description: 'استمع للبث المباشر من إذاعة القرآن الكريم',
       href: '/live',
-      color: '#e74c3c'
+      color: '#E91E63'
     },
     {
       icon: Search,
       title: 'البحث في القرآن',
       description: 'ابحث في آيات القرآن الكريم بسهولة ويسر',
       href: '/search',
-      color: '#3498db'
+      color: '#9C27B0'
     },
     {
       icon: Zap,
       title: 'API للمطورين',
       description: 'استخدم API القرآن الكريم في تطبيقاتك',
       href: 'https://msr-quran-data.vercel.app',
-      color: '#9b59b6'
+      color: '#607D8B'
     }
   ];
 
@@ -276,10 +223,6 @@ const HomePage = () => {
     { number: '30', label: 'جزء', icon: Book },
     { number: '153', label: 'قارئ', icon: Mic }
   ];
-  const theme = useTheme()
-
-
-  // لا نعرض loader كـ early return لحل مشكلة SSR
 
   return (
     <>
@@ -289,12 +232,23 @@ const HomePage = () => {
         <meta name="keywords" content="القرآن الكريم, تلاوة القرآن, تصفح القرآن, استماع القرآن, القرآن الإلكتروني, القرآن الكريم الإلكتروني" />
       </Head> 
 
-      <div className="w-full bg-[var(--sidebar-primary)] min-h-screen  transition-opacity duration-700 ease-in-out" style={{
+      <div className="w-full bg-gradient-to-b from-[#22262d] via-[#252526] to-[#22262d] dark:from-[#22262d] dark:via-[#252526] dark:to-[#22262d] min-h-screen transition-opacity duration-700 ease-in-out relative overflow-hidden" style={{
         opacity: mounted && !isLoading ? 1 : 0
       }}>
+        {/* تأثير Light Rays في الخلفية */}
+        <div className="fixed inset-0 pointer-events-none z-0">
+          <LightRays 
+            count={12}
+            color={isDarkMode ? "rgba(30, 144, 158, 0.08)" : "rgba(30, 144, 158, 0.12)"}
+            blur={48}
+            speed={18}
+            length="85vh"
+          />
+        </div>
+
         {/* البسملة في أعلى الموقع */}
-        <div className="flex justify-center mb-15 items-center py-5 w-full  mb-0 rounded-[10px] relative -bottom-10 border-[3px] border-solid border-[var(--muted-foreground)]/50">          
-           {mounted && (
+        <div className="relative z-10 flex justify-center items-center py-8 w-full mb-4 rounded-lg border-2 border-[#565656]/30 bg-gradient-to-r from-[#252525]/80 via-[#252526]/80 to-[#252525]/80 backdrop-blur-sm shadow-2xl">          
+          {mounted && (
             <Image
               src={isDarkMode ? "/basmalh-dark.svg" : "/basmalh-dark.svg"}
               alt="بِسۡمِ ٱللَّهِ ٱلرَّحۡمَٰنِ ٱلرَّحِيمِ"
@@ -302,42 +256,21 @@ const HomePage = () => {
               height={200}
               priority
               quality={95}
+              className="drop-shadow-2xl"
               key={`basmala-${isDarkMode ? 'dark' : 'light'}`}
-              onLoad={() => {
-              }}
-              onError={(e) => {
-                console.log('خطأ في تحميل البسملة:', e.target.src);
-              }}
             />
-          )}
-          
-          {/* عرض معلومات الثيم للفحص */}
-          {process.env.NODE_ENV === 'development' && mounted && (
-            <div style={{ 
-              position: 'absolute', 
-              top: '10px', 
-              right: '10px', 
-              background: 'rgba(0,0,0,0.8)', 
-              color: 'white', 
-              padding: '5px', 
-              fontSize: '12px',
-              borderRadius: '5px',
-              zIndex: 1000
-            }}>
-            </div>
           )}
         </div>
 
-        {/* SwipeCarousel Hero للشاشات الكبيرة فقط - مخفي في الشاشات الصغيرة */}
-        <section className="hidden lg:block w-full h-screen relative ">
+        {/* SwipeCarousel Hero للشاشات الكبيرة فقط */}
+        <section className="hidden lg:block w-full h-screen relative z-10">
           <SwipeCarousel />
-          
         </section>
 
-        {/* Hero Section العادي للهواتف والتابلت */}
-        <section className="lg:hidden relative h-screen w-full flex items-center justify-center text-center text-white overflow-hidden will-change-transform contain-layout-style-paint">
+        {/* Hero Section للهواتف والتابلت */}
+        <section className="lg:hidden relative z-10 h-screen w-full flex items-center justify-center text-center text-white overflow-hidden">
           <div className="absolute inset-0 z-[1] w-full h-full">
-            <div className="absolute inset-0 w-full h-full overflow-hidden will-change-transform">
+            <div className="absolute inset-0 w-full h-full overflow-hidden">
               {heroImages[currentImageIndex] && (
                 <Image
                   src={heroImages[currentImageIndex].src.startsWith('/') ? heroImages[currentImageIndex].src : `/${heroImages[currentImageIndex].src}`}
@@ -349,16 +282,20 @@ const HomePage = () => {
                 />
               )}
             </div>
-            <div className="absolute inset-0 bg-transparent z-[2]"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-[#22262d]/90 via-[#252526]/50 to-transparent z-[2]"></div>
           </div>
 
           {/* مؤشرات الصور */}
-          <div className="absolute bottom-[3rem] left-1/2 transform -translate-x-1/2 flex gap-[0.5rem] z-[4]">
+          <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 flex gap-2 z-[4]">
             {heroImages.map((_, index) => (
               <button
                 key={index}
                 type="button"
-                className={`w-3 h-3 rounded-full border-2 border-white bg-white/90 cursor-pointer transition-all duration-300 ${index === currentImageIndex ? 'bg-white' : 'hover:bg-white/70'}`}
+                className={`w-3 h-3 rounded-full border-2 border-[#565656]/80 transition-all duration-300 ${
+                  index === currentImageIndex 
+                    ? 'bg-[#565656] scale-125 shadow-lg shadow-[#565656]/50' 
+                    : 'bg-[#3e3e42]/60 hover:bg-[#3e3e42]/90'
+                }`}
                 onClick={() => setCurrentImageIndex(index)}
                 aria-label={`صورة ${index + 1}`}
                 aria-pressed={index === currentImageIndex}
@@ -367,101 +304,150 @@ const HomePage = () => {
           </div>
         </section>
 
-{/* Navigation section — تصحيح الفتح والإغلاق */}
-<section className="md:mt-80 justify-center items-center ">
-  <div className="relative p-6 z-[3] text-center text-card/90 bg-black/50 rounded-2xl backdrop-blur-[15px] border border-[var(--muted-foreground)]/50 shadow-[0_8px_32px_rgba(0,0,0,0.4)]  md:right-50 md:left-50 md:max-w-[calc(80vw-40px)] sm:max-w-[calc(80vw-30px)]  mb-4 sm:p-4">
-  <ShineBorder shineColor={theme.theme === "dark" ? "white" : "black"} />  
-  <WordRotate
-      className="md:text-6xl text-2xl px-6 md:mb-6 font-semibold  [text-shadow:2px_2px_4px_rgba(0,0,0,0.5)] "
-      words={['القرآن الكريم', 'كتاب أٌحكمت آياته', 'النور المبين', 'شفاءُ للناس', 'القرآن المجيد', 'يهدي للحق' , 'صحفٍٍ مكرمة', 'تنزيلٌ من رب العالمين']}
-    />
+        {/* Navigation section */}
+        <section className="relative z-10 md:mt-20 lg:mt-32 flex justify-center items-center px-4 md:px-8">
+          <div className="relative p-6 md:p-8 text-center w-full max-w-5xl bg-gradient-to-br from-[#252525]/90 via-[#252526]/90 to-[#252525]/90 rounded-2xl backdrop-blur-xl border-2 border-[#565656]/30 shadow-2xl shadow-[#565656]/10">
+            <ShineBorder 
+              shineColor={theme.theme === "dark" ? "rgba(255, 255, 255, 0.4)" : "rgba(255, 255, 255, 0.6)"} 
+              borderWidth={9}
+              duration={15}
+            />
+            
+            <WordRotate
+              className="text-4xl md:text-5xl lg:text-6xl px-4 md:px-6 py-7 md:py-8 font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#f9f9f9] via-[#f9f9f9]/80 to-[#25344e]/20 drop-shadow-2xl"
+              words={['القرآن الكريم', 'كتابٌ أُحكِمَت آياتُه', 'النور المبين', 'شفاءٌ للناس', 'القرآن المجيد', 'يهدي للحق', 'صُحُفٌ مُكَرَّمة', 'تنزيلٌ من رب العالمين']}
+            />
 
-    {/* شريط البحث في القرآن */}
-    <div className="mb-8 px-4">
-      <QuranSearchWidget />
-    </div>
+            {/* شريط البحث في القرآن */}
+            <div className="mb-6 md:mb-8 px-2 md:px-4">
+              <QuranSearchWidget />
+            </div>
 
-    {/* زر تسجيل الدخول */}
-    <div className="mb-6 px-4">
-      <LoginButton />
-    </div>
-
-    <div className="flex gap-3 sm:mt-7 md:gap-4 md:flex-col mt-5 items-center sm:flex-col sm:gap-2 justify-center flex-wrap">
-      <Link href="/quran-pages/1" className=" md:mb-3 overflow-hidden  md:ml-10 text-center px-5 py-3 md:py-3 md:px-6 md:w-[200px] sm:py-3 sm:w-full border-2 border-chart-4/20 text-lg md:text-2xl font-semibold rounded-lg transition-all duration-400 no-underline bg-transparent text-white/60  hover:bg-[var(--chart-4)]/10 hover:text-[var(--muted-foreground)]/50 hover:text-white hover:translate-y-[-2px] shadow-[var(--shadow-lg)] hover:shadow-[var(--shadow-xl)]">
-        ابدأ التصفح
-      </Link>
-      <Link href="/quran-sound" className="relative  md:mb-3 overflow-hidden  md:ml-10 items-center px-5 py-3 md:py-2 md:px-4 md:w-[200px] sm:py-3 sm:w-full text-lg md:text-2xl font-semibold rounded-lg transition-all duration-500 no-underline bg-transparent text-[var(--muted-foreground)]/50 border hover:border-[var(--chart-3)] hover:bg-[var(--chart-3)]/15 hover:text-white hover:translate-y-[-2px] shadow-[var(--shadow-lg)] hover:shadow-[var(--shadow-xl)]">
-        استمع الآن
-      </Link>
-    </div>
-  </div>
-
-</section>
-
+            {/* زر تسجيل الدخول */}
+            <div className="mb-6 bg-[#252525]/90 rounded-2xl p-6 md:p-8 border-2 border-[#565656]/30 shadow-2xl shadow-[#565656]/10 md:mb-8 px-2 md:px-4">
+              <LoginButton />
+            </div>
+            <div className="mb-6 flex flex-col sm:flex-row lg:flex-row gap-4 md:gap-6 items-center justify-center">
+              <DrawOutlineButton>ابدأ التصفح</DrawOutlineButton>
+              
+              <Link 
+                href="/quran-reader?page=1" 
+                className="group relative w-full sm:w-auto px-8 py-4 text-lg md:text-xl font-bold rounded-xl transition-all duration-300 bg-gradient-to-br from-[#4a5568] via-[#2d3748] to-[#1a202c] hover:from-[#5a6578] hover:via-[#4a5568] hover:to-[#2d3748] text-white shadow-2xl shadow-black/40 hover:shadow-[0_20px_40px_rgba(0,0,0,0.6)] hover:scale-105 hover:-translate-y-1 border border-[#606060]/30 hover:border-[#707070]/50 overflow-hidden"
+              >
+                <span>تفسير القرآن أيه بآيه</span>
+                {/* TOP - الخط العلوي */}
+                <span className="absolute left-0 top-0 h-[1px] w-0 border-t-2 border-white/60 transition-all duration-200 group-hover:w-full" />
+                {/* RIGHT - الخط الأيمن */}
+                <span className="absolute right-0 top-0 h-0 w-[1px] border-r-2 border-white/60 transition-all delay-100 duration-200 group-hover:h-full" />
+                {/* BOTTOM - الخط السفلي */}
+                <span className="absolute bottom-0 right-0 h-[1px] w-0 border-b-2 border-white/60 transition-all delay-200 duration-200 group-hover:w-full" />
+                {/* LEFT - الخط الأيسر */}
+                <span className="absolute bottom-0 left-0 h-0 w-[1px] border-l-2 border-white/60 transition-all delay-300 duration-200 group-hover:h-full" />
+              </Link>
+              
+              <Link 
+                href="/quran-sound" 
+                className="group relative w-full sm:w-auto px-8 py-4 text-lg md:text-xl font-bold rounded-xl transition-all duration-300 bg-gradient-to-br from-[#4a5568] via-[#2d3748] to-[#1a202c] hover:from-[#5a6578] hover:via-[#4a5568] hover:to-[#2d3748] text-white shadow-2xl shadow-black/40 hover:shadow-[0_20px_40px_rgba(0,0,0,0.6)] hover:scale-105 hover:-translate-y-1 border border-[#606060]/30 hover:border-[#707070]/50 overflow-hidden"
+              >
+                <span>استمع الآن</span>
+                {/* TOP - الخط العلوي */}
+                <span className="absolute left-0 top-0 h-[1px] w-0 border-t-2 border-white/60 transition-all duration-200 group-hover:w-full" />
+                {/* RIGHT - الخط الأيمن */}
+                <span className="absolute right-0 top-0 h-0 w-[1px] border-r-2 border-white/60 transition-all delay-100 duration-200 group-hover:h-full" />
+                {/* BOTTOM - الخط السفلي */}
+                <span className="absolute bottom-0 right-0 h-[1px] w-0 border-b-2 border-white/60 transition-all delay-200 duration-200 group-hover:w-full" />
+                {/* LEFT - الخط الأيسر */}
+                <span className="absolute bottom-0 left-0 h-0 w-[1px] border-l-2 border-white/60 transition-all delay-300 duration-200 group-hover:h-full" />
+              </Link>
+            </div>
+          </div>
+        </section>
 
         {/* الإحصائيات */}
-        <section className="md:py-15 mt-4 bg-[var(--muted)]/20 justfy-center">
-
-  
-          <div className="sm:max-w-2xl md:max-w-6xl px-5 py-5 md:min-w-2xl items-center justify-center">
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-10 md:grid-cols-2 sm:grid-cols-1 md:gap-4 rounded-xl transition-all duration-400 ">
+        <section className="relative z-10 py-16 md:py-20 px-4 md:px-8">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
               {stats.map((stat, index) => {
                 const IconComponent = stat.icon;
                 return (
-                  <div key={index} className="relative text-center px-8 py-8 md:px-4 bg-[var(--sidebar-primary)]/20 rounded-xl border-[2px] border-[var(--muted-foreground)]/10 shadow-[var(--shadow-md)] transition-all duration-300 hover:translate-y-[-4px] hover:shadow-[var(--shadow-lg)] group">
-                    <ShineBorder
-                     shineColor={[ "#aec6ff"]}
-                     borderWidth= "1"
-                     duration= "11"
-
-                     />
-                    <div className="mb-4 text-[var(--chart-4)] flex justify-center items-center transition-all duration-300 group-hover:scale-[1.2] group-hover:text-[var(--primary-dark)]">
-                      <IconComponent size={40} strokeWidth={1.5} />
+                  <div 
+                    key={index} 
+                    className="relative group"
+                  >
+                    <div className="relative bg-gradient-to-br from-[#252525]/80 via-[#252526]/80 to-[#22262d]/80 backdrop-blur-md rounded-2xl p-6 md:p-8 border-2 border-[#3e3e42]/30 shadow-xl hover:shadow-2xl hover:shadow-[#565656]/20 transition-all duration-300 hover:scale-105 hover:border-[#565656]/40">
+                      <ShineBorder
+                        shineColor={["#565656", "#25344e", "#a28c8b"]}
+                        borderWidth={1}
+                        duration={12}
+                      />
+                      <div className="mb-4 text-[#a28c8b]/90 flex justify-center items-center transition-all duration-300 group-hover:scale-110 group-hover:text-[#565656]">
+                        <IconComponent size={48} strokeWidth={1.5} className="drop-shadow-lg" />
+                      </div>
+                      <div className="text-4xl md:text-5xl font-bold text-white mb-2 drop-shadow-lg">
+                        {stat.number}
+                      </div>
+                      <div className="text-lg md:text-xl text-[#cccccc]/80">
+                        {stat.label}
+                      </div>
                     </div>
-                    <div className="text-3xl md:text-4xl font-bold text-[var(--muted)] mb-2">{stat.number}</div>
-                    <div className="text-xl md:text-base text-[var(--text-secondary)]">{stat.label}</div>
                   </div>
                 );
               })}
             </div>
           </div>
-         </section>
+        </section>
 
         {/* الميزات الرئيسية */}
-        <section className="py-16 bg-[var(--background-color)]">
-          <div className="max-w-6xl mx-auto px-6 md:px-4">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-2xl font-bold text-[var(--text-primary)] mb-4">ميزات الموقع</h2>
-              <p className="text-lg text-[var(--text-secondary)] max-w-2xl mx-auto">
+        <section className="relative z-10 py-16 md:py-20 px-4 md:px-8">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-12 md:mb-16">
+              <h2 className="text-4xl md:text-5xl pb-5 font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#f9f9f9] via-[#f9f9f9] to-[#25344e] mb-4 drop-shadow-xl">
+                ميزات الموقع
+              </h2>
+              <p className="text-lg md:text-xl text-[#cccccc]/70 max-w-2xl mx-auto">
                 اكتشف جميع الخدمات التي يوفرها موقع القرآن الكريم
               </p>
             </div>
             
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(400px,1fr))] gap-8 md:grid-cols-1 md:gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
               {features.map((feature, index) => {
                 const IconComponent = feature.icon;
-                return feature.href.startsWith('http') ? (
-                  <a key={index} href={feature.href} target="_blank" rel="noopener noreferrer" className="bg-[var(--background-paper)] rounded-xl p-8 md:p-6 no-underline text-white transition-all duration-300 border border-[var(--border-color)] relative overflow-hidden group hover:translate-y-[-8px] hover:shadow-[var(--shadow-2xl)] before:content-[''] before:absolute before:top-0 before:left-0 before:right-0 before:h-1 before:bg-gradient-to-r before:from-[var(--primary-color)] before:to-[var(--primary-light)] before:transform before:scale-x-0 before:transition-transform before:duration-300 hover:before:scale-x-100">
-                    <div className="mb-4 flex justify-center items-center w-20 h-20 bg-white/10 rounded-xl transition-all duration-300 group-hover:bg-white/20 group-hover:scale-110" style={{ color: feature.color }}>
-                      <IconComponent size={48} strokeWidth={1.5} />
+                const isExternal = feature.href.startsWith('http');
+                const LinkComponent = isExternal ? 'a' : Link;
+                const linkProps = isExternal 
+                  ? { href: feature.href, target: "_blank", rel: "noopener noreferrer" }
+                  : { href: feature.href };
+
+                return (
+                  <LinkComponent 
+                    key={index} 
+                    {...linkProps}
+                    className="group relative bg-gradient-to-br from-[#252525]/80 via-[#252526]/80 to-[#22262d]/80 backdrop-blur-md rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 border-2 border-[#3e3e42]/30 shadow-[0_20px_50px_rgba(0,0,0,0.6),0_10px_20px_rgba(0,0,0,0.4),inset_0_1px_2px_rgba(255,255,255,0.1)] hover:shadow-2xl hover:shadow-[#565656]/20 transition-all duration-300 hover:scale-105 hover:border-[#565656]/40 no-underline overflow-hidden"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-br from-[#565656]/5 via-transparent to-[#25344e]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    
+                    <div className="relative z-10">
+                      <div 
+                        className="mb-4 sm:mb-6 flex justify-center items-center w-16 h-16 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 shadow-lg mx-auto"
+                        style={{ 
+                          backgroundColor: `${feature.color}20`,
+                          color: feature.color
+                        }}
+                      >
+                        <IconComponent size={32} strokeWidth={1.5} className="sm:w-10 sm:h-10" />
+                      </div>
+                      <h3 className="text-xl sm:text-2xl lg:text-2xl font-bold mb-3 sm:mb-4 text-white group-hover:text-[#a28c8b] transition-colors text-center">
+                        {feature.title}
+                      </h3>
+                      <p className="text-2xl text-chart-4 leading-relaxed text-center">
+                        {feature.description}
+                      </p>
+                      <div className="mt-4 sm:mt-6 flex items-center justify-center text-[#565656] group-hover:text-[#a28c8b] transition-all duration-300 group-hover:translate-x-[-8px]">
+                        <ArrowLeft size={20} strokeWidth={2} className="sm:w-6 sm:h-6" />
+                        <span className="mr-2 font-semibold text-sm sm:text-base">اكتشف المزيد</span>
+                      </div>
                     </div>
-                    <h3 className="text-2xl text-accent font-semibold mb-4">{feature.title}</h3>
-                    <p className="text-3xl text-space/70 text-chart-4/70 text-shadow-[0px_2px_2px_rgba(221,255,255,.08)] leading-relaxed mb-6">{feature.description}</p>
-                    <div className="absolute bottom-6 left-6 text-[var(--primary-color)] transition-all duration-300 flex items-center justify-center w-8 h-8 rounded-full bg-[rgba(52,73,94,0.1)] group-hover:translate-x-[-4px] group-hover:bg-[rgba(52,73,94,0.2)]">
-                      <ArrowLeft size={20} strokeWidth={2} />
-                    </div>
-                  </a>
-                ) : (
-                  <Link key={index} href={feature.href} className="bg-neutral-900 rounded-xl p-8 md:p-6 no-underline text-[var(--text-primary)] transition-all duration-300 border border-[var(--muted-foreground)] relative overflow-hidden group hover:translate-y-[-8px] hover:shadow-[var(--shadow-2xl)] before:content-[''] before:absolute before:top-0 before:left-0 before:right-0 before:h-1 before:bg-gradient-to-r before:from-[var(--primary-color)] before:to-[var(--primary-light)] before:transform before:scale-x-0 before:transition-transform before:duration-300 hover:before:scale-x-100">
-                    <div className="mb-4 flex justify-center items-center w-20 h-20 bg-white/10 rounded-xl transition-all duration-300 group-hover:bg-white/20 group-hover:scale-110" style={{ color: feature.color }}>
-                      <IconComponent size={48} strokeWidth={1.5} />
-                    </div>
-                    <h3 className="text-2xl text-space/70 text-accent font-semibold mb-4">{feature.title}</h3>
-                    <p className="text-3xl text-chart-4/70 leading-relaxed mb-6">{feature.description}</p>
-                    <div className="absolute bottom-6 left-6 text-[var(--muted-foreground)] transition-all duration-300 flex items-center justify-center w-8 h-8 rounded-full bg-[rgba(52,73,94,0.1)] group-hover:translate-x-[-4px] group-hover:bg-[rgba(52,73,94,0.2)]">
-                      <ArrowLeft size={20} strokeWidth={2} />
-                    </div>
-                  </Link>
+                  </LinkComponent>
                 );
               })}
             </div>
@@ -469,29 +455,38 @@ const HomePage = () => {
         </section>
 
         {/* قسم الدعوة للعمل */}
-        <section className="py-16 bg-gradient-to-br from-[var(--secondary-color)] to-[var(--secondary-dark)] text-white">
-          <div className="max-w-6xl mx-auto px-6 md:px-4">
-            <div className="text-center max-w-4xl mx-auto">
-              <h2 className="text-3xl md:text-2xl font-bold mb-4">ابدأ رحلتك مع القرآن الكريم</h2>
-              <p className="text-lg leading-relaxed mb-8 opacity-90">
-                انضم إلى الملايين الذين يستخدمون موقعنا لتلاوة وتصفح القرآن الكريم
-              </p>
-              <div className="flex gap-4 justify-center flex-wrap md:flex-col md:items-center">
-                <Link href="/quran-pages/1" className="inline-flex items-center px-8 py-4 md:py-3 text-xl md:text-xl bg-chart-3 font-semibold rounded-xl transition-all duration-300 no-underline shadow-[var(--shadow-lg)] hover:translate-y-[-2px] hover:shadow-[var(--shadow-xl)] bg-[var(--primary-color)] text-white border-none hover:bg-[var(--primary-dark)] hover:text-rose-500 md:w-full md:max-w-72 md:justify-center">
-                  ابدأ الآن
-                </Link>
-                <Link href="/about" className="inline-flex items-center px-8 py-4 md:py-3 text-lg text-muted-foreground font-semibold rounded-xl transition-all duration-300 no-underline shadow-[var(--shadow-lg)] hover:translate-y-[-2px] hover:shadow-[var(--shadow-xl)] bg-transparent text-[var(--primary-color)] border-2 border-[var(--primary-color)] hover:bg-[var(--primary-color)] hover:text-white md:w-full md:max-w-72 md:justify-center">
-                  اعرف المزيد
-                </Link>
-              </div>
+        <section className="relative z-10 py-16 md:py-20 px-4 md:px-8 bg-gradient-to-br from-[#565656]/20 via-[#262626]/20 to-[#525252]/20 backdrop-blur-sm border-y-5 border-[#565656]/30 shadow-xl">
+          <div className="max-w-5xl mx-auto text-center">
+            <h2 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text pb-4 bg-gradient-to-r from-[#f8f8f8] via-[#f9f9f9] to-[#565656] mb-6 drop-shadow-xl">
+              ابدأ رحلتك مع القرآن الكريم
+            </h2>
+            <p className="text-lg md:text-xl text-[#cccccc]/80 leading-relaxed mb-10 max-w-3xl mx-auto">
+              انضم إلى الملايين الذين يستخدمون موقعنا لتلاوة وتصفح القرآن الكريم
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center">
+              <Link 
+                href="/quran-pages/1" 
+                className="w-full sm:w-auto px-10 py-5 text-xl md:text-2xl font-bold rounded-xl transition-all duration-300 bg-gradient-to-r from-[#16697a]/50 to-[#16697a]/50 hover:from-[#1aa3b5] hover:to-[#1aa3b5]/50 text-white shadow-xl shadow-[#000]/50 hover:shadow-sm hover:shadow-[#f9f9f9]/20 hover:border-6 hover:border-[#535353] hover:scale-105 border-none"
+              >
+                ابدأ الآن
+              </Link>
+              <Link 
+                href="/about" 
+                className="w-full sm:w-auto px-10 py-5 text-xl md:text-2xl font-bold rounded-xl transition-all duration-300 bg-transparent border-2 border-[#565656] hover:bg-[#565656]/10 text-[#a28c8b] hover:text-white shadow-lg hover:shadow-xl hover:scale-105"
+              >
+                اعرف المزيد
+              </Link>
             </div>
           </div>
         </section>
+
+        {/* مساحة إضافية في الأسفل */}
+        <div className="h-20"></div>
       </div>
 
-      {/* Loader overlay لحل مشكلة SSR */}
+      {/* Loader overlay */}
       {(!mounted || isLoading) && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-[rgba(250,250,250,0.95)] backdrop-blur-[4px] transition-opacity duration-500 ease-out" aria-hidden={!isLoading}>
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#22262d] backdrop-blur-sm transition-opacity duration-500 ease-out" aria-hidden={!isLoading}>
           <QuranLoader
             size={80}
             text="مرحباً بك في موقع القرآن الكريم..."
@@ -499,7 +494,6 @@ const HomePage = () => {
           />
         </div>
       )}
-
     </>
   );
 };

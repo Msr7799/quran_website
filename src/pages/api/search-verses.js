@@ -1,20 +1,61 @@
 import fs from 'fs';
 import path from 'path';
 
-// تحميل بيانات السور من ملف metadata.json
-let surahsMetadata = [];
+// تحميل وتحليل ملف CSV مع معالجة متقدمة للفواصل
+let quranData = [];
+
+const parseCSVLine = (line) => {
+  const result = [];
+  let current = '';
+  let inQuotes = false;
+  
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i];
+    
+    if (char === '"') {
+      inQuotes = !inQuotes;
+    } else if (char === ',' && !inQuotes) {
+      result.push(current.trim());
+      current = '';
+    } else {
+      current += char;
+    }
+  }
+  
+  result.push(current.trim());
+  return result;
+};
 
 try {
-  const metadataPath = path.join(process.cwd(), 'public', 'json', 'metadata.json');
-  const metadataFile = fs.readFileSync(metadataPath, 'utf8');
-  surahsMetadata = JSON.parse(metadataFile);
+  const csvPath = path.join(process.cwd(), 'public', 'hafs_smart.csv');
+  const csvContent = fs.readFileSync(csvPath, 'utf8');
+  const lines = csvContent.split('\n').slice(1); // تجاهل العنوان الأول
+  
+  quranData = lines
+    .filter(line => line.trim()) // إزالة الأسطر الفارغة
+    .map(line => {
+      const columns = parseCSVLine(line);
+      return {
+        id: parseInt(columns[0]) || 0,
+        juz: parseInt(columns[1]) || 0,
+        surahNumber: parseInt(columns[2]) || 0,
+        surahNameEn: columns[3] ? columns[3].replace(/"/g, '') : '',
+        surahNameAr: columns[4] ? columns[4].replace(/"/g, '') : '',
+        page: parseInt(columns[5]) || 0,
+        lineStart: parseInt(columns[6]) || 0,
+        lineEnd: parseInt(columns[7]) || 0,
+        ayahNumber: parseInt(columns[8]) || 0,
+        ayahText: columns[9] ? columns[9].replace(/"/g, '') : '',
+        ayahTextEmlaey: columns[10] ? columns[10].replace(/"/g, '') : ''
+      };
+    })
+    .filter(verse => verse.surahNumber > 0 && verse.ayahNumber > 0); // فلترة البيانات الصحيحة فقط
+    
+  console.log(`Loaded ${quranData.length} verses from CSV`);
 } catch (error) {
-  console.error('Error loading surah metadata:', error);
-  surahsMetadata = [];
+  console.error('Error loading CSV file:', error);
+  quranData = [];
 }
-
-// استخراج أسماء السور العربية من البيانات الحقيقية
-const surahNames = surahsMetadata.map(surah => surah.name.ar);
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -30,58 +71,35 @@ export default async function handler(req, res) {
   }
 
   try {
-    const versesDir = path.join(process.cwd(), 'public', 'json', 'verses');
     const results = [];
     const searchTerm = query.trim();
 
-    // قراءة جميع ملفات الآيات
-    const files = fs.readdirSync(versesDir).filter(file => file.endsWith('.json'));
-    
-    for (const file of files) {
-      try {
-        const filePath = path.join(versesDir, file);
-        const fileContent = fs.readFileSync(filePath, 'utf8');
-        const verse = JSON.parse(fileContent);
+    // البحث في بيانات القرآن من ملف CSV
+    for (const verse of quranData) {
+      // البحث في النص العربي العادي والإملائي
+      if ((verse.ayahText && verse.ayahText.includes(searchTerm)) || 
+          (verse.ayahTextEmlaey && verse.ayahTextEmlaey.includes(searchTerm))) {
+        
+        results.push({
+          surahNumber: verse.surahNumber,
+          surahName: verse.surahNameAr,
+          verseNumber: verse.ayahNumber,
+          arabicText: verse.ayahTextEmlaey || verse.ayahText,
+          juz: verse.juz,
+          page: verse.page,
+          // إضافة highlight للنص المطابق
+          highlightedText: (verse.ayahTextEmlaey || verse.ayahText).replace(
+            new RegExp(searchTerm, 'gi'), 
+            `<span class="bg-yellow-400/80 text-black px-1 rounded">${searchTerm}</span>`
+          )
+        });
 
-        // البحث في النص العربي
-        if (verse.text && verse.text.ar && verse.text.ar.includes(searchTerm)) {
-          // استخراج رقم السورة ورقم الآية من اسم الملف
-          const [surahNum, verseNum] = file.replace('.json', '').split('_').map(Number);
-          
-          results.push({
-            surahNumber: surahNum,
-            surahName: surahNames[surahNum - 1] || `السورة ${surahNum}`,
-            verseNumber: verseNum,
-            arabicText: verse.text.ar,
-            englishText: verse.text.en,
-            juz: verse.juz,
-            page: verse.page,
-            sajda: verse.sajda || false,
-            // إضافة highlight للنص المطابق
-            highlightedText: verse.text.ar.replace(
-              new RegExp(searchTerm, 'g'), 
-              `<mark class="bg-yellow-300 dark:bg-yellow-600">${searchTerm}</mark>`
-            )
-          });
-
-          // توقف عند الوصول للحد المطلوب
-          if (results.length >= parseInt(limit)) {
-            break;
-          }
+        // توقف عند الوصول للحد المطلوب
+        if (results.length >= parseInt(limit)) {
+          break;
         }
-      } catch (fileError) {
-        console.warn(`Error reading file ${file}:`, fileError.message);
-        continue;
       }
     }
-
-    // ترتيب النتائج حسب السورة والآية
-    results.sort((a, b) => {
-      if (a.surahNumber !== b.surahNumber) {
-        return a.surahNumber - b.surahNumber;
-      }
-      return a.verseNumber - b.verseNumber;
-    });
 
     res.status(200).json({
       success: true,

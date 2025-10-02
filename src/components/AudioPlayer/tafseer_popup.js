@@ -1,15 +1,39 @@
 // src/components/AudioPlayer/tafseer_popup.js - نافذة منبثقة للتفسير
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { LoaderOne } from '../ui/loader.tsx';
+import { CopyButton } from '../ui/animate-ui/primitives/buttons/copy.tsx';
+
+// مكون زر متحرك مخصص للتفسير
+const AnimatedButton = ({ children, onClick, disabled, startIcon, sx, ...props }) => {
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      className="group relative px-4 py-2 text-sm font-medium bg-transparent hover:bg-[#2a2a2a] text-white transition-all duration-300 rounded-lg border border-transparent hover:border-[#4fc3f7]/30 overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
+      style={sx}
+      {...props}
+    >
+      <span className="flex items-center gap-2">
+        {startIcon && <span>{startIcon}</span>}
+        <span>{children}</span>
+      </span>
+      
+      {/* تأثير الحدود المتحركة */}
+      <span className="absolute left-0 top-0 h-[1px] w-0 bg-gradient-to-r from-transparent via-[#4fc3f7] to-transparent transition-all duration-300 group-hover:w-full" />
+      <span className="absolute right-0 top-0 h-0 w-[1px] bg-gradient-to-b from-transparent via-[#4fc3f7] to-transparent transition-all delay-100 duration-300 group-hover:h-full" />
+      <span className="absolute bottom-0 right-0 h-[1px] w-0 bg-gradient-to-l from-transparent via-[#4fc3f7] to-transparent transition-all delay-200 duration-300 group-hover:w-full" />
+      <span className="absolute bottom-0 left-0 h-0 w-[1px] bg-gradient-to-t from-transparent via-[#4fc3f7] to-transparent transition-all delay-300 duration-300 group-hover:h-full" />
+    </button>
+  );
+};
 import {
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
-  Button,
   Typography,
   Box,
-  CircularProgress,
   IconButton,
   Divider,
   Chip
@@ -23,36 +47,57 @@ import {
 import convertToArabicNumerals from '../../utils/convertToArabicNumerals.js';
 import { styled } from '@mui/material/styles';
 
-const StyledDialog = styled(Dialog)(({ theme }) => ({
+const StyledDialog = styled(Dialog)(() => ({
   '& .MuiDialog-paper': {
     borderRadius: '16px',
     maxWidth: '600px',
     width: '90%',
-    maxHeight: '80vh'
+    maxHeight: '80vh',
+    backgroundColor: '#1a1a1a',
+    color: '#ffffff',
+    border: '1px solid #333333'
   }
 }));
 
-const ArabicText = styled(Typography)(({ theme }) => ({
+const ArabicText = styled(Typography)(() => ({
   fontFamily: 'var(--font-family-arabic)',
-  fontSize: '1.2rem',
+  fontSize: '1.5rem',
   lineHeight: 1.8,
   textAlign: 'right',
   direction: 'rtl',
-  color: theme.palette.text.primary,
-  marginBottom: theme.spacing(2)
+  color: '#ffffff',
+  marginBottom: '16px',
+  '@media (max-width: 600px)': {
+    fontSize: '1.3rem',
+    lineHeight: 1.7
+  },
+  '@media (min-width: 900px)': {
+    fontSize: '1.7rem',
+    lineHeight: 1.9
+  }
 }));
 
-const TafseerText = styled(Typography)(({ theme }) => ({
+const TafseerText = styled(Typography)(() => ({
   fontFamily: 'var(--font-family-arabic)',
-  fontSize: '1rem',
-  lineHeight: 1.6,
+  fontSize: '1.2rem',
+  lineHeight: 1.7,
   textAlign: 'right',
   direction: 'rtl',
-  color: theme.palette.text.secondary,
-  backgroundColor: theme.palette.background.default,
-  padding: theme.spacing(2),
+  color: '#cccccc',
+  backgroundColor: '#2a2a2a',
+  padding: '20px',
   borderRadius: '8px',
-  border: `1px solid ${theme.palette.divider}`
+  border: '1px solid #444444',
+  '@media (max-width: 600px)': {
+    fontSize: '1.1rem',
+    lineHeight: 1.6,
+    padding: '16px'
+  },
+  '@media (min-width: 900px)': {
+    fontSize: '1.4rem',
+    lineHeight: 1.8,
+    padding: '24px'
+  }
 }));
 
 /**
@@ -77,26 +122,8 @@ const TafseerPopup = ({
   const [error, setError] = useState(null);
   const [bookmarked, setBookmarked] = useState(false);
 
-  // جلب بيانات التفسير
-  useEffect(() => {
-    if (open && actualSurahNumber && actualAyahNumber) {
-      fetchTafseer();
-    }
-  }, [open, actualSurahNumber, actualAyahNumber]);
-
-  // إضافة معالج للـ Escape key
-  useEffect(() => {
-    const handleEscape = (e) => {
-      if (e.key === 'Escape' && open) {
-        onClose();
-      }
-    };
-
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
-  }, [open, onClose]);
-
-  const fetchTafseer = async () => {
+  // تعريف دالة جلب التفسير أولاً
+  const fetchTafseer = useCallback(async () => {
     setLoading(true);
     setError(null);
     
@@ -148,7 +175,26 @@ const TafseerPopup = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, [actualSurahNumber, actualAyahNumber]);
+
+  // جلب بيانات التفسير
+  useEffect(() => {
+    if (open && actualSurahNumber && actualAyahNumber) {
+      fetchTafseer();
+    }
+  }, [open, actualSurahNumber, actualAyahNumber, fetchTafseer]);
+
+  // إضافة معالج للـ Escape key
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape' && open) {
+        onClose();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [open, onClose]);
 
   const handleShare = async () => {
     const shareText = `
@@ -165,7 +211,7 @@ ${tafseerData?.[0]?.text || ''}
           text: shareText
         });
       } catch (err) {
-        console.log('Share cancelled');
+        console.log('Share cancelled:', err.message);
       }
     } else {
       // نسخ إلى الحافظة
@@ -187,51 +233,80 @@ ${tafseerData?.[0]?.text || ''}
       scroll="paper"
       aria-labelledby="tafseer-dialog-title"
     >
-      <DialogTitle id="tafseer-dialog-title">
+      <DialogTitle id="tafseer-dialog-title" sx={{ backgroundColor: '#1a1a1a', borderBottom: '1px solid #151515' }}>
         <Box display="flex" alignItems="center" justifyContent="space-between">
           <Box display="flex" alignItems="center" gap={1}>
-            <BookIcon color="primary" />
-            <Typography variant="h6">
+            <BookIcon sx={{ color: 'var(--chart-10)' }} />
+            <Typography 
+              variant="h6" 
+              sx={{ 
+                color: '#ffffff', 
+                fontFamily: 'var(--font-family-arabic)',
+                fontSize: { xs: '2rem', sm: '2rem', md: '2.4rem' }
+              }}
+            >
               تفسير {actualSurahName} - الآية {convertToArabicNumerals(actualAyahNumber)}
             </Typography>
           </Box>
-          <IconButton onClick={onClose} size="small">
+          <IconButton onClick={onClose} size="small" sx={{ color: '#ffffff' }}>
             <CloseIcon />
           </IconButton>
         </Box>
       </DialogTitle>
 
-      <DialogContent dividers>
+      <DialogContent dividers sx={{ backgroundColor: '#343434', borderColor: '#262626' }}>
         {/* نص الآية */}
         {actualAyahText && (
           <Box mb={3}>
-            <Chip
-              label="نص الآية"
-              color="primary"
-              variant="outlined"
-              sx={{ mb: 2 }}
-            />
+            <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
+              <Chip
+                label="نص الآية"
+                variant="outlined"
+                sx={{ 
+                  p: 2.5, 
+                  color: 'var(--chart-10)', 
+                  borderColor: 'var(--chart-4)',
+                  backgroundColor: '#2a2a2a',
+                  fontSize: '20px',
+                }}
+              />
+              <CopyButton 
+                content={actualAyahText}
+                variant="outline" 
+                size="sm"
+                className="bg-[#262626] border-none shadow-[#000] hover:bg-[#262626] text-chart-4 shadow-sm  hover:text-chart-18" />
+            </Box>
             <ArabicText>
               {actualAyahText}
             </ArabicText>
-            <Divider />
+            <Divider sx={{ backgroundColor: '#7d7a7a' }} />
           </Box>
         )}
 
         {/* محتوى التفسير */}
         {loading && (
-          <Box display="flex" justifyContent="center" py={4}>
-            <CircularProgress />
-            <Typography sx={{ ml: 2 }}>جاري تحميل التفسير...</Typography>
+          <Box display="flex" justifyContent="center" py={6}>
+            <LoaderOne />
           </Box>
         )}
 
         {error && (
           <Box textAlign="center" py={4}>
-            <Typography color="error">{error}</Typography>
-            <Button onClick={fetchTafseer} sx={{ mt: 2 }}>
-              إعادة المحاولة
-            </Button>
+            <Typography sx={{ 
+              color: '#ff6b6b',
+              fontSize: { xs: '1rem', sm: '1.1rem', md: '1.2rem' }
+            }}>{error}</Typography>
+            <div style={{ marginTop: '16px' }}>
+              <AnimatedButton 
+                onClick={fetchTafseer}
+                sx={{ 
+                  color: '#4fc3f7',
+                  fontSize: { xs: '0.9rem', sm: '1rem', md: '1.1rem' }
+                }}
+              >
+                إعادة المحاولة
+              </AnimatedButton>
+            </div>
           </Box>
         )}
 
@@ -239,12 +314,26 @@ ${tafseerData?.[0]?.text || ''}
           <Box>
             {tafseerData.map((tafseer, index) => (
               <Box key={index} mb={3}>
-                <Chip 
-                  label={tafseer.name} 
-                  color="secondary" 
-                  variant="outlined" 
-                  sx={{ mb: 2 }}
-                />
+                <Box display="flex" alignItems="center" justifyContent="space-between" mb={2}>
+                  <Chip 
+                    label={tafseer.name} 
+                    variant="outlined" 
+                    sx={{ 
+                      p: 2.5,
+                      color: 'var(--chart-10)', 
+                      borderColor: '#311111',
+                      boxShadow:'0px 3px 3px #000',
+                      backgroundColor: '#2a2a2a',
+                      fontSize: '20px',
+                    }}
+                  />
+                  <CopyButton 
+                    content={`تفسير ${tafseer.name}:\n\n${tafseer.text}`}
+                    variant="outline" 
+                    size="sm"
+                    className="bg-[#262626] border-none shadow-[#000] hover:bg-[#262626] text-chart-10 shadow-sm  hover:text-chart-18"
+                  />
+                </Box>
                 <TafseerText>
                   {tafseer.text}
                 </TafseerText>
@@ -254,26 +343,39 @@ ${tafseerData?.[0]?.text || ''}
         )}
       </DialogContent>
 
-      <DialogActions>
-        <Button
+      <DialogActions sx={{ backgroundColor: '#311111', borderTop: '1px solid #333333', gap: 2 }}>
+        <AnimatedButton
           onClick={handleBookmark}
           startIcon={<BookmarkIcon />}
-          color={bookmarked ? 'primary' : 'inherit'}
+          sx={{ 
+            color: bookmarked ? 'var(--chart-12)' : '#cccccc',
+            fontSize: { xs: '0.9rem', sm: '1rem', md: '1.1rem' }
+          }}
         >
           {bookmarked ? 'محفوظ' : 'حفظ'}
-        </Button>
+        </AnimatedButton>
         
-        <Button
+        <AnimatedButton
           onClick={handleShare}
           startIcon={<ShareIcon />}
           disabled={!tafseerData}
+          sx={{ 
+            color: tafseerData ? '#cccccc' : '#666666',
+            fontSize: { xs: '2rem', sm: '2rem', md: '2rem' }
+          }}
         >
-          مشاركة
-        </Button>
-        
-        <Button onClick={onClose} variant="contained">
-          إغلاق
-        </Button>
+          
+        </AnimatedButton>
+
+        {/* زر نسخ كامل للآية والتفاسير */}
+        {tafseerData && (
+          <CopyButton 
+            content={`${actualAyahText ? `${actualAyahText}\n\n` : ''}${tafseerData.map(t => `تفسير ${t.name}:\n${t.text}`).join('\n\n')}`}
+            variant="outline" 
+            size="sm"
+            className="bg-[#000] border-[var(--chart-10)] hover:text-chart-18 hover:bg-[#262626] text-[var(--chart-10)]"
+          />
+        )}
       </DialogActions>
     </StyledDialog>
   );

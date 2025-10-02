@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Search, BookOpen, X } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 const QuranSearchWidget = () => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const router = useRouter();
 
   // البحث في الآيات
   const handleSearch = async (searchQuery) => {
@@ -54,6 +56,19 @@ const QuranSearchWidget = () => {
     setShowResults(false);
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (query.trim().length >= 2) {
+      router.push(`/search?q=${encodeURIComponent(query.trim())}`);
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSubmit(e);
+    }
+  };
+
   return (
     <div className="relative w-full max-w-2xl mx-auto">
       {/* شريط البحث */}
@@ -64,6 +79,7 @@ const QuranSearchWidget = () => {
           placeholder="ابحث في آيات القرآن الكريم..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
+          onKeyPress={handleKeyPress}
           className="w-full bg-gray-800/90 backdrop-blur-sm text-white placeholder-gray-400 rounded-full px-12 py-4 border border-gray-600 focus:border-blue-500 focus:outline-none text-right shadow-lg"
         />
         
@@ -136,9 +152,12 @@ const QuranSearchWidget = () => {
               
               {results.length > 10 && (
                 <div className="p-3 text-center border-t border-gray-700 bg-gray-700/30">
-                  <span className="text-sm text-gray-400">
-                    و {results.length - 10} نتائج أخرى...
-                  </span>
+                  <button
+                    onClick={() => router.push(`/search?q=${encodeURIComponent(query.trim())}`)}
+                    className="text-sm text-blue-400 hover:text-blue-300 transition-colors underline"
+                  >
+                    عرض جميع النتائج ({results.length})
+                  </button>
                 </div>
               )}
             </>
