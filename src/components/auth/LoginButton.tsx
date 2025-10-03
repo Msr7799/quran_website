@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import Image from "next/image";
+import Script from "next/script";
 
 export default function LoginButton() {
   const { data: session, status } = useSession();
+  const buttonDivRef = useRef<HTMLDivElement>(null);
 
   if (status === "loading") {
     return (

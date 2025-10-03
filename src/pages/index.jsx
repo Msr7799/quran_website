@@ -23,7 +23,7 @@ import { ShineBorder } from '@/registry/magicui/shine-border';
 import { WordRotate } from '@registry/magicui/word-rotate';
 import { LightRays } from "@/registry/magicui/light-rays";
 import dynamic from 'next/dynamic';
-import LoginButton from '../components/auth/LoginButton';
+import { signIn } from 'next-auth/react';
 import DrawOutlineButton from '../components/ui/animated-button';
 // تحميل SwipeCarousel ديناميكياً للشاشات الكبيرة فقط
 const SwipeCarousel = dynamic(() => import('../components/SwipCarsouel').then(mod => mod.SwipeCarousel), {
@@ -122,7 +122,7 @@ const HomePage = () => {
       title: 'المصحف الشريف'
     },
     {
-      src: 'img/hero.png',
+      src: 'img/hero2.png',
       alt: 'الاستماع للقرآن',
       title: 'الاستماع للقرآن'
     }
@@ -305,11 +305,11 @@ const HomePage = () => {
         </section>
 
         {/* Navigation section */}
-        <section className="relative z-10 md:mt-20 lg:mt-32 flex justify-center items-center px-4 md:px-8">
-          <div className="relative p-6 md:p-8 text-center w-full max-w-5xl bg-gradient-to-br from-[#252525]/90 via-[#252526]/90 to-[#252525]/90 rounded-2xl backdrop-blur-xl border-2 border-[#565656]/30 shadow-2xl shadow-[#565656]/10">
+        <section className="relative z-10 lg:mt-48 flex justify-center items-center px-4 md:px-8">
+          <div className="relative p-6 md:p-8 text-center w-full bg-gradient-to-br from-chart-17/90 via-chart-17/90 to-chart-17/90 rounded-2xl backdrop-blur-xl border-2 border-[#565656]/30 shadow-2xl shadow-[#565656]/10">
             <ShineBorder 
-              shineColor={theme.theme === "dark" ? "rgba(255, 255, 255, 0.4)" : "rgba(255, 255, 255, 0.6)"} 
-              borderWidth={9}
+              shineColor={theme.theme === "dark" ? "rgba(186, 187, 229, 0.4)" : "rgba(67, 85, 109, 0.6)"} 
+              borderWidth={4}
               duration={15}
             />
             
@@ -324,8 +324,19 @@ const HomePage = () => {
             </div>
 
             {/* زر تسجيل الدخول */}
-            <div className="mb-6 bg-[#252525]/90 rounded-2xl p-6 md:p-8 border-2 border-[#565656]/30 shadow-2xl shadow-[#565656]/10 md:mb-8 px-2 md:px-4">
-              <LoginButton />
+            <div className="mb-6 md:mb-8 px-2 md:px-4 flex justify-center">
+              <button 
+                onClick={() => signIn('google')}
+                className="transition-transform hover:scale-105 active:scale-95"
+              >
+                <Image 
+                  src="/google-btn-muted.svg" 
+                  alt="تسجيل الدخول بجوجل" 
+                  width={179} 
+                  height={46}
+                  className="w-auto h-12 md:h-14"
+                />
+              </button>
             </div>
             <div className="mb-6 flex flex-col arabic-font sm:flex-row lg:flex-row gap-4 md:gap-6 items-center justify-center">
               <DrawOutlineButton>ابدأ التصفح</DrawOutlineButton>
