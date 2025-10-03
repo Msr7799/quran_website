@@ -2,6 +2,7 @@
 import React from 'react';
 import Head from 'next/head';
 import VerticalAccordion from '../../components/ui/Accordions/VerticalAccordion';
+import { HoverImageLinks } from '../../components/ui/hover-image-links';
 
 /**
  * صفحة المصحف PDF المحدثة
@@ -28,10 +29,13 @@ const QuranPdfPage = () => {
              رابط تحميل PDF مباشر وبجوده عاليه مجموعة منتقاة من المصاحف المختلفة برويات معتمدة
             </p>
           </div>
+          <div className="m-10">
+
+          <VerticalAccordion />
+          </div>
           
-          <VerticalAccordion 
-          
-          />
+          {/* قسم الكتب الإسلامية */}
+          <HoverImageLinks />
         </div>
       </div>
     </>

@@ -60,7 +60,7 @@ const Panel = ({
   return (
     <>
       <button
-        className="bg-muted/10 hover:bg-chart-3 transition-colors p-3 border-r-[1px] border-b-[1px] border-muted/50 rounded-sm flex flex-row-reverse lg:flex-col justify-start items-center gap-4 relative group"
+        className="bg-chart-13 hover:bg-chart-17 transition-colors p-3 border-r-[1px] border-b-[1px] border-muted/50 rounded-sm flex flex-row-reverse lg:flex-col justify-start items-center gap-4 relative group"
         onClick={() => setOpen(id)}
       >
         <span
@@ -73,10 +73,10 @@ const Panel = ({
         </span>
         <span className=" lg:hidden text-xl font-light">{title}</span>
       
-        <div className="w-6 lg:w-full aspect-square bg-indigo-950 text-white grid place-items-center">
+        <div className="w-6 lg:w-full aspect-square bg-[#000] border-2 rounded-full border-[#000] text-white grid place-items-center">
         <Icon /> 
         </div>
-        <span className="w-4 h-4 bg-black/50 group-hover:bg-muted/30 transition-colors border-r-[1px] border-b-[1px] lg:border-b-0 lg:border-t-[1px] border-slate-200 rotate-45 absolute bottom-0 lg:bottom-[50%] right-[50%] lg:right-0 translate-y-[50%] translate-x-[50%] z-20" />
+        <span className="w-4 h-4 bg-black/50 group-hover:bg-muted/30 transition-colors border-r-[1px] border-b-[1px] lg:border-b-0 lg:border-t-[1px] border-slate-200 rotate-45 absolute bottom-0 lg:bottom-[50%] right-[50%] lg:right-0 arabic-font translate-y-[50%] translate-x-[50%] z-20" />
       </button>
 
 
@@ -104,7 +104,7 @@ const Panel = ({
           >
             {/* أيقونة التحميل */}
             <div className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <FiDownload className="text-white text-xl" />
+              <FiDownload className="arabic-font text-white text-xl" />
             </div>
             
             <motion.div
