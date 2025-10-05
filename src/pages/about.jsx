@@ -1,7 +1,7 @@
 // pages/about.jsx
 import SeoHead from '../components/SeoHead';
 import styles from '../styles/About.module.css';
-import { FaInfoCircle, FaHome, FaEnvelope } from 'react-icons/fa';
+import { FaInfoCircle, FaHome, FaEnvelope, FaCode } from 'react-icons/fa';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 
@@ -61,6 +61,71 @@ export default function About() {
         </section>
 
         <section className={styles.section}>
+          <h2 className={styles.title}><FaCode className={styles.titleIcon} title='التكنولوجيا المستخدمة' aria-label='التكنولوجيا المستخدمة' /> التكنولوجيا المستخدمة</h2>
+          <p className={styles.paragraph}>
+            تم بناء هذا الموقع باستخدام أحدث التقنيات والأدوات لضمان أداء عالٍ وتجربة مستخدم ممتازة:
+          </p>
+          <div className={styles.techGrid}>
+            <div className={styles.techItem}>
+              <Image src="/about/Next.js-OaGXgRZeP_brandlogos.net.svg" alt="Next.js" width={80} height={80} className={styles.techIcon} />
+              <span className={styles.techName}>Next.js</span>
+            </div>
+            <div className={styles.techItem}>
+              <Image src="/about/react-logo-A60AB5e1_brandlogos.net.svg" alt="React" width={80} height={80} className={styles.techIcon} />
+              <span className={styles.techName}>React</span>
+            </div>
+            <div className={styles.techItem}>
+              <Image src="/about/node.js-logo-brandlogos.net_9gb0f3wp3.svg" alt="Node.js" width={80} height={80} className={styles.techIcon} />
+              <span className={styles.techName}>Node.js</span>
+            </div>
+            <div className={styles.techItem}>
+              <Image src="/about/MongoDB.svg" alt="MongoDB" width={80} height={80} className={styles.techIcon} />
+              <span className={styles.techName}>MongoDB</span>
+            </div>
+            <div className={styles.techItem}>
+              <Image src="/about/tailwind-css-logo-brandlogos.net_lx9ncaaci.svg" alt="Tailwind CSS" width={80} height={80} className={styles.techIcon} />
+              <span className={styles.techName}>Tailwind CSS</span>
+            </div>
+            <div className={styles.techItem}>
+              <Image src="/about/vercel-logo-brandlogos.net_z7tyu1fer.svg" alt="Vercel" width={80} height={80} className={styles.techIcon} />
+              <span className={styles.techName}>Vercel</span>
+            </div>
+            <div className={styles.techItem}>
+              <Image src="/about/github-wordmark-logo-brandlogos.net_8jszq0y8b.svg" alt="GitHub" width={80} height={80} className={styles.techIcon} />
+              <span className={styles.techName}>GitHub</span>
+            </div>
+            <div className={styles.techItem}>
+              <Image src="/about/postman-logo-brandlogos.net_394yrhhe5.svg" alt="Postman" width={80} height={80} className={styles.techIcon} />
+              <span className={styles.techName}>Postman</span>
+            </div>
+            <div className={styles.techItem}>
+              <Image src="/about/SQLite-kATlFTaf_brandlogos.net.svg" alt="SQLite" width={80} height={80} className={styles.techIcon} />
+              <span className={styles.techName}>SQLite</span>
+            </div>
+            <div className={styles.techItem}>
+              <Image src="/about/i6.svg" alt="API Development" width={80} height={80} className={styles.techIcon} />
+              <span className={styles.techName}>API Development</span>
+            </div>
+            <div className={styles.techItem}>
+              <Image src="/about/b3.svg" alt="Backend Services" width={80} height={80} className={styles.techIcon} />
+              <span className={styles.techName}>Backend Services</span>
+            </div>
+            <div className={styles.techItem}>
+              <Image src="/about/p5.svg" alt="Performance" width={80} height={80} className={styles.techIcon} />
+              <span className={styles.techName}>Performance</span>
+            </div>
+            <div className={styles.techItem}>
+              <Image src="/about/p6.svg" alt="Progressive Web App" width={80} height={80} className={styles.techIcon} />
+              <span className={styles.techName}>Progressive Web App</span>
+            </div>
+            <div className={styles.techItem}>
+              <Image src="/about/window.svg" alt="Cross Platform" width={80} height={80} className={styles.techIcon} />
+              <span className={styles.techName}>Cross Platform</span>
+            </div>
+          </div>
+        </section>
+
+        <section className={styles.section}>
           <h2 className={styles.title}><FaEnvelope className={styles.titleIcon} title='معلومات المطور' aria-label='معلومات المطور' /> المطور</h2>
           <div style={{ marginBottom: 16, position: 'relative', width: '100%', height: '300px' }}>
             <Image
@@ -72,6 +137,17 @@ export default function About() {
                 borderRadius: 8 
               }}
               title='معلومات عن المطور'
+              priority
+            />
+          </div>
+          <div className={styles.developerImageContainer}>
+            <Image
+              src="/about/about-me.gif"
+              alt="حساب GitHub للمطور"
+              width={800}
+              height={400}
+              className={styles.developerImage}
+              title='حساب GitHub للمطور'
               priority
             />
           </div>

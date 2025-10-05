@@ -31,7 +31,7 @@
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
-  color: #f0f6fc;
+  color: #f8f9fa;
   transition: all 0.3s ease;
   font-family: 'Arabic UI', 'Tahoma', 'Arial Unicode MS', sans-serif; /* arabic-font */
 }
@@ -49,7 +49,7 @@
 
 .paragraph {
   line-height: 1.8;
-  color: #c9d1d9;
+  color: #f8f9fa;
   font-size: 1.1rem;
   font-family: 'arabic-font', Arial, sans-serif;
   text-align: right;
@@ -102,6 +102,81 @@
   border-color: #58a6ff;
 }
 
+/* Tech Grid Styles */
+.techGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+  padding: 1rem;
+}
+
+.techItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  background-color: #e2e2e2;
+  border: 1px solid #30363d;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.techItem:hover {
+  transform: translateY(-5px);
+  border-color: #52575e;
+  box-shadow: 0 8px 16px rgba(88, 166, 255, 0.3);
+  background-color: #b9b9b9;
+}
+
+.techIcon {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  filter: brightness(1);
+  transition: all 0.3s ease;
+}
+
+.techItem:hover .techIcon {
+  filter: brightness(1.2);
+  transform: scale(1.1);
+}
+
+.techName {
+  color: #4a5568;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: center;
+  font-family: 'arabic-font', Arial, sans-serif;
+}
+
+/* Developer Image Styles */
+.developerImageContainer {
+  width: 100%;
+  margin: 2rem 0;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 2px solid #30363d;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.developerImageContainer:hover {
+  border-color: #5c5e61;
+  box-shadow: 0 8px 24px rgba(88, 166, 255, 0.3);
+  transform: scale(1.02);
+}
+
+.developerImage {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  display: block;
+}
+
 /* استجابة للشاشات الصغيرة */
 @media (max-width: 768px) {
   .container {
@@ -121,6 +196,25 @@
   .paragraph {
     font-size: 1rem;
     line-height: 1.6;
+  }
+  
+  .techGrid {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 1rem;
+    padding: 0.5rem;
+  }
+  
+  .techItem {
+    padding: 1rem;
+  }
+  
+  .techIcon {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .techName {
+    font-size: 0.8rem;
   }
 }
   
