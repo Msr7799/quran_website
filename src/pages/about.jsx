@@ -2,12 +2,10 @@
 import SeoHead from '../components/SeoHead';
 import styles from '../styles/About.module.css';
 import { FaInfoCircle, FaHome, FaEnvelope } from 'react-icons/fa';
-import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 
 export default function About() {
-  const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   // حل مشكلة hydration
@@ -28,22 +26,37 @@ export default function About() {
         image={`${process.env.NEXT_PUBLIC_BASE_URL}/images/about-image.jpg`}
         keywords="موقع القرآن الكريم, معلومات عنا, رؤية الموقع"
       />
-      <main className={`${styles.container} ${theme === 'dark' ? styles.darkTheme : styles.lightTheme}`}>
+      <div style={{
+        backgroundColor: '#0d1117',
+        minHeight: '100vh',
+        width: '100vw',
+        margin: 0,
+        padding: 0,
+        position: 'relative',
+        left: '50%',
+        right: '50%',
+        marginLeft: '-50vw',
+        marginRight: '-50vw'
+      }}>
+        <main className={styles.container}>
         <section className={styles.section}>
           <h1 className={styles.title}><FaHome className={styles.titleIcon} title='من نحن' aria-label='من نحن' /> من نحن</h1>
           <p className={styles.paragraph} title='بحمد الله وتوفيقه نقدم موقع القرآن الكريم' aria-label='بحمد الله وتوفيقه نقدم موقع القرآن الكريم'>
             بحمد الله وتوفيقه، نقدم موقع القرآن الكريم الذي يهدف إلى تقديم محتوى شامل ومتقدم يخص كتاب الله العزيز، 
             بما في ذلك فهرس القرآن وملفات PDF و MP3 وصفحات للقراء. نسأل الله العلي العظيم أن يجعل هذا العمل 
-            في ميزان حسنات عبدالله الرميحي وأهل بيته، وأن ينفع به المسلمين في كل مكان.
+            في ميزان الحسنات، وأن ينفع به المسلمين في كل مكان.
           </p>
         </section>
         <section className={styles.section}>
           <h2 className={styles.title}><FaInfoCircle className={styles.titleIcon} title='رؤيتنا' aria-label='رؤيتنا' /> رؤيتنا</h2>
           <p className={styles.paragraph}>
-            بإذن الله تعالى، نسعى من خلال هذا الموقع إلى تقديم محتوى دقيق وموثوق من كتاب الله العزيز يتماشى مع احتياجات 
-            المستخدمين في استكشاف وتعلم القرآن الكريم. نحن ملتزمون بفضل الله ومنّته بتوفير تجربة مريحة وسلسة لمساعدة 
-            إخواننا المسلمين على الوصول إلى الموارد القرآنية بسهولة ويسر. نسأل الله تبارك وتعالى أن يبارك في هذا العمل 
-            وأن يجعله صدقة جارية لعبدالله الرميحي وأهل بيته وأن ينفع به الأمة الإسلامية جمعاء.
+            رؤيتنا بأن يكون عندنا موقع يقدم جميع ما يخدم كتاب الله ويجعل وصوله سهلاً لكل العالم، ومساعدة المطورين على الحصول على بيانات القرآن لعمل برامج القرآن. وكل البيانات تم توفيرها من مجمع الملك فهد لطباعة المصحف الشريف ومن منبرهم الرسمي.
+          </p>
+          <p className={styles.paragraph}>
+            نسعى لإنشاء مكتبة دينية متكاملة تشمل علوم القرآن والتجويد والفقه والتوحيد والأحاديث وصور من حياة الأنبياء والتفاسير والمعاجم. نهدف بإذن الله للوصول إلى العالم وتوفير هذه المراجع والبيانات الإسلامية ورفع كلمة الله.
+          </p>
+          <p className={styles.paragraph}>
+            من نظرتنا أننا نطمح بأن يوفقنا الله لإنهاء البرنامج الخاص للهواتف في أقرب وقت ممكن بإذن الله.
           </p>
         </section>
 
@@ -67,12 +80,12 @@ export default function About() {
             نحن نؤمن بأهمية توفير موارد تعليمية ودينية عالية الجودة للمستخدمين.
           </p>
           <p className={styles.paragraph}>
-            للمزيد من المعلومات أو للاستفسارات، لا تتردد في <a href="mailto:rn0x.me@gmail.com" className={styles.link} title='تواصل عبر البريد الإلكتروني' aria-label='تواصل عبر البريد الإلكتروني'>التواصل معنا</a>.
+            للمزيد من المعلومات أو للاستفسارات، لا تتردد في <a href="mailto:alromaihi2224@gmail.com" className={styles.link} title='تواصل عبر البريد الإلكتروني' aria-label='تواصل عبر البريد الإلكتروني'>التواصل معنا</a>.
           </p>
         </section>
 
-
-      </main>
+        </main>
+      </div>
     </>
   );
 }

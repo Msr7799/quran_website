@@ -4,8 +4,8 @@ const config = {
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
-    './ui/**/*.{js,ts,jsx,tsx}',
-    './registry/**/*.{js,ts,jsx,tsx}',
+    './src/ui/**/*.{js,ts,jsx,tsx}',
+    './src/registry/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     extend: {
