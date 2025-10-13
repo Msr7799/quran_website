@@ -67,59 +67,87 @@ export default function About() {
           </p>
           <div className={styles.techGrid}>
             <div className={styles.techItem}>
-              <Image src="/about/Next.js-OaGXgRZeP_brandlogos.net.svg" alt="Next.js" width={80} height={80} className={styles.techIcon} />
+              <div className={styles.techIconWrapper}>
+                <Image src="/about/Next.js-OaGXgRZeP_brandlogos.net.svg" alt="Next.js"  fill className={styles.techIcon} style={{ objectFit: 'contain' }} />
+              </div>
               <span className={styles.techName}>Next.js</span>
             </div>
             <div className={styles.techItem}>
-              <Image src="/about/react-logo-A60AB5e1_brandlogos.net.svg" alt="React" width={80} height={80} className={styles.techIcon} />
+              <div className={styles.techIconWrapper}>
+                <Image src="/about/react-logo-A60AB5e1_brandlogos.net.svg" alt="React" fill className={styles.techIcon} style={{ objectFit: 'contain' }} />
+              </div>
               <span className={styles.techName}>React</span>
             </div>
             <div className={styles.techItem}>
-              <Image src="/about/node.js-logo-brandlogos.net_9gb0f3wp3.svg" alt="Node.js" width={80} height={80} className={styles.techIcon} />
+              <div className={styles.techIconWrapper}>
+                <Image src="/about/node.js-logo-brandlogos.net_9gb0f3wp3.svg" alt="Node.js" fill className={styles.techIcon} style={{ objectFit: 'contain' }} />
+              </div>
               <span className={styles.techName}>Node.js</span>
             </div>
             <div className={styles.techItem}>
-              <Image src="/about/MongoDB.svg" alt="MongoDB" width={80} height={80} className={styles.techIcon} />
+              <div className={styles.techIconWrapper}>
+                <Image src="/about/MongoDB.svg" alt="MongoDB" fill className={styles.techIcon} style={{ objectFit: 'contain' }} />
+              </div>
               <span className={styles.techName}>MongoDB</span>
             </div>
             <div className={styles.techItem}>
-              <Image src="/about/tailwind-css-logo-brandlogos.net_lx9ncaaci.svg" alt="Tailwind CSS" width={80} height={80} className={styles.techIcon} />
+              <div className={styles.techIconWrapper}>
+                <Image src="/about/tailwind-css-logo-brandlogos.net_lx9ncaaci.svg" alt="Tailwind CSS" fill className={styles.techIcon} style={{ objectFit: 'contain' }} />
+              </div>
               <span className={styles.techName}>Tailwind CSS</span>
             </div>
             <div className={styles.techItem}>
-              <Image src="/about/vercel-logo-brandlogos.net_z7tyu1fer.svg" alt="Vercel" width={80} height={80} className={styles.techIcon} />
+              <div className={styles.techIconWrapper}>
+                <Image src="/about/vercel-logo-brandlogos.net_z7tyu1fer.svg" alt="Vercel" fill className={styles.techIcon} style={{ objectFit: 'contain' }} />
+              </div>
               <span className={styles.techName}>Vercel</span>
             </div>
             <div className={styles.techItem}>
-              <Image src="/about/github-wordmark-logo-brandlogos.net_8jszq0y8b.svg" alt="GitHub" width={80} height={80} className={styles.techIcon} />
+              <div className={styles.techIconWrapper}>
+                <Image src="/about/github-wordmark-logo-brandlogos.net_8jszq0y8b.svg" alt="GitHub" fill className={styles.techIcon} style={{ objectFit: 'contain' }} />
+              </div>
               <span className={styles.techName}>GitHub</span>
             </div>
             <div className={styles.techItem}>
-              <Image src="/about/postman-logo-brandlogos.net_394yrhhe5.svg" alt="Postman" width={80} height={80} className={styles.techIcon} />
+              <div className={styles.techIconWrapper}>
+                <Image src="/about/postman-logo-brandlogos.net_394yrhhe5.svg" alt="Postman" fill className={styles.techIcon} style={{ objectFit: 'contain' }} />
+              </div>
               <span className={styles.techName}>Postman</span>
             </div>
             <div className={styles.techItem}>
-              <Image src="/about/SQLite-kATlFTaf_brandlogos.net.svg" alt="SQLite" width={80} height={80} className={styles.techIcon} />
+              <div className={styles.techIconWrapper}>
+                <Image src="/about/SQLite-kATlFTaf_brandlogos.net.svg" alt="SQLite" fill className={styles.techIcon} style={{ objectFit: 'contain' }} />
+              </div>
               <span className={styles.techName}>SQLite</span>
             </div>
             <div className={styles.techItem}>
-              <Image src="/about/i6.svg" alt="API Development" width={80} height={80} className={styles.techIcon} />
+              <div className={styles.techIconWrapper}>
+                <Image src="/about/i6.svg" alt="API Development" fill className={styles.techIcon} style={{ objectFit: 'contain' }} />
+              </div>
               <span className={styles.techName}>API Development</span>
             </div>
             <div className={styles.techItem}>
-              <Image src="/about/b3.svg" alt="Backend Services" width={80} height={80} className={styles.techIcon} />
+              <div className={styles.techIconWrapper}>
+                <Image src="/about/b3.svg" alt="Backend Services" fill className={styles.techIcon} style={{ objectFit: 'contain' }} />
+              </div>
               <span className={styles.techName}>Backend Services</span>
             </div>
             <div className={styles.techItem}>
-              <Image src="/about/p5.svg" alt="Performance" width={80} height={80} className={styles.techIcon} />
+              <div className={styles.techIconWrapper}>
+                <Image src="/about/p5.svg" alt="Performance" fill className={styles.techIcon} style={{ objectFit: 'contain' }} />
+              </div>
               <span className={styles.techName}>Performance</span>
             </div>
             <div className={styles.techItem}>
-              <Image src="/about/p6.svg" alt="Progressive Web App" width={80} height={80} className={styles.techIcon} />
+              <div className={styles.techIconWrapper}>
+                <Image src="/about/p6.svg" alt="Progressive Web App" fill className={styles.techIcon} style={{ objectFit: 'contain' }} />
+              </div>
               <span className={styles.techName}>Progressive Web App</span>
             </div>
             <div className={styles.techItem}>
-              <Image src="/about/window.svg" alt="Cross Platform" width={80} height={80} className={styles.techIcon} />
+              <div className={styles.techIconWrapper}>
+                <Image src="/about/window.svg" alt="Cross Platform" fill className={styles.techIcon} style={{ objectFit: 'contain' }} />
+              </div>
               <span className={styles.techName}>Cross Platform</span>
             </div>
           </div>
@@ -127,29 +155,36 @@ export default function About() {
 
         <section className={styles.section}>
           <h2 className={styles.title}><FaEnvelope className={styles.titleIcon} title='معلومات المطور' aria-label='معلومات المطور' /> المطور</h2>
+          <p className='mb-7'> موقع بيانات القرآن يوفر api لانشاء مواقع القرآن الكريم يحمل على بيانات للتحميل الماشر ويمكنك أستعمال ال endpoints
+
+          </p>
           <div style={{ marginBottom: 16, position: 'relative', width: '100%', height: '300px' }}>
-            <Image
-              src="/quran_data_website.png"
-              alt="Quran Data Website"
-              fill
-              style={{ 
-                objectFit: 'contain',
-                borderRadius: 8 
-              }}
-              title='معلومات عن المطور'
-              priority
-            />
+            <a href="https://msr-quran-data.vercel.app/" target="_blank" rel="noopener noreferrer" style={{ cursor: 'pointer', display: 'block', position: 'relative', width: '100%', height: '100%' }}>
+              <Image
+                src="/quran_data_website.png"
+                alt="Quran Data Website"
+                fill
+                style={{ 
+                  objectFit: 'contain',
+                  borderRadius: 8 
+                }}
+                title='معلومات عن المطور'
+                priority
+              />
+            </a>
           </div>
           <div className={styles.developerImageContainer}>
-            <Image
-              src="/about/about-me.gif"
-              alt="حساب GitHub للمطور"
-              width={800}
-              height={400}
-              className={styles.developerImage}
-              title='حساب GitHub للمطور'
-              priority
-            />
+            <a href="https://github.com/msr7799" target="_blank" rel="noopener noreferrer" style={{ cursor: 'pointer', display: 'block' }}>
+              <Image
+                src="/about/about-me.gif"
+                alt="حساب GitHub للمطور"
+                width={800}
+                height={400}
+                className={styles.developerImage}
+                title='حساب GitHub للمطور'
+                priority
+              />
+            </a>
           </div>
           <p className={styles.paragraph}>
             هذا الموقع تم تطويره كجزء من مشروع لتقديم محتوى القرآن الكريم بشكل متكامل وسهل الاستخدام.
