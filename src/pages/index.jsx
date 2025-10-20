@@ -247,7 +247,7 @@ const HomePage = () => {
         </div>
 
         {/* البسملة في أعلى الموقع */}
-        <div className="relative z-10 flex justify-center items-center py-8 w-full mb-4 rounded-lg border-2 border-[#565656]/30 bg-gradient-to-r from-[#252525]/80 via-[#252526]/80 to-[#252525]/80 backdrop-blur-sm shadow-2xl">          
+        <div className="relative z-10 flex justify-center items-center py-4 sm:py-6 md:py-8 w-full mb-2 sm:mb-3 md:mb-4 rounded-lg border-2 border-[#565656]/30 bg-gradient-to-r from-[#252525]/80 via-[#252526]/80 to-[#252525]/80 backdrop-blur-sm shadow-2xl">          
           {mounted && (
             <Image
               src={isDarkMode ? "/basmalh-dark.svg" : "/basmalh-dark.svg"}
@@ -256,7 +256,7 @@ const HomePage = () => {
               height={200}
               priority
               quality={95}
-              className="drop-shadow-2xl"
+              className="drop-shadow-2xl w-[280px] sm:w-[350px] md:w-[400px] lg:w-[500px] h-auto"
               key={`basmala-${isDarkMode ? 'dark' : 'light'}`}
             />
           )}
@@ -305,8 +305,8 @@ const HomePage = () => {
         </section>
 
         {/* Navigation section */}
-        <section className="relative z-10 lg:mt-48 flex justify-center items-center px-4 md:px-8">
-          <div className="relative p-6 md:p-8 text-center w-full bg-gradient-to-br from-chart-17/90 via-chart-17/90 to-chart-17/90 rounded-2xl backdrop-blur-xl border-2 border-[#565656]/30 shadow-2xl shadow-[#565656]/10">
+        <section className="relative z-10 lg:mt-48 flex justify-center items-center px-3 sm:px-4 md:px-6 lg:px-8">
+          <div className="relative p-4 sm:p-5 md:p-6 lg:p-8 text-center w-full max-w-6xl bg-gradient-to-br from-chart-17/90 via-chart-17/90 to-chart-17/90 rounded-xl sm:rounded-2xl backdrop-blur-xl border-2 border-[#565656]/30 shadow-2xl shadow-[#565656]/10">
             <ShineBorder 
               shineColor={theme.theme === "dark" ? "rgba(186, 187, 229, 0.4)" : "rgba(67, 85, 109, 0.6)"} 
               borderWidth={4}
@@ -314,17 +314,17 @@ const HomePage = () => {
             />
             
             <WordRotate
-              className="text-4xl md:text-5xl lg:text-6xl px-4 md:px-6 py-7 md:py-8 font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#f9f9f9] via-[#f9f9f9]/80 to-[#25344e]/20 drop-shadow-2xl"
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl px-2 sm:px-4 md:px-6 py-4 sm:py-5 md:py-6 lg:py-7 xl:py-8 font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#f9f9f9] via-[#f9f9f9]/80 to-[#25344e]/20 drop-shadow-2xl"
               words={['القرآن الكريم', 'كتابٌ أُحكِمَت آياتُه', 'النور المبين', 'شفاءٌ للناس', 'القرآن المجيد', 'يهدي للحق', 'صُحُفٌ مُكَرَّمة', 'تنزيلٌ من رب العالمين']}
             />
 
             {/* شريط البحث في القرآن */}
-            <div className="mb-6 md:mb-8 px-2 md:px-4">
+            <div className="mb-4 sm:mb-6 md:mb-8 px-2 md:px-4">
               <QuranSearchWidget />
             </div>
 
             {/* زر تسجيل الدخول */}
-            <div className="mb-6 md:mb-8 px-2 md:px-4 flex justify-center">
+            <div className="mb-4 sm:mb-6 md:mb-8 px-2 md:px-4 flex justify-center">
               <button 
                 onClick={() => signIn('google')}
                 className="transition-transform hover:scale-105 active:scale-95"
@@ -334,16 +334,16 @@ const HomePage = () => {
                   alt="تسجيل الدخول بجوجل" 
                   width={179} 
                   height={46}
-                  className="w-auto h-12 md:h-14"
+                  className="w-auto h-10 sm:h-12 md:h-14"
                 />
               </button>
             </div>
-            <div className="mb-6 flex flex-col arabic-font sm:flex-row lg:flex-row gap-4 md:gap-6 items-center justify-center">
+            <div className="mb-4 sm:mb-6 flex flex-col arabic-font sm:flex-row lg:flex-row gap-3 sm:gap-4 md:gap-6 items-center justify-center">
               <DrawOutlineButton>ابدأ التصفح</DrawOutlineButton>
               
               <Link 
                 href="/quran-reader?page=1" 
-                className="group relative w-full arabic-font sm:w-auto px-8 py-4 text-lg md:text-xl font-bold rounded-xl transition-all duration-300 bg-gradient-to-br from-[#4a5568] via-[#2d3748] to-[#1a202c] hover:from-[#5a6578] hover:via-[#4a5568] hover:to-[#2d3748] text-white shadow-2xl shadow-black/40 hover:shadow-[0_20px_40px_rgba(0,0,0,0.6)] hover:scale-105 hover:-translate-y-1 border border-[#606060]/30 hover:border-[#707070]/50 overflow-hidden"
+                className="group relative w-full arabic-font sm:w-auto px-4 py-3 sm:px-6 sm:py-3.5 md:px-8 md:py-4 text-base sm:text-lg md:text-xl font-bold rounded-lg sm:rounded-xl transition-all duration-300 bg-gradient-to-br from-[#4a5568] via-[#2d3748] to-[#1a202c] hover:from-[#5a6578] hover:via-[#4a5568] hover:to-[#2d3748] text-white shadow-2xl shadow-black/40 hover:shadow-[0_20px_40px_rgba(0,0,0,0.6)] hover:scale-105 hover:-translate-y-1 border border-[#606060]/30 hover:border-[#707070]/50 overflow-hidden"
               >
                 <span>تفسير القرآن آيه بآيه</span>
                 {/* TOP - الخط العلوي */}
@@ -358,7 +358,7 @@ const HomePage = () => {
               
               <Link 
                 href="/quran-sound" 
-                className="group relative w-full sm:w-auto px-8  py-4 text-lg md:text-xl font-bold rounded-xl transition-all duration-300 bg-gradient-to-br from-[#4a5568] via-[#2d3748] to-[#1a202c] hover:from-[#5a6578] hover:via-[#4a5568] hover:to-[#2d3748] text-white shadow-2xl shadow-black/40 hover:shadow-[0_20px_40px_rgba(0,0,0,0.6)] hover:scale-105 hover:-translate-y-1 border border-[#606060]/30 hover:border-[#707070]/50 overflow-hidden"
+                className="group relative w-full sm:w-auto px-4 py-3 sm:px-6 sm:py-3.5 md:px-8 md:py-4 text-base sm:text-lg md:text-xl font-bold rounded-lg sm:rounded-xl transition-all duration-300 bg-gradient-to-br from-[#4a5568] via-[#2d3748] to-[#1a202c] hover:from-[#5a6578] hover:via-[#4a5568] hover:to-[#2d3748] text-white shadow-2xl shadow-black/40 hover:shadow-[0_20px_40px_rgba(0,0,0,0.6)] hover:scale-105 hover:-translate-y-1 border border-[#606060]/30 hover:border-[#707070]/50 overflow-hidden"
               >
                 <span>استمع الآن</span>
                 {/* TOP - الخط العلوي */}
@@ -375,9 +375,9 @@ const HomePage = () => {
         </section>
 
         {/* الإحصائيات */}
-        <section className="relative z-10 py-16 md:py-20 px-4 md:px-8">
+        <section className="relative z-10 py-8 sm:py-12 md:py-16 lg:py-20 px-3 sm:px-4 md:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
               {stats.map((stat, index) => {
                 const IconComponent = stat.icon;
                 return (
@@ -385,19 +385,19 @@ const HomePage = () => {
                     key={index} 
                     className="relative group"
                   >
-                    <div className="relative bg-gradient-to-br from-[#252525]/80 via-[#252526]/80 to-[#22262d]/80 backdrop-blur-md rounded-2xl p-6 md:p-8 border-2 border-[#3e3e42]/30 shadow-xl hover:shadow-2xl hover:shadow-[#565656]/20 ">
+                    <div className="relative bg-gradient-to-br from-[#252525]/80 via-[#252526]/80 to-[#22262d]/80 backdrop-blur-md rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 lg:p-8 border-2 border-[#3e3e42]/30 shadow-xl hover:shadow-2xl hover:shadow-[#565656]/20 ">
                       <ShineBorder
                         shineColor={["#565656", "#25344e", "#a28c8b"]}
                         borderWidth={1}
                         duration={12}
                       />
-                      <div className="mb-4 text-chart-10 flex justify-center items-center  group-hover:text-chart-20">
-                        <IconComponent size={48} strokeWidth={1.5} className="drop-shadow-lg" />
+                      <div className="mb-3 sm:mb-4 text-chart-10 flex justify-center items-center group-hover:text-chart-20">
+                        <IconComponent size={32} strokeWidth={1.5} className="sm:w-10 sm:h-10 md:w-12 md:h-12 drop-shadow-lg" />
                       </div>
-                      <div className="text-4xl md:text-5xl font-bold text-white mb-2 drop-shadow-lg">
+                      <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-1 sm:mb-2 drop-shadow-lg">
                         {stat.number}
                       </div>
-                      <div className="text-lg md:text-xl text-[#cccccc]/80">
+                      <div className="text-sm sm:text-base md:text-lg lg:text-xl text-[#cccccc]/80">
                         {stat.label}
                       </div>
                     </div>
@@ -409,18 +409,18 @@ const HomePage = () => {
         </section>
 
         {/* الميزات الرئيسية */}
-        <section className="relative z-10 py-16 md:py-20 px-4 md:px-8">
+        <section className="relative z-10 py-8 sm:py-12 md:py-16 lg:py-20 px-3 sm:px-4 md:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-12 md:mb-16">
-              <h2 className="text-3xl md:text-4xl pb-5 font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#f9f9f9] via-[#f9f9f9] to-[#25344e] mb-4 drop-shadow-xl">
+            <div className="text-center mb-8 sm:mb-10 md:mb-12 lg:mb-16">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl pb-3 sm:pb-4 md:pb-5 font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#f9f9f9] via-[#f9f9f9] to-[#25344e] mb-3 sm:mb-4 drop-shadow-xl">
                 ميزات الموقع
               </h2>
-              <p className="text-xl md:text-2xl text-chart-10 max-w-2xl mx-auto">
+              <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-chart-10 max-w-2xl mx-auto px-4">
                 اكتشف جميع الخدمات التي يوفرها موقع القرآن الكريم
               </p>
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 lg:gap-10">
               {features.map((feature, index) => {
                 const IconComponent = feature.icon;
                 const isExternal = feature.href.startsWith('http');
@@ -433,29 +433,29 @@ const HomePage = () => {
                   <LinkComponent 
                     key={index} 
                     {...linkProps}
-                    className="group relative bg-gradient-to-br from-[#252525]/80 via-[#252526]/80 to-[#22262d]/80 backdrop-blur-md rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 border-2 border-[#3e3e42]/30 shadow-[0_20px_50px_rgba(0,0,0,0.6),0_10px_20px_rgba(0,0,0,0.4),inset_0_1px_2px_rgba(255,255,255,0.1)] hover:shadow-2xl hover:shadow-[#565656]/20 transition-all duration-300 hover:scale-105 hover:border-[#565656]/40 no-underline overflow-hidden"
+                    className="group relative bg-gradient-to-br from-[#252525]/80 via-[#252526]/80 to-[#22262d]/80 backdrop-blur-md rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 lg:p-8 border-2 border-[#3e3e42]/30 shadow-[0_20px_50px_rgba(0,0,0,0.6),0_10px_20px_rgba(0,0,0,0.4),inset_0_1px_2px_rgba(255,255,255,0.1)] hover:shadow-2xl hover:shadow-[#565656]/20 transition-all duration-300 hover:scale-105 hover:border-[#565656]/40 no-underline overflow-hidden"
                   >
                     <div className="absolute inset-0 bg-gradient-to-br from-[#565656]/5 via-transparent to-[#25344e]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     
                     <div className="relative z-10">
                       <div 
-                        className="mb-4 sm:mb-6 flex justify-center items-center w-16 h-16 sm:w-20 sm:h-20 rounded-xl sm:rounded-2xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 shadow-lg mx-auto"
+                        className="mb-3 sm:mb-4 md:mb-6 flex justify-center items-center w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-lg sm:rounded-xl md:rounded-2xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 shadow-lg mx-auto"
                         style={{ 
                           backgroundColor: `${feature.color}20`,
                           color: feature.color
                         }}
                       >
-                        <IconComponent size={32} strokeWidth={1.5} className="sm:w-10 sm:h-10" />
+                        <IconComponent size={24} strokeWidth={1.5} className="sm:w-8 sm:h-8 md:w-10 md:h-10" />
                       </div>
-                      <h3 className="text-2xl sm:text-2xl lg:text-2xl font-bold mb-3 sm:mb-4 text-white group-hover:text-chart-4 transition-colors text-center">
+                      <h3 className="text-lg sm:text-xl md:text-2xl font-bold mb-2 sm:mb-3 md:mb-4 text-white group-hover:text-chart-4 transition-colors text-center">
                         {feature.title}
                       </h3>
-                      <p className="text-xl text-chart-10 leading-relaxed text-bold text-center arabic-font">
+                      <p className="text-sm sm:text-base md:text-lg lg:text-xl text-chart-10 leading-relaxed text-center arabic-font">
                         {feature.description}
                       </p>
-                      <div className="mt-4 sm:mt-6 flex items-center justify-center text-[#565656] group-hover:text-chart-16 transition-all duration-300 group-hover:translate-x-[-8px] arabic-font">
-                        <ArrowLeft size={20} strokeWidth={2} className="sm:w-6 sm:h-6" />
-                        <span className="mr-2 font-semibold text-sm sm:text-base">اكتشف المزيد</span>
+                      <div className="mt-3 sm:mt-4 md:mt-6 flex items-center justify-center text-[#565656] group-hover:text-chart-16 transition-all duration-300 group-hover:translate-x-[-8px] arabic-font">
+                        <ArrowLeft size={16} strokeWidth={2} className="sm:w-5 sm:h-5 md:w-6 md:h-6" />
+                        <span className="mr-2 font-semibold text-xs sm:text-sm md:text-base">اكتشف المزيد</span>
                       </div>
                     </div>
                   </LinkComponent>
@@ -466,24 +466,24 @@ const HomePage = () => {
         </section>
 
         {/* قسم الدعوة للعمل */}
-        <section className="relative z-10 py-16 md:py-20 px-4 md:px-8 bg-gradient-to-br from-[#565656]/20 via-[#262626]/20 to-[#525252]/20 backdrop-blur-sm border-y-5 border-[#565656]/30 shadow-xl">
+        <section className="relative z-10 py-8 sm:py-12 md:py-16 lg:py-20 px-3 sm:px-4 md:px-6 lg:px-8 bg-gradient-to-br from-[#565656]/20 via-[#262626]/20 to-[#525252]/20 backdrop-blur-sm border-y-5 border-[#565656]/30 shadow-xl">
           <div className="max-w-5xl mx-auto text-center">
-            <h2 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text pb-4 bg-gradient-to-r from-[#f8f8f8] via-[#f9f9f9] to-[#565656] mb-6 drop-shadow-xl">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-transparent bg-clip-text pb-3 sm:pb-4 bg-gradient-to-r from-[#f8f8f8] via-[#f9f9f9] to-[#565656] mb-4 sm:mb-5 md:mb-6 drop-shadow-xl">
               ابدأ رحلتك مع القرآن الكريم
             </h2>
-            <p className="text-lg md:text-xl text-[#cccccc]/80 leading-relaxed mb-10 max-w-3xl mx-auto">
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-[#cccccc]/80 leading-relaxed mb-6 sm:mb-8 md:mb-10 max-w-3xl mx-auto px-4">
               انضم إلى الملايين الذين يستخدمون موقعنا لتلاوة وتصفح القرآن الكريم
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 justify-center items-center">
               <Link 
                 href="/quran-pages/1" 
-                className="w-full sm:w-auto px-10 py-5 text-xl md:text-2xl font-bold rounded-xl transition-all duration-300 bg-gradient-to-r from-[#16697a]/50 to-[#16697a]/50 hover:from-[#1aa3b5] hover:to-[#1aa3b5]/50 text-white shadow-xl shadow-[#000]/50 hover:shadow-sm hover:shadow-[#f9f9f9]/20 hover:border-6 hover:border-[#535353] hover:scale-105 border-none"
+                className="w-full sm:w-auto px-6 py-3.5 sm:px-8 sm:py-4 md:px-10 md:py-5 text-base sm:text-lg md:text-xl lg:text-2xl font-bold rounded-lg sm:rounded-xl transition-all duration-300 bg-gradient-to-r from-[#16697a]/50 to-[#16697a]/50 hover:from-[#1aa3b5] hover:to-[#1aa3b5]/50 text-white shadow-xl shadow-[#000]/50 hover:shadow-sm hover:shadow-[#f9f9f9]/20 hover:border-6 hover:border-[#535353] hover:scale-105 border-none"
               >
                 ابدأ الآن
               </Link>
               <Link 
                 href="/about" 
-                className="w-full sm:w-auto px-10 py-5 text-xl md:text-2xl font-bold rounded-xl transition-all duration-300 bg-transparent border-2 border-chart-10 bg-chart-17 text-chart-10 hover:bg-chart-17 shadow-lg hover:shadow-xl hover:scale-105"
+                className="w-full sm:w-auto px-6 py-3.5 sm:px-8 sm:py-4 md:px-10 md:py-5 text-base sm:text-lg md:text-xl lg:text-2xl font-bold rounded-lg sm:rounded-xl transition-all duration-300 bg-transparent border-2 border-chart-10 bg-chart-17 text-chart-10 hover:bg-chart-17 shadow-lg hover:shadow-xl hover:scale-105"
               >
                 اعرف المزيد
               </Link>
@@ -492,7 +492,7 @@ const HomePage = () => {
         </section>
 
         {/* مساحة إضافية في الأسفل */}
-        <div className="h-20"></div>
+        <div className="h-12 sm:h-16 md:h-20"></div>
       </div>
 
       {/* Loader overlay */}
