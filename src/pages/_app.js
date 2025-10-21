@@ -12,7 +12,7 @@ import '../styles/loaders.css';
 // استيراد المكونات
 import AppAppBar from '../components/AppAppBar';
 import Layout from '../components/Layout';
-import Footer from '../components/Footer';
+import Footer from '../components/FooterNew';
 import AuthProvider from '../components/auth/AuthProvider';
 
 /**
