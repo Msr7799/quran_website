@@ -18,6 +18,26 @@ const LANGUAGE_NAMES = {
   'es': 'Español' // Latino
 };
 
+// دالة للمحاولة مع نموذج معين
+async function tryWithModel(genAI, modelName, promptText, maxRetries = 2) {
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      const model = genAI.getGenerativeModel({ model: modelName });
+      const result = await model.generateContent(promptText);
+      return { success: true, text: result.response.text().trim(), model: modelName };
+    } catch (error) {
+      console.log(`⚠️ Attempt ${i + 1}/${maxRetries} failed for ${modelName}:`, error.message);
+      
+      // إذا كان overloaded، انتظر قليلاً قبل المحاولة مرة أخرى
+      if (error.message?.includes('overloaded') && i < maxRetries - 1) {
+        await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
+      } else if (i === maxRetries - 1) {
+        throw error;
+      }
+    }
+  }
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -37,8 +57,16 @@ export default async function handler(req, res) {
       });
     }
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
     let result = prompt;
+    let usedModel = 'none';
+    
+    // قائمة النماذج المتاحة فعلياً في v1beta (من الأسرع للأقوى)
+    const models = [
+      'gemini-1.5-flash',          // الأسرع - خيار أول
+      'gemini-1.5-flash-latest',   // نسخة محدثة
+      'gemini-pro',                // النموذج الأساسي المستقر
+      'gemini-1.5-pro-latest'      // الأقوى - احتياطي نهائي
+    ];
 
     // تحسين البروبت
     if (action === 'enhance') {
@@ -55,8 +83,25 @@ export default async function handler(req, res) {
 
 السؤال المحسّن:`;
 
-      const enhanceResult = await model.generateContent(enhancePrompt);
-      result = enhanceResult.response.text().trim();
+      // محاولة مع النماذج المتاحة
+      let lastError;
+      for (const modelName of models) {
+        try {
+          console.log(`🔄 Trying model: ${modelName}`);
+          const modelResult = await tryWithModel(genAI, modelName, enhancePrompt);
+          result = modelResult.text;
+          usedModel = modelResult.model;
+          console.log(`✅ Success with model: ${usedModel}`);
+          break;
+        } catch (error) {
+          lastError = error;
+          console.log(`❌ Failed with ${modelName}:`, error.message);
+        }
+      }
+      
+      if (result === prompt && lastError) {
+        throw lastError; // فشلت جميع المحاولات
+      }
     }
 
     // ترجمة البروبت
@@ -76,21 +121,47 @@ export default async function handler(req, res) {
 
 الترجمة إلى ${langName}:`;
 
-      const translateResult = await model.generateContent(translatePrompt);
-      result = translateResult.response.text().trim();
+      // محاولة مع النماذج المتاحة
+      let lastError;
+      for (const modelName of models) {
+        try {
+          console.log(`🔄 Trying model: ${modelName}`);
+          const modelResult = await tryWithModel(genAI, modelName, translatePrompt);
+          result = modelResult.text;
+          usedModel = modelResult.model;
+          console.log(`✅ Success with model: ${usedModel}`);
+          break;
+        } catch (error) {
+          lastError = error;
+          console.log(`❌ Failed with ${modelName}:`, error.message);
+        }
+      }
+      
+      if (result === prompt && lastError) {
+        throw lastError; // فشلت جميع المحاولات
+      }
     }
 
     return res.status(200).json({ 
       originalPrompt: prompt,
       result: result,
       action: action,
-      targetLanguage: targetLanguage
+      targetLanguage: targetLanguage,
+      usedModel: usedModel // النموذج الذي نجح
     });
 
   } catch (error) {
-    console.error('Error processing prompt:', error);
+    console.error('❌ Error processing prompt:', error);
+    console.error('Error details:', {
+      message: error.message,
+      stack: error.stack,
+      action: req.body.action,
+      hasApiKey: !!process.env.GEMINI_API_KEY
+    });
+    
     return res.status(500).json({ 
       error: 'Failed to process prompt',
+      errorMessage: error.message,
       result: req.body.prompt
     });
   }

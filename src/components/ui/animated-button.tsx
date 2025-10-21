@@ -28,7 +28,7 @@ const DrawOutlineButton = ({
 
       onClick={handleClick}
 
-      className="group relative w-full sm:w-auto px-8 py-4 text-lg md:text-xl font-bold bg-gradient-to-br from-[#4a5568] via-[#2d3748] to-[#1a202c] hover:from-[#5a6578] hover:via-[#4a5568] hover:to-[#2d3748] text-white transition-all duration-300 shadow-2xl shadow-black/40 hover:shadow-[0_20px_40px_rgba(0,0,0,0.6)] hover:scale-105 hover:-translate-y-1 rounded-lg border border-[#606060]/30 hover:border-[#707070]/50 overflow-hidden"
+      className="group relative w-full sm:w-auto px-8 py-4 text-lg md:text-xl font-bold  hover:from-[#5a6578] hover:via-[#4a5568] hover:to-[#2d3748] text-white transition-all duration-300 shadow-2xl shadow-black/40 hover:shadow-[0_20px_40px_rgba(0,0,0,0.6)] hover:scale-105 hover:-translate-y-1 rounded-lg border border-[#606060]/30 hover:border-[#707070]/50 overflow-hidden"
 
     >
 

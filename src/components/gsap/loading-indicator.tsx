@@ -29,8 +29,24 @@ const searching = [
     [16, 23, 24, 22, 30],
 ];
 
+// Syncing animation frames (للتحسين والترجمة)
+const syncing = [
+    [45, 38, 31, 24, 17, 23, 25],
+    [38, 31, 24, 17, 10, 16, 18],
+    [31, 24, 17, 10, 3, 9, 11],
+    [24, 17, 10, 3, 2, 4],
+    [17, 10, 3],
+    [10, 3],
+    [3],
+    [],
+    [45],
+    [45, 38, 44, 46],
+    [45, 38, 31, 37, 39],
+    [45, 38, 31, 24, 30, 32],
+];
+
 type LoadingIndicatorProps = {
-    type?: "loading" | "searching";
+    type?: "loading" | "searching" | "syncing";
     text?: string;
     className?: string;
 };
@@ -40,24 +56,30 @@ export const LoadingIndicator = ({
     text,
     className = "" 
 }: LoadingIndicatorProps) => {
-    const [currentType, setCurrentType] = useState<"loading" | "searching">(type);
+    const [currentType, setCurrentType] = useState<"loading" | "searching" | "syncing">(type);
     
     useEffect(() => {
-        // إذا كان البحث، نبدأ بـ loading ثم ننتقل لـ searching
-        if (type === "searching") {
-            setCurrentType("loading");
-            const timer = setTimeout(() => {
-                setCurrentType("searching");
-            }, 1500); // ننتظر ثانية ونصف ثم نغير للبحث
-            
-            return () => clearTimeout(timer);
-        } else {
-            setCurrentType("loading");
-        }
+        setCurrentType(type);
     }, [type]);
     
-    const frames = currentType === "loading" ? loading : searching;
-    const displayText = text || (currentType === "loading" ? "جاري التحميل..." : "جاري البحث...");
+    // اختيار الـ frames حسب النوع
+    const frames = currentType === "loading" 
+        ? loading 
+        : currentType === "searching" 
+        ? searching 
+        : syncing;
+    
+    // النص الافتراضي حسب النوع
+    const defaultText = currentType === "loading" 
+        ? "جاري التحميل..." 
+        : currentType === "searching" 
+        ? "جاري البحث..." 
+        : "جاري المعالجة...";
+    
+    const displayText = text || defaultText;
+    
+    // السرعة حسب النوع
+    const duration = currentType === "loading" ? 200 : currentType === "searching" ? 150 : 100;
     
     return (
         <div className={`flex items-center gap-3 ${className}`}>
@@ -66,7 +88,7 @@ export const LoadingIndicator = ({
                 className="gap-px"
                 isPlaying={true}
                 repeatCount={-1}
-                duration={currentType === "loading" ? 200 : 150}
+                duration={duration}
                 dotClassName="bg-chart-3/30 [&.active]:bg-chart-3 size-1.5 rounded-sm"
             />
             <span className="text-sm text-neutral-400 arabic-font">

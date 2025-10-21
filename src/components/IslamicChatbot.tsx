@@ -1,11 +1,13 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Sparkles, Loader2, MessageCircle, X, Minimize2, Maximize2, Settings, Trash2, Globe, Clock } from 'lucide-react';
+import { Send, Sparkles, Loader2, MessageCircle, X, BotMessageSquareIcon, Minimize2, Maximize2, Settings, Trash2, Globe, Clock } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { CopyButton } from './ui/animate-ui/primitives/buttons/copy';
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
+import { LoadingIndicator } from './gsap/loading-indicator';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -13,6 +15,8 @@ interface Message {
 }
 
 export default function IslamicChatbot() {
+  const router = useRouter();
+  
   // تحميل المحادثة من sessionStorage
   const loadMessages = () => {
     if (typeof window !== 'undefined') {
@@ -36,9 +40,15 @@ export default function IslamicChatbot() {
   const [messages, setMessages] = useState<Message[]>(loadMessages);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingType, setLoadingType] = useState<"loading" | "searching" | "syncing">("loading");
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  
+  // للمقارنة بين البروبت الأصلي والمحسّن
+  const [showComparison, setShowComparison] = useState(false);
+  const [originalPrompt, setOriginalPrompt] = useState('');
+  const [enhancedPrompt, setEnhancedPrompt] = useState('');
   
   // Settings
   const [model, setModel] = useState('gemini-2.5-flash');
@@ -111,6 +121,9 @@ export default function IslamicChatbot() {
     const userMessage: Message = { role: 'user', content: input };
     setMessages(prev => [...prev, userMessage]);
     setInput('');
+    
+    // تحديد نوع التحميل: searching إذا كان Tavily مفعل، وإلا loading
+    setLoadingType(useTavily ? "searching" : "loading");
     setIsLoading(true);
 
     // AbortController لإلغاء الطلب عند الحاجة
@@ -230,9 +243,10 @@ export default function IslamicChatbot() {
   const handleEnhance = async () => {
     if (!input.trim()) return;
     
+    setLoadingType("syncing");
     setIsLoading(true);
     try {
-      const response = await fetch('/api/enhance-prompt', {
+      const response = await fetch('/api/enhance-prompt-hf', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -241,24 +255,49 @@ export default function IslamicChatbot() {
         })
       });
 
+      const data = await response.json();
+      
       if (response.ok) {
-        const data = await response.json();
-        setInput(data.result);
+        // حفظ البروبت الأصلي والمحسّن
+        setOriginalPrompt(input);
+        setEnhancedPrompt(data.result);
+        setShowComparison(true);
+        
+        const modelInfo = data.usedModel ? ` (${data.usedModel})` : '';
+        toast.success(`تم تحسين السؤال! اختر النسخة التي تفضلها 🎯${modelInfo}`);
+      } else {
+        console.error('❌ Enhancement failed:', data);
+        toast.error(`فشل التحسين: ${data.errorMessage || data.error}`);
       }
     } catch (error) {
-      console.error('Error enhancing prompt:', error);
+      console.error('❌ Error enhancing prompt:', error);
+      toast.error('حدث خطأ في الاتصال بالخادم');
     } finally {
       setIsLoading(false);
     }
+  };
+  
+  // اختيار البروبت الأصلي
+  const selectOriginal = () => {
+    setShowComparison(false);
+    toast.info('تم الاحتفاظ بالسؤال الأصلي ✅');
+  };
+  
+  // اختيار البروبت المحسّن
+  const selectEnhanced = () => {
+    setInput(enhancedPrompt);
+    setShowComparison(false);
+    toast.success('تم تطبيق السؤال المحسّن! 🎯');
   };
 
   // ترجمة البروبت
   const handleTranslate = async () => {
     if (!input.trim()) return;
     
+    setLoadingType("syncing");
     setIsLoading(true);
     try {
-      const response = await fetch('/api/enhance-prompt', {
+      const response = await fetch('/api/enhance-prompt-hf', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -268,12 +307,19 @@ export default function IslamicChatbot() {
         })
       });
 
+      const data = await response.json();
+      
       if (response.ok) {
-        const data = await response.json();
         setInput(data.result);
+        const modelInfo = data.usedModel ? ` (${data.usedModel})` : '';
+        toast.success(`تم الترجمة بنجاح! 🌐${modelInfo}`);
+      } else {
+        console.error('❌ Translation failed:', data);
+        toast.error(`فشل الترجمة: ${data.errorMessage || data.error}`);
       }
     } catch (error) {
-      console.error('Error translating prompt:', error);
+      console.error('❌ Error translating prompt:', error);
+      toast.error('حدث خطأ في الاتصال بالخادم');
     } finally {
       setIsLoading(false);
     }
@@ -344,12 +390,12 @@ export default function IslamicChatbot() {
   }
 
   return (
-    <div className={`fixed ${isMinimized ? 'bottom-6 left-6' : 'inset-4 md:left-6 md:bottom-6 md:top-auto md:right-auto'} z-50 flex flex-col ${isMinimized ? 'w-80 h-16' : 'md:w-[500px] md:h-[700px]'} transition-all duration-300`}>
+    <div className={`fixed ${isMinimized ? 'bottom-6 left-6' : 'inset-4 md:left-6 md:bottom-6 md:top-auto md:right-auto'} z-50 flex flex-col ${isMinimized ? 'w-90 h-20' : 'md:w-[700px] md:h-[800px]'} transition-all duration-300` }>
       {/* Chat Container */}
-      <div className={`flex flex-col bg-neutral-900 rounded-2xl shadow-2xl border border-neutral-700 overflow-hidden ${isMinimized ? 'h-16' : 'h-full'}`}>
+      <div className={`flex flex-col bg-neutral-900 rounded-2xl shadow-2xl border border-neutral-700 overflow-hidden ${isMinimized ? 'h-60' : 'h-full'}`}>
         
         {/* Header - نفس ألوان IslamicChatInline */}
-        <div className="bg-gradient-to-r from-chart-3 via-chart-13 to-chart-3 p-4 flex items-center justify-between border-b-2 border-chart-16/30">
+        <div className="bg-gradient-to-r from-chart-19 via-chart-12/50 to-chart-19 p-4 flex items-center justify-between border-b-2 border-chart-16/30">
           <div className="flex items-center gap-3">
             <div className="relative">
               <div className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
@@ -358,12 +404,12 @@ export default function IslamicChatbot() {
               <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-chart-3 rounded-full border-2 border-white" />
             </div>
             <div>
-              <h3 className="text-white font-bold text-xl arabic-font">نور - المساعد الإسلامي</h3>
+              <h4 className={`text-white font-bold text-lgrabic-font ${isMinimized ? 'top-100 absolute ' : 'text-lg'}`} >نور - المساعد الإسلامي</h4>
               <div className="flex items-center gap-2 flex-wrap">
-                <p className="text-orange-100 text-sm arabic-font">متصل الآن • جاهز للمساعدة</p>
+                <p className={`text-orange-100 text-sm arabic-font ${isMinimized ? 'top-100 absolute ' : 'text-lg'}`}>متصل الآن • جاهز للمساعدة</p>
                 
                 {messages.length > 1 && (
-                  <span className="text-xs bg-blue-500/20 border border-blue-400/30 text-blue-300 px-2 py-0.5 rounded-full arabic-font">
+                  <span className={`text-xs bg-blue-500/20 border border-blue-400/30 text-blue-300 px-2 py-0.5 rounded-full arabic-font ${isMinimized ? 'top-100 absolute ' : 'text-lg'}`} >
                     💾 {messages.length} رسائل
                   </span>
                 )}
@@ -404,6 +450,15 @@ export default function IslamicChatbot() {
             >
               <X className="w-4 h-4 text-white" />
             </button>
+            <button
+              onClick={() => router.push('/chat-bot')}
+              className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300"
+              aria-label="نور النموذج الاسلامي"
+              title="فتح صفحة نور الكاملة"
+            >
+              <BotMessageSquareIcon className="w-5 h-5 text-white" />
+            </button>
+            
           </div>
         </div>
 
@@ -615,8 +670,8 @@ export default function IslamicChatbot() {
                   <div
                     className={`w-full rounded-2xl p-5 relative group ${
                       message.role === 'user'
-                        ? 'bg-gradient-to-br from-chart-3 to-chart-16 text-white shadow-lg shadow-chart-3/30'
-                        : 'bg-chart-13 text-neutral-200 shadow-xl border border-neutral-700'
+                    ? 'bg-gradient-to-br from-[#212121]/60 to-[#212121]/50 text-white shadow-xl shadow-chart-6/50 border border-[#3d3d3d]/30'
+                   :  '!bg-sidebar-ring/30 text-neutral-200 shadow-xl border border-neutral-700'
                     }`}
                   >
                     {/* Copy Button */}
@@ -649,15 +704,90 @@ export default function IslamicChatbot() {
               
               {isLoading && (
                 <div className="w-full">
-                  <div className="w-full bg-chart-13 rounded-2xl p-5 shadow-xl border border-neutral-700 flex items-center justify-center gap-3">
-                    <Loader2 className="w-6 h-6 text-chart-3 animate-spin" />
-                    <span className="text-neutral-300 text-lg arabic-font">جاري الكتابة...</span>
+                  <div className="w-full bg-chart-13 rounded-2xl p-5 shadow-xl border border-neutral-700 flex items-center justify-center">
+                    <LoadingIndicator 
+                      type={loadingType} 
+                      text={
+                        loadingType === "loading" ? "جاري الكتابة..." :
+                        loadingType === "syncing" ? "جاري المعالجة..." :
+                        "جاري البحث..."
+                      }
+                      className="text-lg"
+                    />
                   </div>
                 </div>
               )}
               
               <div ref={messagesEndRef} />
             </div>
+
+            {/* Comparison Modal - مقارنة البروبت */}
+            {showComparison && (
+              <div className="bg-neutral-800 p-6 border-t border-neutral-700">
+                <div className="bg-gradient-to-r from-chart-3/10 to-chart-16/10 rounded-2xl p-6 border-2 border-chart-3/30">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-white font-bold text-xl arabic-font flex items-center gap-2">
+                      <Sparkles className="w-6 h-6 text-chart-3" />
+                      قارن واختر النسخة الأفضل
+                    </h3>
+                    <button
+                      onClick={() => setShowComparison(false)}
+                      className="text-neutral-400 hover:text-white transition-colors"
+                      aria-label="إغلاق"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* البروبت الأصلي */}
+                    <div className="bg-neutral-900 rounded-xl p-4 border-2 border-neutral-700 hover:border-blue-500/50 transition-all cursor-pointer"
+                         onClick={selectOriginal}>
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-blue-400 font-semibold arabic-font flex items-center gap-2">
+                          📝 السؤال الأصلي
+                        </span>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); selectOriginal(); }}
+                          className="bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 px-4 py-2 rounded-lg transition-all text-sm arabic-font"
+                        >
+                          اختيار
+                        </button>
+                      </div>
+                      <p className="text-neutral-300 arabic-font leading-relaxed" style={{ fontSize: `${fontSize}px` }}>
+                        {originalPrompt}
+                      </p>
+                    </div>
+                    
+                    {/* البروبت المحسّن */}
+                    <div className="bg-neutral-900 rounded-xl p-4 border-2 border-chart-3/50 hover:border-chart-3 transition-all cursor-pointer relative"
+                         onClick={selectEnhanced}>
+                      <div className="absolute -top-3 -right-3 bg-chart-3 text-white px-3 py-1 rounded-full text-xs font-bold">
+                        محسّن ✨
+                      </div>
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-chart-3 font-semibold arabic-font flex items-center gap-2">
+                          🎯 السؤال المحسّن
+                        </span>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); selectEnhanced(); }}
+                          className="bg-gradient-to-r from-chart-3 to-chart-16 text-white px-4 py-2 rounded-lg hover:shadow-lg hover:shadow-chart-3/30 transition-all text-sm arabic-font font-bold"
+                        >
+                          تطبيق
+                        </button>
+                      </div>
+                      <p className="text-neutral-300 arabic-font leading-relaxed" style={{ fontSize: `${fontSize}px` }}>
+                        {enhancedPrompt}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <p className="text-center text-neutral-400 text-sm mt-4 arabic-font">
+                    💡 اضغط على أي بطاقة أو استخدم الأزرار للاختيار
+                  </p>
+                </div>
+              </div>
+            )}
 
             {/* Input - نفس تصميم IslamicChatInline */}
             <div className="bg-neutral-800 p-6 rounded-b-2xl border-t border-neutral-700">
@@ -676,7 +806,7 @@ export default function IslamicChatbot() {
                 <button
                   onClick={sendMessage}
                   disabled={isLoading || !input.trim()}
-                  className="bg-gradient-to-br from-chart-3 to-chart-16 text-white px-6 py-4 rounded-2xl hover:shadow-lg hover:shadow-chart-3/40 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none flex items-center justify-center min-w-[60px]"
+                  className="bg-gradient-to-br from-chart-21 to-chart-14 text-white px-6 py-4 rounded-2xl hover:shadow-md hover:shadow-[#3d3d3d]/20 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl shadow-chart-6/70 border border-chart-13/60 disabled:hover:shadow-none flex items-center justify-center min-w-[60px]"
                   aria-label="إرسال"
                 >
                   {isLoading ? (
@@ -710,7 +840,7 @@ export default function IslamicChatbot() {
                 </button>
               </div>
               
-              <p className="text-sm text-neutral-400 mt-3 text-center arabic-font">
+              <p className="text-sm bg-gradient-to-r from-chart-19 to-chart-12 text-neutral-400 mt-3 text-center arabic-font">
                 💡 نصيحة: يمكنك الضغط على Shift+Enter للسطر الجديد
               </p>
             </div>

@@ -7,6 +7,8 @@ import remarkGfm from 'remark-gfm';
 import { CopyButton } from './ui/animate-ui/primitives/buttons/copy';
 import { LoadingIndicator } from './gsap/loading-indicator';
 import { toast } from 'sonner';
+import  AnimatedOutlineButton  from './ui/animated-outline-button';
+
 
 interface Message {
   role: 'user' | 'assistant';
@@ -38,7 +40,13 @@ export default function IslamicChatInline() {
   const [messages, setMessages] = useState<Message[]>(loadMessages);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingType, setLoadingType] = useState<"loading" | "searching" | "syncing">("loading");
   const [showSettings, setShowSettings] = useState(false);
+  
+  // للمقارنة بين البروبت الأصلي والمحسّن
+  const [showComparison, setShowComparison] = useState(false);
+  const [originalPrompt, setOriginalPrompt] = useState('');
+  const [enhancedPrompt, setEnhancedPrompt] = useState('');
   const [model, setModel] = useState('gemini-2.5-flash');
   const [temperature, setTemperature] = useState(0.7);
   const [maxTokens, setMaxTokens] = useState(1024);
@@ -117,6 +125,9 @@ export default function IslamicChatInline() {
     const userMessage: Message = { role: 'user', content: input };
     setMessages(prev => [...prev, userMessage]);
     setInput('');
+    
+    // تحديد نوع التحميل: searching إذا كان Tavily مفعل، وإلا loading
+    setLoadingType(useTavily ? "searching" : "loading");
     setIsLoading(true);
 
     // AbortController لإلغاء الطلب عند الحاجة
@@ -262,9 +273,10 @@ export default function IslamicChatInline() {
   const handleEnhance = async () => {
     if (!input.trim()) return;
     
+    setLoadingType("syncing");
     setIsLoading(true);
     try {
-      const response = await fetch('/api/enhance-prompt', {
+      const response = await fetch('/api/enhance-prompt-hf', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -273,24 +285,49 @@ export default function IslamicChatInline() {
         })
       });
 
+      const data = await response.json();
+      
       if (response.ok) {
-        const data = await response.json();
-        setInput(data.result);
+        // حفظ البروبت الأصلي والمحسّن
+        setOriginalPrompt(input);
+        setEnhancedPrompt(data.result);
+        setShowComparison(true);
+        
+        const modelInfo = data.usedModel ? ` (${data.usedModel})` : '';
+        toast.success(`تم تحسين السؤال! اختر النسخة التي تفضلها 🎯${modelInfo}`);
+      } else {
+        console.error('❌ Enhancement failed:', data);
+        toast.error(`فشل التحسين: ${data.errorMessage || data.error}`);
       }
     } catch (error) {
-      console.error('Error enhancing prompt:', error);
+      console.error('❌ Error enhancing prompt:', error);
+      toast.error('حدث خطأ في الاتصال بالخادم');
     } finally {
       setIsLoading(false);
     }
+  };
+  
+  // اختيار البروبت الأصلي
+  const selectOriginal = () => {
+    setShowComparison(false);
+    toast.info('تم الاحتفاظ بالسؤال الأصلي ✅');
+  };
+  
+  // اختيار البروبت المحسّن
+  const selectEnhanced = () => {
+    setInput(enhancedPrompt);
+    setShowComparison(false);
+    toast.success('تم تطبيق السؤال المحسّن! 🎯');
   };
 
   // ترجمة البروبت
   const handleTranslate = async () => {
     if (!input.trim()) return;
     
+    setLoadingType("syncing");
     setIsLoading(true);
     try {
-      const response = await fetch('/api/enhance-prompt', {
+      const response = await fetch('/api/enhance-prompt-hf', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -300,12 +337,19 @@ export default function IslamicChatInline() {
         })
       });
 
+      const data = await response.json();
+      
       if (response.ok) {
-        const data = await response.json();
         setInput(data.result);
+        const modelInfo = data.usedModel ? ` (${data.usedModel})` : '';
+        toast.success(`تم الترجمة بنجاح! 🌐${modelInfo}`);
+      } else {
+        console.error('❌ Translation failed:', data);
+        toast.error(`فشل الترجمة: ${data.errorMessage || data.error}`);
       }
     } catch (error) {
-      console.error('Error translating prompt:', error);
+      console.error('❌ Error translating prompt:', error);
+      toast.error('حدث خطأ في الاتصال بالخادم');
     } finally {
       setIsLoading(false);
     }
@@ -362,16 +406,16 @@ export default function IslamicChatInline() {
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto arabic-font">
+    <div className="w-full max-w-7xl mx-auto arabic-font">
       {/* Header */}
-      <div className="bg-gradient-to-r from-chart-3 to-chart-19 p-6 rounded-t-3xl">
+      <div className="bg-gradient-to-r from-chart-19 to-chart-12/80 p-6 rounded-t-3xl">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="relative">
               <div className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
                 <Sparkles className="w-7 h-7 text-white" />
               </div>
-              <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-chart-3 rounded-full border-2 border-white" />
+              <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-chart-13/50 rounded-full border-2 border-white" />
             </div>
             <div>
               <h2 className="text-white font-bold text-2xl arabic-font">نور - المساعد الإسلامي</h2>
@@ -380,7 +424,7 @@ export default function IslamicChatInline() {
                 
                 {/* Memory Indicator */}
                 {messages.length > 1 && (
-                  <span className="text-xs bg-blue-500/20 border border-blue-400/30 text-blue-300 px-2 py-0.5 rounded-full arabic-font">
+                  <span className="text-xs bg-blue-500/20 mt-3 mr-3 border border-blue-400/30 text-blue-300 px-2 py-0.5 rounded-full arabic-font">
                     💾 {messages.length} رسائل محفوظة
                   </span>
                 )}
@@ -638,16 +682,16 @@ export default function IslamicChatInline() {
       )}
 
       {/* Chat Container */}
-      <div className="bg-chart-17 border-x border-neutral-700">
+      <div className="bg-chart-17/20 border-x border-neutral-700">
         {/* Messages */}
-        <div className="h-[600px] overflow-y-auto p-6 space-y-6 bg-gradient-to-b from-[#111] to-[#101010]">
+        <div className="h-[700px] overflow-y-auto p-6 space-y-6 bg-gradient-to-b from-[#111]/80 to-[#1131/80">
           {messages.map((message, index) => (
             <div key={index} className="w-full">
               <div
-                className={`w-full rounded-2xl p-5 relative group ${
+                className={`w-[70%] rounded-2xl p-5 relative group ${
                   message.role === 'user'
-                    ? 'bg-gradient-to-br from-chart-3 to-chart-16 text-white shadow-lg shadow-chart-3/30'
-                    : 'bg-chart-13 text-neutral-200 shadow-xl border border-neutral-700'
+                    ? 'mr-60 mb-5 mt-10 h-30 bg-gradient-to-br from-[#212121]/60 to-[#212121]/50 text-white shadow-xl shadow-chart-6/50 border border-[#3d3d3d]/30'
+                    : 'mr-40 mt-10 bg-gradient-to-br from-chart-21/70 to-chart-21/90 text-neutral-200 shadow-2xl shadow-chart-6/50 border-3 border-neutral-900'
                 }`}
               >
                 {/* Copy Button */}
@@ -685,8 +729,12 @@ export default function IslamicChatInline() {
             <div className="flex justify-start">
               <div className="bg-[#101010] rounded-2xl p-5 shadow-xl border border-neutral-700">
                 <LoadingIndicator 
-                  type={useTavily ? "searching" : "loading"}
-                  text={useTavily ? "جاري البحث في الإنترنت..." : "جاري الكتابة..."}
+                  type={loadingType}
+                  text={
+                    loadingType === "loading" ? "جاري الكتابة..." :
+                    loadingType === "syncing" ? "جاري المعالجة..." :
+                    "جاري البحث في الإنترنت..."
+                  }
                 />
               </div>
             </div>
@@ -694,6 +742,74 @@ export default function IslamicChatInline() {
           
           <div ref={messagesEndRef} />
         </div>
+
+        {/* Comparison Modal - مقارنة البروبت */}
+        {showComparison && (
+          <div className="p-6 bg-chart-17 border-t border-neutral-700">
+            <div className="bg-gradient-to-r from-chart-3/10 to-chart-16/10 rounded-2xl p-6 border-2 border-chart-3/30">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-white font-bold text-xl arabic-font flex items-center gap-2">
+                  <Sparkles className="w-6 h-6 text-chart-3" />
+                  قارن واختر النسخة الأفضل
+                </h3>
+                <button
+                  onClick={() => setShowComparison(false)}
+                  className="text-neutral-400 hover:text-white transition-colors"
+                  aria-label="إغلاق"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* البروبت الأصلي */}
+                <div className="bg-neutral-700 rounded-xl p-4 border-2 border-neutral-700 hover:border-blue-500/50 transition-all cursor-pointer"
+                     onClick={selectOriginal}>
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-blue-400 font-semibold arabic-font flex items-center gap-2">
+                      📝 السؤال الأصلي
+                    </span>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); selectOriginal(); }}
+                      className="bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 px-4 py-2 rounded-lg transition-all text-sm arabic-font"
+                    >
+                      اختيار
+                    </button>
+                  </div>
+                  <p className="text-neutral-300 arabic-font leading-relaxed" style={{ fontSize: `${fontSize}px` }}>
+                    {originalPrompt}
+                  </p>
+                </div>
+                
+                {/* البروبت المحسّن */}
+                <div className="bg-neutral-900 rounded-xl p-4 border-2 border-chart-3/50 hover:border-chart-3 transition-all cursor-pointer relative"
+                     onClick={selectEnhanced}>
+                  <div className="absolute -top-3 -right-3 bg-chart-3 text-white px-3 py-1 rounded-full text-xs font-bold">
+                    محسّن ✨
+                  </div>
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-chart-3 font-semibold arabic-font flex items-center gap-2">
+                      🎯 السؤال المحسّن
+                    </span>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); selectEnhanced(); }}
+                      className="bg-gradient-to-r from-chart-3 to-chart-16 text-white px-4 py-2 rounded-lg hover:shadow-lg hover:shadow-chart-3/30 transition-all text-sm arabic-font font-bold"
+                    >
+                      تطبيق
+                    </button>
+                  </div>
+                  <p className="text-neutral-300 arabic-font leading-relaxed" style={{ fontSize: `${fontSize}px` }}>
+                    {enhancedPrompt}
+                  </p>
+                </div>
+              </div>
+              
+              <p className="text-center text-neutral-400 text-sm mt-4 arabic-font">
+                💡 اضغط على أي بطاقة أو استخدم الأزرار للاختيار
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Input */}
         <div className="p-6 bg-chart-17 border-t border-neutral-700">
@@ -709,10 +825,11 @@ export default function IslamicChatInline() {
               rows={2}
               disabled={isLoading}
             />
-            <button
+ 
+            <AnimatedOutlineButton variant='custom'
               onClick={sendMessage}
               disabled={isLoading || !input.trim()}
-              className="bg-gradient-to-br from-chart-3 to-chart-16 text-white px-6 rounded-2xl hover:shadow-lg hover:shadow-chart-3/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none flex items-center justify-center min-w-[80px]"
+              className=" !bg-chart-11  border border-muted/20 hover:scale-105 text-white px-6 rounded-2xl hover:shadow-lg hover:shadow-chart-3/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none flex items-center justify-center min-w-[80px]"
               aria-label="إرسال"
             >
               {isLoading ? (
@@ -720,12 +837,12 @@ export default function IslamicChatInline() {
               ) : (
                 <Send className="w-6 h-6" />
               )}
-            </button>
+            </AnimatedOutlineButton>
           </div>
 
           {/* أزرار التحسين والترجمة */}
           <div className="flex gap-2 mt-3">
-            <button
+            <AnimatedOutlineButton variant='custom'
               onClick={handleEnhance}
               disabled={isLoading || !input.trim()}
               className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600/20 to-purple-500/20 border border-purple-500/30 text-purple-300 px-4 py-2.5 rounded-xl hover:from-purple-600/30 hover:to-purple-500/30 hover:border-purple-500/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed arabic-font text-sm"
@@ -733,17 +850,20 @@ export default function IslamicChatInline() {
             >
               <span className="text-lg">🎯</span>
               <span>تحسين السؤال</span>
-            </button>
-            
-            <button
+            </AnimatedOutlineButton>
+  
+
+             <AnimatedOutlineButton variant='blue'
+               
               onClick={handleTranslate}
               disabled={isLoading || !input.trim()}
-              className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600/20 to-blue-500/20 border border-blue-500/30 text-blue-300 px-4 py-2.5 rounded-xl hover:from-blue-600/30 hover:to-blue-500/30 hover:border-blue-500/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed arabic-font text-sm"
+              className="flex-1 flex items-center justify-center gap-2 !bg-gradient-to-r !from-blue-600/20 !to-blue-500/20 !border !border-blue-500/30 text-blue-300 px-4 py-2.5 rounded-xl hover:from-blue-600/30 hover:to-blue-500/30 hover:border-blue-500/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed arabic-font text-sm"
               title={`ترجمة إلى ${targetLanguage === 'ar' ? 'العربية' : targetLanguage}`}
             >
               <span className="text-lg">🌐</span>
               <span>ترجمة</span>
-            </button>
+              </AnimatedOutlineButton>
+          
           </div>
           
           <p className="text-sm text-neutral-400 mt-3 text-center arabic-font">
@@ -753,12 +873,12 @@ export default function IslamicChatInline() {
       </div>
 
       {/* Footer */}
-      <div className="bg-neutral-800 p-4 rounded-b-3xl border-x border-b border-neutral-700">
+      <div className="bg-chart-12 p-4 rounded-b-3xl border-x border-b border-neutral-700">
         <div className="space-y-2">
           <p className="text-xs text-center text-neutral-400 arabic-font">
             ⚠️ المساعد ليس مفتياً - للمسائل الكبيرة، يُنصح بالرجوع للعلماء المتخصصين
           </p>
-          <p className="text-xs text-center text-neutral-500 arabic-font">
+          <p className="text-xs text-center text-neutral-300 arabic-font">
             💾 المحادثة محفوظة مؤقتاً - تُحذف عند إغلاق التبويب
           </p>
         </div>
