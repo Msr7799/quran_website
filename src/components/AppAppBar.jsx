@@ -346,8 +346,23 @@ function AppAppBar() {
           <div 
             className={`menu-indicator ${isIndicatorTouched ? 'touched' : ''}`}
             data-tooltip="انقر لفتح القائمة"
-            onClick={() => setIsVisible(true)}
-            style={{ cursor: 'pointer', pointerEvents: 'none' }}
+            onClick={() => {
+              setIsVisible(true);
+              setShouldShakeLogo(false);
+              sessionStorage.setItem('hasSeenMenuInThisTab', 'true');
+            }}
+            onTouchStart={(e) => {
+              e.stopPropagation();
+              setIsIndicatorTouched(true);
+            }}
+            onTouchEnd={(e) => {
+              e.stopPropagation();
+              setIsVisible(true);
+              setShouldShakeLogo(false);
+              sessionStorage.setItem('hasSeenMenuInThisTab', 'true');
+              setTimeout(() => setIsIndicatorTouched(false), 300);
+            }}
+            style={{ cursor: 'pointer' }}
           >
             <div className="menu-edge-glow"></div>
             <div className="menu-arrow">
@@ -359,23 +374,14 @@ function AppAppBar() {
         </>
       )}
 
-      {/* منطقة السحب - فقط عندما تكون القائمة مرئية */}
+      {/* منطقة السحب لإغلاق القائمة - فقط عندما تكون القائمة مرئية */}
       {isVisible && (
         <div
+          className="swipe-overlay-close"
           onTouchStart={onTouchStart}
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}
-          onMouseDown={onMouseDown}
-          onMouseMove={onMouseMove}
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: 999,
-            pointerEvents: 'auto',
-          }}
+          onClick={() => setIsVisible(false)}
         />
       )}
 
@@ -687,17 +693,20 @@ function AppAppBar() {
         /* منطقة السحب */
         .swipe-zone {
           position: fixed;
-          top: 0;
+          top: 30%;
           left: 0;
-          width: 150px; /* عرض المنطقة على الكمبيوتر */
-          height: 100vh;
+          width: 40px;
+          height: 40%;
           z-index: 999;
           pointer-events: auto;
-          /* خلفية شفافة تماماً - للمستخدم العادي لا يراها */
           background: transparent;
         }
+        
+        /* السماح للسهم بالظهور فوق منطقة السحب */
+        .swipe-zone:hover ~ .menu-indicator {
+          z-index: 1002;
+        }
 
-        /* تأثير خفيف جداً عند التمرير لإظهار حدود المنطقة */
         .swipe-zone:hover {
           background: linear-gradient(
             to right,
@@ -714,16 +723,15 @@ function AppAppBar() {
           );
         }
 
-        /* تكبير منطقة السحب على الشاشات الصغيرة */
         @media (max-width: 768px) {
           .swipe-zone {
-            width: 200px; /* أوسع على الموبايل */
+            width: 50px;
           }
         }
 
         @media (max-width: 480px) {
           .swipe-zone {
-            width: 250px; /* أوسع جداً على الشاشات الصغيرة */
+            width: 60px;
           }
         }
 
@@ -733,10 +741,12 @@ function AppAppBar() {
           left: 0;
           top: 50%;
           transform: translateY(-50%);
-          z-index: 998;
+          z-index: 1001;
           display: flex;
           align-items: center;
           transition: all 0.4s ease;
+          cursor: pointer;
+          pointer-events: auto;
         }
 
         /* السهم مخفي بشكل افتراضي */
@@ -777,7 +787,8 @@ function AppAppBar() {
 
         /* عند الضغط */
         .menu-indicator:active .menu-arrow {
-          transform: translateX(2px) scale(0.95);
+          transform: translateX(6px) scale(1.1);
+          box-shadow: 0 6px 20px rgba(104, 123, 140, 0.8);
         }
 
         .menu-edge-glow {
@@ -792,6 +803,7 @@ function AppAppBar() {
             transparent 100%
           );
           border-radius: 0 4px 4px 0;
+          pointer-events: none;
         }
 
         [data-theme="dark"] .menu-edge-glow {
@@ -816,6 +828,18 @@ function AppAppBar() {
           color: white;
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
           backdrop-filter: blur(10px);
+          cursor: pointer;
+          pointer-events: auto;
+          transition: all 0.3s ease;
+        }
+        
+        .menu-arrow:hover {
+          transform: scale(1.1);
+          box-shadow: 0 4px 16px rgba(104, 123, 140, 0.6);
+        }
+        
+        .menu-arrow:active {
+          transform: scale(0.95);
         }
 
         [data-theme="dark"] .menu-arrow {
@@ -900,13 +924,26 @@ function AppAppBar() {
           }
         }
 
+        /* overlay شفاف لإغلاق القائمة */
+        .swipe-overlay-close {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          z-index: 998;
+          background: rgba(0, 0, 0, 0.3);
+          backdrop-filter: blur(2px);
+          cursor: pointer;
+        }
+
         /* الشريط الجانبي الثابت */
         .fixed-sidebar {
           position: fixed;
           top: 20px;
-          left: 20px; /* نقل إلى اليسار */
-          height: calc(100vh - 40px); /* الطول الكامل */
-          width: 90px; /* تكبير العرض */
+          left: 20px;
+          height: calc(100vh - 40px);
+          width: 90px;
           background: linear-gradient(
             180deg,
             rgba(104, 123, 140, 0.95) 0%,
@@ -925,17 +962,20 @@ function AppAppBar() {
           z-index: 1000;
           transform: translateX(0);
           opacity: 1;
-          overflow: visible; /* مهم جداً لظهور التلميحات */
+          overflow: visible;
+          pointer-events: auto;
         }
 
         .fixed-sidebar.visible {
           transform: translateX(0);
           opacity: 1;
+          pointer-events: auto;
         }
 
         .fixed-sidebar.hidden {
-          transform: translateX(-120%); /* تغيير الاتجاه للإخفاء إلى اليسار */
+          transform: translateX(-120%);
           opacity: 0;
+          pointer-events: none;
         }
 
         .sidebar-search-section {

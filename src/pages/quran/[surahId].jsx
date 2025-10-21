@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import toast, { Toaster } from 'react-hot-toast';
 import { Search, ArrowLeft, BookOpen, Eye, EyeOff } from 'lucide-react';
 import { FaCopy, FaShareAlt } from 'react-icons/fa';
 import { MdMenuBook } from 'react-icons/md';
@@ -73,7 +74,17 @@ export default function SurahPage({ surah, prevSurah, nextSurah }) {
 
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text);
-    alert('تم نسخ الآية!');
+    toast.success('تم نسخ الآية بنجاح ✓', {
+      duration: 3000,
+      position: 'bottom-center',
+      style: {
+        background: '#10b981',
+        color: '#fff',
+        fontFamily: 'hafs',
+        fontSize: '16px',
+        padding: '12px 24px',
+      },
+    });
   };
 
   const shareVerse = (text) => {
@@ -81,10 +92,28 @@ export default function SurahPage({ surah, prevSurah, nextSurah }) {
       navigator.share({
         title: 'مشاركة آية',
         text: text,
-      }).then(() => console.log('تمت المشاركة بنجاح'))
+      }).then(() => {
+        toast.success('تمت المشاركة بنجاح ✓', {
+          duration: 2000,
+          position: 'bottom-center',
+          style: {
+            background: '#10b981',
+            color: '#fff',
+            fontFamily: 'hafs',
+          },
+        });
+      })
         .catch((error) => console.log('حدث خطأ في المشاركة', error));
     } else {
-      alert('ميزة المشاركة غير مدعومة على هذا المتصفح');
+      toast.error('ميزة المشاركة غير مدعومة على هذا المتصفح', {
+        duration: 3000,
+        position: 'bottom-center',
+        style: {
+          background: '#ef4444',
+          color: '#fff',
+          fontFamily: 'hafs',
+        },
+      });
     }
   };
 
@@ -101,6 +130,7 @@ export default function SurahPage({ surah, prevSurah, nextSurah }) {
 
   return (
     <>
+      <Toaster />
       <SeoHead
         title={`سورة ${surah.name.ar} (${surah.name.en}) - قراءة مفصلة من القرآن الكريم`}
         description={`اكتشف سورة ${surah.name.ar} من القرآن الكريم، والتي تحتوي على ${surah.verses_count} آية ونزلت في ${surah.revelation_place.ar}. تصفح تفاصيل السورة، مع إمكانية الاستماع للتلاوة وقراءة النصوص. احصل على معلومات شاملة حول السورة ومعانيها.`}

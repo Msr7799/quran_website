@@ -1,7 +1,7 @@
 import React from "react";
 import { FiChevronDown } from "react-icons/fi";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 interface DropDownOption {
   value: string;
@@ -24,28 +24,54 @@ const DropDownButton: React.FC<DropDownButtonProps> = ({
   className = ""
 }) => {
   const [open, setOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   
   const selectedOption = options.find(option => option.value === value);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    };
+
+    if (open) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [open]);
+
   return (
-    <motion.div animate={open ? "open" : "closed"} className="relative">
+    <motion.div ref={dropdownRef} animate={open ? "open" : "closed"} className="relative" style={{ width: '100%', maxWidth: '350px' }}>
       <button
         onClick={() => setOpen((pv) => !pv)}
-        className={`flex items-center justify-between gap-2 px-3 py-2 rounded-lg text-white bg-[var(--chart-17)] hover:bg-[var(--chart-17)]/80 transition-colors text-base min-w-[100px] ${className}`}
+        className={`flex items-center justify-between gap-3 px-4 py-3 rounded-lg text-white bg-[var(--chart-17)] hover:bg-[var(--chart-17)]/80 transition-colors text-base w-full ${className}`}
+        style={{ fontSize: '16px', minHeight: '48px' }}
       >
-        <span className="font-medium">
+        <span className="font-medium" style={{ flex: 1, textAlign: 'right' }}>
           {selectedOption ? selectedOption.label : placeholder}
         </span>
         <motion.span variants={iconVariants}>
-          <FiChevronDown />
+          <FiChevronDown size={20} />
         </motion.span>
       </button>
 
       <motion.ul
         initial={wrapperVariants.closed}
         variants={wrapperVariants}
-        style={{ originY: "top", translateX: "-50%" }}
-        className="flex flex-col gap-1 p-2 rounded-lg bg-[#1a1a1a] border border-[#555555] shadow-xl absolute top-[120%] left-[50%] w-full min-w-[120px] overflow-hidden z-50"
+        style={{ 
+          originY: "top", 
+          translateX: "-50%",
+          scrollbarWidth: 'thin',
+          scrollbarColor: 'rgba(255, 255, 255, 0.3) transparent',
+          bottom: 'auto',
+          top: '120%'
+        }}
+        className="dropdown-list flex flex-col gap-1 p-2 rounded-lg bg-[#1a1a1a] border border-[#555555] shadow-xl absolute left-[50%] w-full min-w-[200px] max-h-[240px] overflow-y-auto overflow-x-hidden z-[99999]"
       >
         {options.map((option) => (
           <Option 
@@ -79,16 +105,43 @@ const Option = ({
         onClick();
         setOpen(false);
       }}
-      className={`flex items-center gap-2 w-full p-2 text-sm font-medium whitespace-nowrap rounded-md transition-colors cursor-pointer ${
+      className={`flex items-center gap-2 w-full px-3 py-3 text-base font-medium whitespace-normal rounded-md transition-colors cursor-pointer ${
         isSelected 
           ? 'bg-[var(--chart-17)] text-white' 
           : 'text-gray-300 hover:bg-[#3a3a3a] hover:text-white'
       }`}
+      style={{ minHeight: '44px', lineHeight: '1.4' }}
     >
-      <span>{text}</span>
+      <span style={{ wordBreak: 'break-word', textAlign: 'right', width: '100%' }}>{text}</span>
     </motion.li>
   );
 };
+
+// Add global styles for scrollbar
+if (typeof window !== 'undefined') {
+  const styleId = 'dropdown-scrollbar-styles';
+  if (!document.getElementById(styleId)) {
+    const style = document.createElement('style');
+    style.id = styleId;
+    style.textContent = `
+      .dropdown-list::-webkit-scrollbar {
+        width: 6px;
+      }
+      .dropdown-list::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .dropdown-list::-webkit-scrollbar-thumb {
+        background-color: rgba(255, 255, 255, 0.3);
+        border-radius: 3px;
+        transition: background-color 0.3s ease;
+      }
+      .dropdown-list::-webkit-scrollbar-thumb:hover {
+        background-color: rgba(255, 255, 255, 0.5);
+      }
+    `;
+    document.head.appendChild(style);
+  }
+}
 
 export default DropDownButton;
 
@@ -104,7 +157,8 @@ const wrapperVariants = {
     scaleY: 0,
     transition: {
       when: "afterChildren",
-      staggerChildren: 0.1,
+      staggerChildren: 0, // إغلاق فوري لجميع العناصر
+      duration: 0.15,
     },
   },
 };

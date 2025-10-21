@@ -401,6 +401,7 @@ const QuranPageView = () => {
               justifyContent: 'center',
               flexDirection: 'row',
               gap: 2,
+              color: isDarkMode ? '#ffffff' : '#d3b6b6ff',
               height: '60px',
               padding: '10px 20px',
               borderTop: isDarkMode ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(0, 0, 0, 0.1)',
@@ -427,6 +428,7 @@ const QuranPageView = () => {
             '@media (max-width: 768px)': {
               order: 1, /* التنقل أولاً في الشاشات الصغيرة */
               marginBottom: '5px'
+
             }
           }}>
             <PageNavigator

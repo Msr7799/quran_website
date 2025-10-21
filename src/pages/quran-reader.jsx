@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { LoaderOne } from '@/components/ui/loader';
+import toast, { Toaster } from 'react-hot-toast';
 import { 
 
   Menu, 
@@ -355,7 +356,17 @@ export default function QuranReader() {
       .join('\n\n');
     
     navigator.clipboard.writeText(selectedTexts);
-    alert(`تم نسخ ${selectedVerses.size} آية`);
+    toast.success(`تم نسخ ${selectedVerses.size} آية بنجاح ✓`, {
+      duration: 3000,
+      position: 'bottom-center',
+      style: {
+        background: '#10b981',
+        color: '#fff',
+        fontFamily: 'hafs',
+        fontSize: '16px',
+        padding: '12px 24px',
+      },
+    });
   };
 
   // مشاركة الآيات المحددة
@@ -454,17 +465,23 @@ export default function QuranReader() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-neutral-900 flex items-center justify-center">
-        <div className="text-center">
-          <LoaderOne />
-          <p className="text-gray-300 mt-6 text-lg font-medium">جاري تحميل الصفحة...</p>
+      <>
+        <Toaster />
+        <div className="min-h-screen bg-neutral-900 flex items-center justify-center">
+          <div className="text-center">
+            <LoaderOne />
+            <p className="text-gray-300 mt-6 text-lg font-medium">جاري تحميل الصفحة...</p>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 
+  
+
   return (
     <>
+      <Toaster />
       <Head>
         <title>قارئ القرآن الكريم - الصفحة {currentPage}</title>
         <meta name="description" content={`قارئ القرآن الكريم - الصفحة ${currentPage} من المصحف الشريف`} />
@@ -1391,6 +1408,7 @@ export default function QuranReader() {
             surahName={selectedVerse.surahName}
           />
         )}
+        <Toaster />
       </div>
     </>
   );

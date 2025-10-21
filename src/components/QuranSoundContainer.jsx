@@ -1,6 +1,7 @@
 // src/components/QuranSoundContainer.jsx - مع إصلاح التوقيت وموضع الآيات
 
 import React, { useState, useEffect, useRef } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
 import { Box, Typography, TextField, List, ListItemText, ListItemButton, Paper, Chip, ThemeProvider, createTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
@@ -148,91 +149,7 @@ padding: '20px',
 },
 }));
 
-// مكونات القسم الجديد داخل VerseDisplayContainer
-const ReciterSection = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'center',
-  padding: theme.spacing(2.5),
-  backgroundColor: theme.palette.background.paper,
-  borderRadius: theme.spacing(1.875),
-  backdropFilter: 'blur(10px)',
-  border: `1px solid ${theme.palette.divider}`,
-  gap: theme.spacing(2.5),
-  width: '100%',
-  maxWidth: '600px',
-  [theme.breakpoints.down('md')]: {
-    flexDirection: 'column',
-    padding: theme.spacing(1.875),
-    gap: theme.spacing(1.875),
-  },
-  [theme.breakpoints.down('sm')]: {
-    padding: theme.spacing(1.25),
-    gap: theme.spacing(1.25),
-  },
-}));
-
-const ReciterImage = styled('img')(({ theme }) => ({
-  width: theme.spacing(10),
-  height: theme.spacing(10),
-  borderRadius: '50%',
-  border: `3px solid ${theme.palette.divider}`,
-  boxShadow: theme.shadows[4],
-  transition: theme.transitions.create('transform'),
-  '&:hover': {
-    transform: 'scale(1.05)',
-  },
-  [theme.breakpoints.down('md')]: {
-    width: theme.spacing(8.75),
-    height: theme.spacing(8.75),
-    marginBottom: theme.spacing(1.5),
-  },
-  [theme.breakpoints.down('sm')]: {
-    width: theme.spacing(7.5),
-    height: theme.spacing(7.5),
-    marginBottom: theme.spacing(1.25),
-  },
-}));
-
-const ReciterInfo = styled(Box)(({ theme }) => ({
-  textAlign: 'center',
-  color: theme.palette.text.primary,
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-}));
-
-const ReciterName = styled(Typography)(({ theme }) => ({
-  fontFamily: 'hafs',
-  fontSize: '1.4rem',
-  fontWeight: 800,
-  color: theme.palette.text.primary,
-  textShadow: '2px 2px 4px rgba(0, 0, 0, 0.7)',
-  marginBottom: theme.spacing(1),
-  [theme.breakpoints.down('md')]: {
-    fontSize: '1.2rem',
-  },
-  [theme.breakpoints.down('sm')]: {
-    fontSize: '1rem',
-  },
-}));
-
-const SurahName = styled(Typography)(({ theme }) => ({
-  fontFamily: 'uthmanic_hafs_v22',
-  fontSize: '1.1rem',
-  color: 'var(--text-secondary)',
-  textShadow: '1px 1px 2px rgba(0, 0, 0, 0.5)',
-  '@media (max-width: 768px)': {
-    fontSize: '1rem',
-  },
-  '@media (max-width: 480px)': {
-    fontSize: '0.9rem',
-  },
-}));
-
-const VerseSection = styled(Box)(({ theme }) => ({
+const VerseSection = styled(Box)(() => ({
   width: '100%',
   minHeight: '200px',
   display: 'flex',
@@ -252,7 +169,7 @@ const VerseSection = styled(Box)(({ theme }) => ({
   },
 }));
 
-const PlayerSection = styled(Box)(({ theme }) => ({
+const PlayerSection = styled(Box)(() => ({
   width: '100%',
   backgroundColor: 'var(--background-paper)',
   borderRadius: '5px',
@@ -268,7 +185,7 @@ const PlayerSection = styled(Box)(({ theme }) => ({
   },
 }));
 
-const ListeningSection = styled(Box)(({ theme }) => ({
+const ListeningSection = styled(Box)(() => ({
   backgroundColor: 'var(--background-paper)',
   padding: '30px',
   marginBottom: '30px',
@@ -281,7 +198,7 @@ const ListeningSection = styled(Box)(({ theme }) => ({
   },
 }));
 
-const SectionTitle = styled(Typography)(({ theme }) => ({
+const SectionTitle = styled(Typography)(() => ({
   fontFamily: 'hafs',
   fontSize: '1.8rem',
   fontWeight: 'bold',
@@ -297,7 +214,7 @@ const SectionTitle = styled(Typography)(({ theme }) => ({
   },
 }));
 
-const SelectionContainer = styled(Box)(({ theme }) => ({
+const SelectionContainer = styled(Box)(() => ({
   display: 'grid',
   gridTemplateColumns: '1fr 1fr',
   gap: '30px',
@@ -308,7 +225,7 @@ const SelectionContainer = styled(Box)(({ theme }) => ({
   },
 }));
 
-const SelectionBox = styled(Paper)(({ theme }) => ({
+const SelectionBox = styled(Paper)(() => ({
   padding: '20px',
   borderRadius: '15px',
   backgroundColor: 'var(--background-color)',
@@ -320,7 +237,7 @@ const SelectionBox = styled(Paper)(({ theme }) => ({
   },
 }));
 
-const SectionSubTitle = styled(Typography)(({ theme }) => ({
+const SectionSubTitle = styled(Typography)(() => ({
   fontFamily: 'hafs',
   fontSize: '1.2rem',
   fontWeight: 'bold',
@@ -333,7 +250,7 @@ const SectionSubTitle = styled(Typography)(({ theme }) => ({
   gap: '8px',
 }));
 
-const SearchField = styled(TextField)(({ theme }) => ({
+const SearchField = styled(TextField)(() => ({
   marginBottom: '15px',
   '& .MuiOutlinedInput-root': {
     borderRadius: '10px',
@@ -358,7 +275,7 @@ const SearchField = styled(TextField)(({ theme }) => ({
   },
 }));
 
-const ScrollableList = styled(List)(({ theme }) => ({
+const ScrollableList = styled(List)(() => ({
   flex: 1,
   overflow: 'auto',
   '&::-webkit-scrollbar': {
@@ -377,7 +294,7 @@ const ScrollableList = styled(List)(({ theme }) => ({
   },
 }));
 
-const ListItemStyled = styled(ListItemButton)(({ theme, selected }) => ({
+const ListItemStyled = styled(ListItemButton)(({ selected }) => ({
   borderRadius: '10px',
   marginBottom: '8px',
   backgroundColor: selected ? 'var(--primary-color)' : 'transparent',
@@ -388,7 +305,7 @@ const ListItemStyled = styled(ListItemButton)(({ theme, selected }) => ({
   transition: 'all 0.2s ease',
 }));
 
-const StatusChip = styled(Chip)(({ theme }) => ({
+const StatusChip = styled(Chip)(() => ({
   backgroundColor: 'var(--background-paper)',
   color: 'var(--text-primary)',
   fontWeight: 'bold',
@@ -406,7 +323,7 @@ const StatusChip = styled(Chip)(({ theme }) => ({
   },
 }));
 
-const TimingInfo = styled(Box)(({ theme }) => ({
+const TimingInfo = styled(Box)(() => ({
   backgroundColor: 'var(--background-paper)',
   borderRadius: '12px',
   padding: '16px',
@@ -607,7 +524,17 @@ function QuranSoundContainer() {
   // معالجة اختيار السورة وتشغيل الصوت
   const handleSurahSelect = (surah) => {
     if (!selectedReciter) {
-      alert('يرجى اختيار القارئ أولاً');
+      toast.error('يرجى اختيار القارئ أولاً', {
+        duration: 3000,
+        position: 'top-center',
+        style: {
+          background: '#ef4444',
+          color: '#fff',
+          fontFamily: 'hafs',
+          fontSize: '16px',
+          padding: '12px 24px',
+        },
+      });
       return;
     }
 
@@ -705,6 +632,7 @@ function QuranSoundContainer() {
 
   return (
     <Container>
+      <Toaster />
       {/* العنوان الرئيسي */}
       <HeaderSection>
         <Title>

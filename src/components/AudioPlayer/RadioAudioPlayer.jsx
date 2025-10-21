@@ -11,11 +11,11 @@ import {
   Radio, 
   SkipForward, 
   SkipBack, 
-  ChevronDown,
   Heart,
   Share,
   RotateCcw
 } from 'lucide-react';
+import DropDownButton from '../ui/animate-ui/primitives/buttons/dropdown-button';
 
 const RadioAudioPlayer = ({ radios = [] }) => {
   const [currentRadio, setCurrentRadio] = useState(null);
@@ -24,14 +24,12 @@ const RadioAudioPlayer = ({ radios = [] }) => {
   const [isMuted, setIsMuted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [favorites, setFavorites] = useState([]);
   const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
+  const [, setDuration] = useState(0);
   const [isConnecting, setIsConnecting] = useState(false);
   
   const audioRef = useRef(null);
-  const dropdownRef = useRef(null);
 
   // Initialize audio element
   useEffect(() => {
@@ -58,17 +56,7 @@ const RadioAudioPlayer = ({ radios = [] }) => {
     }
   }, [radios, currentRadio]);
 
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsDropdownOpen(false);
-      }
-    };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
   const handleAudioError = () => {
     setError('خطأ في تحميل الإذاعة');
@@ -103,14 +91,17 @@ const RadioAudioPlayer = ({ radios = [] }) => {
         await audioRef.current.play();
         setIsPlaying(true);
       }
-    } catch (err) {
+    } catch {
       handleAudioError();
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleRadioChange = (radio) => {
+  const handleRadioChange = (radioId) => {
+    const radio = radios.find(r => r.id === radioId);
+    if (!radio) return;
+    
     if (audioRef.current) {
       audioRef.current.pause();
     }
@@ -118,7 +109,6 @@ const RadioAudioPlayer = ({ radios = [] }) => {
     setCurrentRadio(radio);
     setIsPlaying(false);
     setError(null);
-    setIsDropdownOpen(false);
     
     // Auto play new radio
     setTimeout(() => {
@@ -150,13 +140,13 @@ const RadioAudioPlayer = ({ radios = [] }) => {
   const playNext = () => {
     const currentIndex = radios.findIndex(radio => radio.id === currentRadio?.id);
     const nextIndex = (currentIndex + 1) % radios.length;
-    handleRadioChange(radios[nextIndex]);
+    handleRadioChange(radios[nextIndex].id);
   };
 
   const playPrevious = () => {
     const currentIndex = radios.findIndex(radio => radio.id === currentRadio?.id);
     const prevIndex = currentIndex === 0 ? radios.length - 1 : currentIndex - 1;
-    handleRadioChange(radios[prevIndex]);
+    handleRadioChange(radios[prevIndex].id);
   };
 
   const toggleFavorite = () => {
@@ -259,37 +249,16 @@ const RadioAudioPlayer = ({ radios = [] }) => {
       </div>
 
       {/* Radio Selector Dropdown */}
-      <div className="radio-selector" ref={dropdownRef}>
-        <button 
-          className="dropdown-trigger"
-          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-        >
-          <span>اختر إذاعة أخرى</span>
-          <ChevronDown className={`chevron ${isDropdownOpen ? 'open' : ''}`} />
-        </button>
-        
-        {isDropdownOpen && (
-          <div className="dropdown-menu">
-            <div className="dropdown-header">
-              <h5>الإذاعات المتاحة ({radios.length})</h5>
-            </div>
-            <div className="dropdown-list">
-              {radios.map((radio) => (
-                <button
-                  key={radio.id}
-                  className={`dropdown-item ${currentRadio?.id === radio.id ? 'active' : ''}`}
-                  onClick={() => handleRadioChange(radio)}
-                >
-                  <Radio className="item-icon" />
-                  <span className="item-name">{radio.name}</span>
-                  {favorites.includes(radio.id) && (
-                    <Heart className="item-favorite" />
-                  )}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
+      <div style={{ marginBottom: '20px' }}>
+        <DropDownButton
+          options={radios.map(radio => ({
+            value: radio.id,
+            label: radio.name
+          }))}
+          value={currentRadio?.id || ''}
+          onChange={handleRadioChange}
+          placeholder="اختر إذاعة"
+        />
       </div>
 
       {/* Error Display */}
@@ -370,6 +339,8 @@ const RadioAudioPlayer = ({ radios = [] }) => {
           border: 1px solid rgba(255, 255, 255, 0.1);
           max-width: 450px;
           margin: 0 auto;
+          margin-bottom: 100px;
+          position: relative;
         }
 
         .radio-header {
@@ -498,112 +469,6 @@ const RadioAudioPlayer = ({ radios = [] }) => {
 
         .live {
           color: #4ade80;
-        }
-
-        .radio-selector {
-          position: relative;
-          margin-bottom: 20px;
-        }
-
-        .dropdown-trigger {
-          width: 100%;
-          background: rgba(255, 255, 255, 0.15);
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          border-radius: 12px;
-          padding: 12px 16px;
-          color: white;
-          cursor: pointer;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          transition: all 0.3s ease;
-          font-family: 'Cairo', sans-serif;
-        }
-
-        .dropdown-trigger:hover {
-          background: rgba(255, 255, 255, 0.2);
-        }
-
-        .chevron {
-          transition: transform 0.3s ease;
-        }
-
-        .chevron.open {
-          transform: rotate(180deg);
-        }
-
-        .dropdown-menu {
-          position: absolute;
-          top: calc(100% + 8px);
-          left: 0;
-          right: 0;
-          background: rgba(255, 255, 255, 0.95);
-          backdrop-filter: blur(20px);
-          border-radius: 12px;
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-          z-index: 1000;
-          max-height: 300px;
-          overflow: hidden;
-          border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .dropdown-header {
-          padding: 12px 16px;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-          background: rgba(255, 255, 255, 0.1);
-        }
-
-        .dropdown-header h5 {
-          margin: 0;
-          font-size: 14px;
-          color: #333;
-          font-weight: 600;
-        }
-
-        .dropdown-list {
-          max-height: 240px;
-          overflow-y: auto;
-        }
-
-        .dropdown-item {
-          width: 100%;
-          background: none;
-          border: none;
-          padding: 12px 16px;
-          text-align: right;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          transition: background 0.2s ease;
-          color: #333;
-        }
-
-        .dropdown-item:hover {
-          background: rgba(255, 255, 255, 0.5);
-        }
-
-        .dropdown-item.active {
-          background: rgba(102, 126, 234, 0.2);
-          color: #667eea;
-        }
-
-        .item-icon {
-          width: 16px;
-          height: 16px;
-          flex-shrink: 0;
-        }
-
-        .item-name {
-          flex: 1;
-          text-align: right;
-          font-family: 'Cairo', sans-serif;
-        }
-
-        .item-favorite {
-          width: 16px;
-          height: 16px;
-          color: #ff6b6b;
         }
 
         .error-display {
@@ -785,7 +650,7 @@ const RadioAudioPlayer = ({ radios = [] }) => {
         @media (max-width: 768px) {
           .radio-player-container {
             padding: 20px;
-            margin: 0 16px;
+            margin: 0 16px 100px 16px;
           }
 
           .radio-header {
@@ -823,6 +688,10 @@ const RadioAudioPlayer = ({ radios = [] }) => {
         }
 
         @media (max-width: 480px) {
+          .radio-player-container {
+            margin-bottom: 80px;
+          }
+
           .radio-title {
             font-size: 16px;
           }
@@ -834,11 +703,8 @@ const RadioAudioPlayer = ({ radios = [] }) => {
           .current-radio {
             padding: 16px;
           }
-
-          .dropdown-menu {
-            max-height: 250px;
-          }
         }
+
       `}</style>
     </div>
   );
