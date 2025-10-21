@@ -126,7 +126,7 @@ export default function FooterNew() {
 
   return (
     <React.Fragment>
-      <footer className="bg-white dark:bg-gray-900">
+      <footer className="!bg-ring dark:bg-gray-900">
         <div className="mx-auto max-w-screen-xl px-4 pt-8 pb-6 sm:px-6 lg:px-8">
           
           {/* قسم الاشتراك */}

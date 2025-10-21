@@ -438,19 +438,28 @@ const LivePage = () => {
       </div>
 
       <style jsx>{`
+        :global(body) {
+          background: #1a1a1a !important;
+          margin: 0;
+          padding: 0;
+        }
+
         .live-container {
-          max-width: 1200px;
+          max-width: 1400px;
           margin: 0 auto;
           padding: 20px;
           direction: rtl;
           font-family: 'Cairo', sans-serif;
+          background: #1a1a1a;
+          min-height: 100vh;
+          width: 100%;
         }
 
         .live-header {
           text-align: center;
           margin-bottom: 30px;
           padding-bottom: 20px;
-          border-bottom: 2px solid #e0e0e0;
+          border-bottom: 2px solid #333;
         }
 
         .live-header h1 {
@@ -459,29 +468,29 @@ const LivePage = () => {
           justify-content: center;
           gap: 10px;
           font-size: 2.5rem;
-          color: #1976d2;
+          color: #ffffff;
           margin-bottom: 10px;
         }
 
         .header-icon {
-          color: #dc004e;
+          color: #888;
         }
 
         .live-header p {
           font-size: 1.2rem;
-          color: #666;
+          color: #aaa;
         }
 
         .error-message {
-          background: #ffebee;
-          color: #c62828;
+          background: #2a1515;
+          color: #ff6b6b;
           padding: 15px;
           border-radius: 8px;
           margin-bottom: 20px;
           display: flex;
           align-items: center;
           gap: 10px;
-          border-left: 4px solid #c62828;
+          border-left: 4px solid #ff6b6b;
         }
 
         .live-content {
@@ -492,10 +501,11 @@ const LivePage = () => {
 
         .video-container {
           position: relative;
-          background: #000;
+          background: #0a0a0a;
           border-radius: 12px;
           overflow: hidden;
-          box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+          box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+          border: 1px solid #333;
         }
 
         .video-wrapper {
@@ -556,11 +566,11 @@ const LivePage = () => {
         }
 
         .play-pause {
-          background: rgba(25,118,210,0.8);
+          background: rgba(80,80,80,0.8);
         }
 
         .play-pause:hover {
-          background: rgba(25,118,210,1);
+          background: rgba(100,100,100,1);
         }
 
         .volume-control {
@@ -582,7 +592,7 @@ const LivePage = () => {
           appearance: none;
           width: 12px;
           height: 12px;
-          background: #1976d2;
+          background: #888;
           border-radius: 50%;
           cursor: pointer;
         }
@@ -590,7 +600,7 @@ const LivePage = () => {
         .volume-slider::-moz-range-thumb {
           width: 12px;
           height: 12px;
-          background: #1976d2;
+          background: #888;
           border-radius: 50%;
           cursor: pointer;
           border: none;
@@ -629,8 +639,8 @@ const LivePage = () => {
         .spinner {
           width: 40px;
           height: 40px;
-          border: 4px solid rgba(255,255,255,0.3);
-          border-top: 4px solid #1976d2;
+          border: 4px solid rgba(255,255,255,0.2);
+          border-top: 4px solid #888;
           border-radius: 50%;
           animation: spin 1s linear infinite;
         }
@@ -638,8 +648,8 @@ const LivePage = () => {
         .small-spinner {
           width: 20px;
           height: 20px;
-          border: 2px solid rgba(255,255,255,0.3);
-          border-top: 2px solid #1976d2;
+          border: 2px solid rgba(255,255,255,0.2);
+          border-top: 2px solid #888;
           border-radius: 50%;
           animation: spin 1s linear infinite;
         }
@@ -650,10 +660,11 @@ const LivePage = () => {
         }
 
         .channel-info {
-          background: white;
+          background: #242424;
           padding: 20px;
           border-radius: 12px;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+          border: 1px solid #333;
           display: flex;
           justify-content: space-between;
           align-items: center;
@@ -661,7 +672,7 @@ const LivePage = () => {
 
         .channel-details h2 {
           font-size: 1.5rem;
-          color: #1976d2;
+          color: #ffffff;
           margin-bottom: 8px;
         }
 
@@ -670,7 +681,7 @@ const LivePage = () => {
           align-items: center;
           gap: 8px;
           font-size: 0.9rem;
-          color: #666;
+          color: #aaa;
         }
 
         .status-dot {
@@ -690,21 +701,22 @@ const LivePage = () => {
           display: flex;
           align-items: center;
           gap: 8px;
-          color: #666;
+          color: #aaa;
           font-size: 0.9rem;
         }
 
 
         .channels-list {
-          background: white;
+          background: #242424;
           padding: 20px;
           border-radius: 12px;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+          border: 1px solid #333;
         }
 
         .channels-list h3 {
           margin-bottom: 20px;
-          color: #1976d2;
+          color: #ffffff;
           font-size: 1.3rem;
         }
 
@@ -715,9 +727,9 @@ const LivePage = () => {
         }
 
         .channel-btn {
-          background: white;
-          border: 2px solid #e0e0e0;
-          color: black;
+          background: #2d2d2d;
+          border: 2px solid #3d3d3d;
+          color: #e0e0e0;
           padding: 15px;
           border-radius: 8px;
           cursor: pointer;
@@ -730,16 +742,16 @@ const LivePage = () => {
         }
 
         .channel-btn:hover {
-          border-color: #1976d2;
-          background: #f5f5f5;
+          border-color: #555;
+          background: #383838;
           transform: translateY(-2px);
-          box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+          box-shadow: 0 4px 8px rgba(0,0,0,0.3);
         }
 
         .channel-btn.active {
-          border-color: #1976d2;
-          background: #e3f2fd;
-          color: #1976d2;
+          border-color: #777;
+          background: #383838;
+          color: #ffffff;
         }
 
         .playing-indicator {
@@ -753,7 +765,7 @@ const LivePage = () => {
         .wave {
           width: 3px;
           height: 12px;
-          background: #1976d2;
+          background: #888;
           border-radius: 2px;
           animation: wave 1s ease-in-out infinite;
         }
@@ -775,7 +787,7 @@ const LivePage = () => {
         .radio-section {
           margin-top: 40px;
           padding-top: 40px;
-          border-top: 2px solid #e0e0e0;
+          border-top: 2px solid #333;
         }
 
         .radio-section-header {
@@ -789,18 +801,18 @@ const LivePage = () => {
           justify-content: center;
           gap: 12px;
           font-size: 2rem;
-          color: #1976d2;
+          color: #ffffff;
           margin-bottom: 10px;
           font-family: 'Cairo', sans-serif;
         }
 
         .section-icon {
-          color: #667eea;
+          color: #888;
         }
 
         .radio-section-header p {
           font-size: 1.1rem;
-          color: #666;
+          color: #aaa;
           margin: 0;
         }
 
@@ -810,24 +822,25 @@ const LivePage = () => {
           align-items: center;
           justify-content: center;
           padding: 60px 20px;
-          background: white;
+          background: #242424;
           border-radius: 16px;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+          border: 1px solid #333;
           text-align: center;
         }
 
         .radio-loading .loading-spinner {
           width: 40px;
           height: 40px;
-          border: 4px solid #e0e0e0;
-          border-top: 4px solid #667eea;
+          border: 4px solid #333;
+          border-top: 4px solid #888;
           border-radius: 50%;
           animation: spin 1s linear infinite;
           margin-bottom: 16px;
         }
 
         .radio-loading p {
-          color: #666;
+          color: #aaa;
           font-size: 1rem;
           margin: 0;
         }

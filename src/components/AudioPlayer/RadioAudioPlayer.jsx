@@ -182,7 +182,7 @@ const RadioAudioPlayer = ({ radios = [] }) => {
         
         <style jsx>{`
           .radio-player-container {
-            background: linear-gradient(135deg,rgb(49, 53, 74) 0%,rgb(52, 53, 79) 100%);
+            background: linear-gradient(135deg,rgba(67, 63, 64, 0.54) 0%,rgb(66, 67, 71) 100%);
             border-radius: 20px;
             padding: 20px;
             color: white;
@@ -330,7 +330,7 @@ const RadioAudioPlayer = ({ radios = [] }) => {
 
       <style jsx>{`
         .radio-player-container {
-          background: linear-gradient(135deg,rgb(90, 97, 132) 0%,rgb(53, 56, 115) 100%);
+          background: linear-gradient(135deg,rgb(90, 90, 90) 0%,rgb(89, 89, 94) 100%);
           border-radius: 20px;
           padding: 24px;
           color: white;
