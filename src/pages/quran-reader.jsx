@@ -473,28 +473,28 @@ export default function QuranReader() {
       <div className="min-h-screen bg-neutral-900 text-white">
         {/* Header */}
         <header className="sticky top-0 z-50 bg-neutral-900/95 backdrop-blur-sm border-b border-gray-700">
-          <div className="max-w-7xl mx-auto px-4 py-4">
-            <div className="flex items-center justify-between">
+          <div className="max-w-7xl mx-auto px-3 sm:px-4 py-2.5 sm:py-3 md:py-4">
+            <div className="flex items-center justify-between gap-2 sm:gap-3">
               {/* Logo & Menu */}
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
                 <button
                   onClick={() => setShowSidebar(!showSidebar)}
-                  className="lg:hidden p-2 rounded-lg hover:bg-neutral-800 transition-colors"
+                  className="lg:hidden p-1.5 sm:p-2 rounded-lg hover:bg-neutral-800 transition-colors"
                 >
-                  <Menu size={20} />
+                  <Menu size={18} className="sm:w-5 sm:h-5" />
                 </button>
-                <h1 className="text-xl font-bold text-sky-200">قارئ القرآن</h1>
+                <h1 className="text-base sm:text-lg md:text-xl font-bold text-sky-200">قارئ القرآن</h1>
               </div>
 
               {/* Page Info */}
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
                 <button
                   onClick={() => setShowPageSelector(!showPageSelector)}
-                  className="bg-gray-700 hover:bg-slate-600 px-4 py-2 rounded-lg transition-colors relative"
+                  className="bg-gray-700 hover:bg-slate-600 px-2 py-1.5 sm:px-3 sm:py-2 md:px-4 rounded-lg transition-colors relative"
                 >
-                  <span className="text-sm">الصفحة {currentPage}</span>
+                  <span className="text-xs sm:text-sm">الصفحة {currentPage}</span>
                   {pageData?.pageInfo && (
-                    <div className="text-base text-gray-300">
+                    <div className="text-xs sm:text-sm text-gray-300">
                       الجزء {pageData.pageInfo.juz}
                     </div>
                   )}
@@ -502,52 +502,52 @@ export default function QuranReader() {
               </div>
 
               {/* Actions */}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 sm:gap-1.5 md:gap-2">
                 {/* Navigation Button */}
                 <button
                   onClick={() => setShowNavigation(!showNavigation)}
-                  className={`p-2 rounded-lg transition-colors ${showNavigation ? 'bg-chart-4': 'bg-gray-600 hover:bg-gray-500'}`}
+                  className={`p-1.5 sm:p-2 rounded-lg transition-colors ${showNavigation ? 'bg-chart-4': 'bg-gray-600 hover:bg-gray-500'}`}
                   title="الانتقال للسورة أو الآية"
                 >
-                  <Navigation size={16} />
+                  <Navigation size={14} className="sm:w-4 sm:h-4" />
                 </button>
 
                 {/* Search Button */}
                 <button
                   onClick={() => setShowSearch(!showSearch)}
-                  className={`p-2 rounded-lg transition-colors ${showSearch ? 'bg-blue-600' : 'bg-gray-600 hover:bg-gray-500'}`}
+                  className={`p-1.5 sm:p-2 rounded-lg transition-colors ${showSearch ? 'bg-blue-600' : 'bg-gray-600 hover:bg-gray-500'}`}
                   title="البحث في الصفحة"
                 >
-                  <Search size={16} />
+                  <Search size={14} className="sm:w-4 sm:h-4" />
                 </button>
 
                 {/* Settings Button */}
                 <button
                   onClick={() => setShowSettings(!showSettings)}
-                  className={`p-2 rounded-lg transition-colors ${showSettings ? 'bg-purple-600' : 'bg-gray-600 hover:bg-gray-500'}`}
+                  className={`p-1.5 sm:p-2 rounded-lg transition-colors ${showSettings ? 'bg-purple-600' : 'bg-gray-600 hover:bg-gray-500'}`}
                   title="الإعدادات"
                 >
-                  <Settings size={16} />
+                  <Settings size={14} className="sm:w-4 sm:h-4" />
                 </button>
 
                 {selectedVerses.size > 0 && (
                   <>
                     <button
                       onClick={copySelectedVerses}
-                      className="p-2 rounded-lg bg-green-600 hover:bg-green-700 transition-colors"
+                      className="p-1.5 sm:p-2 rounded-lg bg-green-600 hover:bg-green-700 transition-colors"
                       title="نسخ المحدد"
                     >
-                      <Copy size={16} />
+                      <Copy size={14} className="sm:w-4 sm:h-4" />
                     </button>
                     <button
                       onClick={shareSelectedVerses}
-                      className="p-2 rounded-lg bg-gray-600 hover:bg-gray-700 transition-colors"
+                      className="p-1.5 sm:p-2 rounded-lg bg-gray-600 hover:bg-gray-700 transition-colors"
                       title="مشاركة المحدد"
                     >
-                      <Share2 size={16} />
+                      <Share2 size={14} className="sm:w-4 sm:h-4" />
                     </button>
-                    <span className="text-base text-gray-300 px-2">
-                      {selectedVerses.size} محدد
+                    <span className="text-xs sm:text-sm text-gray-300 px-1 sm:px-2">
+                      {selectedVerses.size}
                     </span>
                   </>
                 )}
@@ -556,13 +556,13 @@ export default function QuranReader() {
 
             {/* Navigation Panel */}
             {showNavigation && (
-              <div className="mt-4 p-4 bg-neutral-800 rounded-lg">
-                <h3 className="text-lg font-bold text-indigo-300 mb-4 flex items-center gap-2">
-                  <Navigation size={20} />
+              <div className="mt-3 sm:mt-4 p-3 sm:p-4 bg-neutral-800 rounded-lg">
+                <h3 className="text-base sm:text-lg font-bold text-indigo-300 mb-3 sm:mb-4 flex items-center gap-2">
+                  <Navigation size={16} className="sm:w-5 sm:h-5" />
                   الانتقال السريع
                 </h3>
-                <div className="flex items-center gap-4 mb-4">
-                  <Navigation size={16} className="text-gray-400" />
+                <div className="flex items-center gap-2 sm:gap-3 md:gap-4 mb-3 sm:mb-4">
+                  <Navigation size={14} className="text-gray-400 sm:w-4 sm:h-4" />
                   <input
                     type="text"
                     value={navigationQuery}
@@ -570,42 +570,42 @@ export default function QuranReader() {
                       setNavigationQuery(e.target.value);
                       handleNavigation(e.target.value);
                     }}
-                    placeholder="أدخل رقم السورة (1-114) أو رقم السورة:الآية (مثل 2:255) أو اسم السورة أو رقم الصفحة (ص123)..."
-                    className="flex-1 bg-neutral-700 text-white px-4 py-2 rounded-lg border border-gray-600 focus:border-indigo-400 focus:outline-none"
+                    placeholder="رقم السورة أو الآية (مثل 2:255)..."
+                    className="flex-1 bg-neutral-700 text-white px-2 py-1.5 sm:px-3 sm:py-2 md:px-4 text-xs sm:text-sm rounded-lg border border-gray-600 focus:border-indigo-400 focus:outline-none"
                   />
                   {isNavigating && (
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-indigo-400"></div>
+                    <div className="animate-spin rounded-full h-3 w-3 sm:h-4 sm:w-4 border-b-2 border-indigo-400"></div>
                   )}
                 </div>
                 
                 {/* أمثلة سريعة */}
-                <div className="flex flex-wrap gap-2 mb-4">
+                <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-3 sm:mb-4">
                   <button
                     onClick={() => {
                       setNavigationQuery('2:255');
                       handleNavigation('2:255');
                     }}
-                    className="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 rounded-lg text-sm transition-colors"
+                    className="px-2 py-1 sm:px-3 bg-indigo-600 hover:bg-indigo-700 rounded-lg text-xs sm:text-sm transition-colors"
                   >
-                    آية الكرسي (2:255)
+                    آية الكرسي
                   </button>
                   <button
                     onClick={() => {
                       setNavigationQuery('36');
                       handleNavigation('36');
                     }}
-                    className="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 rounded-lg text-sm transition-colors"
+                    className="px-2 py-1 sm:px-3 bg-indigo-600 hover:bg-indigo-700 rounded-lg text-xs sm:text-sm transition-colors"
                   >
-                    سورة يس (36)
+                    سورة يس
                   </button>
                   <button
                     onClick={() => {
                       setNavigationQuery('18:10');
                       handleNavigation('18:10');
                     }}
-                    className="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 rounded-lg text-sm transition-colors"
+                    className="px-2 py-1 sm:px-3 bg-indigo-600 hover:bg-indigo-700 rounded-lg text-xs sm:text-sm transition-colors"
                   >
-                    أصحاب الكهف (18:10)
+                    أصحاب الكهف
                   </button>
                 </div>
 
@@ -630,9 +630,9 @@ export default function QuranReader() {
 
             {/* Search Panel */}
             {showSearch && (
-              <div className="mt-4 p-4 bg-neutral-800 rounded-lg">
-                <div className="flex items-center gap-4">
-                  <Search size={16} className="text-gray-400" />
+              <div className="mt-3 sm:mt-4 p-3 sm:p-4 bg-neutral-800 rounded-lg">
+                <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
+                  <Search size={14} className="text-gray-400 sm:w-4 sm:h-4" />
                   <input
                     type="text"
                     value={searchQuery}
@@ -640,12 +640,12 @@ export default function QuranReader() {
                       setSearchQuery(e.target.value);
                       searchInCurrentPage(e.target.value);
                     }}
-                    placeholder="ابحث في آيات الصفحة الحالية..."
-                    className="flex-1 bg-neutral-700 text-white px-4 py-2 rounded-lg border border-gray-600 focus:border-sky-400 focus:outline-none"
+                    placeholder="ابحث في الصفحة..."
+                    className="flex-1 bg-neutral-700 text-white px-2 py-1.5 sm:px-3 sm:py-2 md:px-4 text-xs sm:text-sm rounded-lg border border-gray-600 focus:border-sky-400 focus:outline-none"
                   />
                   {searchResults.length > 0 && (
-                    <span className="text-base text-gray-300">
-                      {searchResults.length} نتيجة
+                    <span className="text-xs sm:text-sm text-gray-300">
+                      {searchResults.length}
                     </span>
                   )}
                 </div>
@@ -654,89 +654,89 @@ export default function QuranReader() {
 
             {/* Settings Panel */}
             {showSettings && (
-              <div className="mt-4 p-4 bg-neutral-800 rounded-lg">
-                <h3 className="text-lg font-bold text-sky-200 mb-4 flex items-center gap-2">
-                  <Settings size={20} />
+              <div className="mt-3 sm:mt-4 p-3 sm:p-4 bg-neutral-800 rounded-lg">
+                <h3 className="text-base sm:text-lg font-bold text-sky-200 mb-3 sm:mb-4 flex items-center gap-2">
+                  <Settings size={16} className="sm:w-5 sm:h-5" />
                   إعدادات العرض
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                   {/* Font Size */}
-                  <div className="space-y-2">
-                    <label className="text-base text-gray-300">حجم الخط</label>
-                    <div className="flex items-center gap-2">
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <label className="text-xs sm:text-sm md:text-base text-gray-300">حجم الخط</label>
+                    <div className="flex items-center gap-1.5 sm:gap-2">
                       <button
                         onClick={() => adjustFontSize(-2)}
-                        className="p-1 rounded bg-gray-600 hover:bg-gray-500"
+                        className="p-1 sm:p-1.5 rounded bg-gray-600 hover:bg-gray-500"
                       >
-                        <Minus size={14} />
+                        <Minus size={12} className="sm:w-3.5 sm:h-3.5" />
                       </button>
-                      <span className="text-sm w-12 text-center">{fontSize}px</span>
+                      <span className="text-xs sm:text-sm w-10 sm:w-12 text-center">{fontSize}px</span>
                       <button
                         onClick={() => adjustFontSize(2)}
-                        className="p-1 rounded bg-gray-600 hover:bg-gray-500"
+                        className="p-1 sm:p-1.5 rounded bg-gray-600 hover:bg-gray-500"
                       >
-                        <Plus size={14} />
+                        <Plus size={12} className="sm:w-3.5 sm:h-3.5" />
                       </button>
                     </div>
                   </div>
 
                   {/* Line Spacing */}
-                  <div className="space-y-2">
-                    <label className="text-base text-gray-300">التباعد بين السطور</label>
-                    <div className="flex items-center gap-2">
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <label className="text-xs sm:text-sm md:text-base text-gray-300">التباعد بين السطور</label>
+                    <div className="flex items-center gap-1.5 sm:gap-2">
                       <button
                         onClick={() => adjustLineSpacing(-0.1)}
-                        className="p-1 rounded bg-gray-600 hover:bg-gray-500"
+                        className="p-1 sm:p-1.5 rounded bg-gray-600 hover:bg-gray-500"
                       >
-                        <Minus size={14} />
+                        <Minus size={12} className="sm:w-3.5 sm:h-3.5" />
                       </button>
-                      <span className="text-sm w-12 text-center">{lineSpacing.toFixed(1)}</span>
+                      <span className="text-xs sm:text-sm w-10 sm:w-12 text-center">{lineSpacing.toFixed(1)}</span>
                       <button
                         onClick={() => adjustLineSpacing(0.1)}
-                        className="p-1 rounded bg-gray-600 hover:bg-gray-500"
+                        className="p-1 sm:p-1.5 rounded bg-gray-600 hover:bg-gray-500"
                       >
-                        <Plus size={14} />
+                        <Plus size={12} className="sm:w-3.5 sm:h-3.5" />
                       </button>
                     </div>
                   </div>
 
                   {/* Show Verse Numbers */}
-                  <div className="space-y-2">
-                    <label className="text-base text-gray-300">إظهار أرقام الآيات</label>
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <label className="text-xs sm:text-sm md:text-base text-gray-300">إظهار أرقام الآيات</label>
                     <button
                       onClick={() => setShowVerseNumbers(!showVerseNumbers)}
-                      className={`flex items-center gap-2 px-3 py-2 m-2 border-2 border-chart-13 shadow-md shadow-chart-17 rounded transition-colors ${
+                      className={`flex items-center gap-1.5 sm:gap-2 px-2 py-1.5 sm:px-3 sm:py-2 border-2 border-chart-13 shadow-md shadow-chart-17 rounded transition-colors ${
                         showVerseNumbers ? 'bg-chart-18' : 'bg-chart-19'
                       }`}
                     >
-                      {showVerseNumbers ? <Eye size={16} /> : <EyeOff size={16} />}
-                      {showVerseNumbers ? 'مُفعل' : 'مُعطل'}
+                      {showVerseNumbers ? <Eye size={14} className="sm:w-4 sm:h-4" /> : <EyeOff size={14} className="sm:w-4 sm:h-4" />}
+                      <span className="text-xs sm:text-sm">{showVerseNumbers ? 'مُفعل' : 'مُعطل'}</span>
                     </button>
                   </div>
 
                   {/* Highlight on Hover */}
-                  <div className="space-y-2">
-                    <label className="text-base text-gray-300">تمييز عند التمرير</label>
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <label className="text-xs sm:text-sm md:text-base text-gray-300">تمييز عند التمرير</label>
                     <button
                       onClick={() => setHighlightOnHover(!highlightOnHover)}
-                      className={`flex items-center shadow-md shadow-[#000] border-2 border-chart-17  gap-2 px-3 py-2 m-3 rounded transition-colors ${
+                      className={`flex items-center shadow-md shadow-[#000] border-2 border-chart-17 gap-1.5 sm:gap-2 px-2 py-1.5 sm:px-3 sm:py-2 rounded transition-colors ${
                         highlightOnHover ? 'bg-chart-13' : 'bg-gray-600'
                       }`}
                     >
-                      <Palette size={16} />
-                      {highlightOnHover ? 'مُفعل' : 'مُعطل'}
+                      <Palette size={14} className="sm:w-4 sm:h-4" />
+                      <span className="text-xs sm:text-sm">{highlightOnHover ? 'مُفعل' : 'مُعطل'}</span>
                     </button>
                   </div>
                 </div>
 
                 {/* Keyboard Shortcuts Info */}
-                <div className="mt-4 p-3  rounded-lg">
-                  <h4 className="text-sm font-bold text-chart-10 mb-2 flex items-center gap-2">
-                    <Keyboard size={16} />
+                <div className="mt-3 sm:mt-4 p-2 sm:p-3 rounded-lg">
+                  <h4 className="text-xs sm:text-sm font-bold text-chart-10 mb-1.5 sm:mb-2 flex items-center gap-1.5 sm:gap-2">
+                    <Keyboard size={14} className="sm:w-4 sm:h-4" />
                     اختصارات لوحة المفاتيح
                   </h4>
-                  <div className="text-base text-gray-400 space-y-1">
-                    <div>Ctrl+F: البحث | Ctrl+A: تحديد الكل | Esc: إلغاء التحديد</div>
+                  <div className="text-xs sm:text-sm text-gray-400">
+                    <div>Ctrl+F: البحث | Ctrl+A: تحديد الكل</div>
                   </div>
                 </div>
               </div>
@@ -979,35 +979,35 @@ export default function QuranReader() {
           </aside>
 
           {/* Main Content */}
-          <main className="flex-1 p-4 lg:p-8">
+          <main className="flex-1 p-3 sm:p-4 md:p-6 lg:p-8">
             {/* Page Navigation */}
        
        
 
             {/* Quran Page Content */}
-            <div className="bg-neutral-800 rounded-xl p-6 lg:p-8 border border-gray-700">
+            <div className="bg-neutral-800 rounded-lg sm:rounded-xl p-3 sm:p-4 md:p-5 lg:p-6 xl:p-8 border border-gray-700">
               {processPageDataWithSurahHeaders(pageData).map((item) => {
                 if (item.type === 'surah-header') {
                   // عرض عنوان السورة
                   return (
-                    <div key={item.id} className="mb-6 mt-8 first:mt-0">
+                    <div key={item.id} className="mb-4 sm:mb-5 md:mb-6 mt-6 sm:mt-7 md:mt-8 first:mt-0">
                       <div className="text-center">
-                        <div className="inline-flex items-center justify-center bg-chart-17 border border-gray-700 backdrop-blur-sm text-white px-6 py-1 rounded-sm shadow-lg">
+                        <div className="inline-flex items-center justify-center bg-chart-17 border border-gray-700 backdrop-blur-sm text-white px-3 py-1 sm:px-4 md:px-5 lg:px-6 rounded-sm shadow-lg">
                           <div className="text-right">
-                            <div className="md:text-2xl text-xl font-semibold">{item.surahInfo.name.ar}</div>
-                            <div className="text-base opacity-90">{item.surahInfo.name.en}</div>
+                            <div className="text-base sm:text-lg md:text-xl lg:text-2xl font-semibold">{item.surahInfo.name.ar}</div>
+                            <div className="text-xs sm:text-sm md:text-base opacity-90">{item.surahInfo.name.en}</div>
                           </div>
-                          <div className="mx-3 w-px h-8 bg-white/30"></div>
+                          <div className="mx-2 sm:mx-3 w-px h-6 sm:h-7 md:h-8 bg-white/30"></div>
                           <div className="text-left">
-                            <div className="md:text-2xl text-xl opacity-90">سورة رقم</div>
-                            <div className="text-xl font-bold">{item.surahInfo.number}</div>
+                            <div className="text-sm sm:text-base md:text-lg lg:text-xl opacity-90">سورة رقم</div>
+                            <div className="text-base sm:text-lg md:text-xl font-bold">{item.surahInfo.number}</div>
                           </div>
                         </div>
-                        <div className="mt-2 md:text-base text-md text-gray-400">
+                        <div className="mt-1.5 sm:mt-2 text-xs sm:text-sm md:text-base text-gray-400">
                           {item.surahInfo.verses_count} آية • {item.surahInfo.revelation_place.ar}
                         </div>
                       </div>
-                      <div className="mt-4 border-t border-gray-600"></div>
+                      <div className="mt-3 sm:mt-4 border-t border-gray-600"></div>
                     </div>
                   );
                 } else {
@@ -1048,14 +1048,14 @@ export default function QuranReader() {
                         >
                           {verse.text}
                           {showVerseNumbers && (
-                            <span className="inline-block mx-1 text-base bg-gray-600 text-white px-1 rounded">
+                            <span className="inline-block mx-0.5 sm:mx-1 text-xs sm:text-sm md:text-base bg-gray-600 text-white px-1 rounded">
                               {verse.ayahNo}
                             </span>
                           )}
                           
                           {/* أيقونة التفسير عند Hover */}
-                          <span className="invisible group-hover:visible absolute -top-2 -right-1 bg-indigo-600 text-white text-sm px-1 rounded opacity-75">
-                            <Book size={12} />
+                          <span className="invisible group-hover:visible absolute -top-1.5 sm:-top-2 -right-0.5 sm:-right-1 bg-indigo-600 text-white text-xs sm:text-sm px-0.5 sm:px-1 rounded opacity-75">
+                            <Book size={10} className="sm:w-3 sm:h-3" />
                           </span>
                           
                           {verseIndex < item.verses.length - 1 && ' '}
@@ -1068,18 +1068,18 @@ export default function QuranReader() {
             </div>
 
             {/* Bottom Navigation */}
-            <div className="flex items-center justify-center gap-4 mt-8">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 md:gap-4 mt-4 sm:mt-6 md:mt-8">
               <button
                 onClick={goToPrevPage}
                 disabled={currentPage <= 1}
-                className="px-6 py-3 bg-slate-700 hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-colors"
+                className="w-full sm:w-auto px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 text-sm sm:text-base bg-slate-700 hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-colors"
               >
                 الصفحة السابقة
               </button>
               
               <button
                 onClick={() => setShowPageSelector(!showPageSelector)}
-                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
+                className="w-full sm:w-auto px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 text-sm sm:text-base bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
               >
                 اذهب إلى صفحة
               </button>
@@ -1087,7 +1087,7 @@ export default function QuranReader() {
               <button
                 onClick={goToNextPage}
                 disabled={currentPage >= 604}
-                className="px-6 py-3 bg-slate-700 hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-colors"
+                className="w-full sm:w-auto px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 text-sm sm:text-base bg-slate-700 hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg transition-colors"
               >
                 الصفحة التالية
               </button>
@@ -1099,11 +1099,11 @@ export default function QuranReader() {
         {showSidebar && (
           <div className="lg:hidden fixed inset-0 z-50">
             <div className="absolute inset-0 bg-black/50" onClick={() => setShowSidebar(false)}></div>
-            <div className="absolute left-0 top-0 h-full w-80 bg-[#1a1a1a] p-5 overflow-y-auto border-r border-[#333333]">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="font-bold text-white">القائمة</h3>
+            <div className="absolute left-0 top-0 h-full w-72 sm:w-80 bg-[#1a1a1a] p-3 sm:p-4 md:p-5 overflow-y-auto border-r border-[#333333]">
+              <div className="flex items-center justify-between mb-4 sm:mb-5 md:mb-6">
+                <h3 className="text-base sm:text-lg font-bold text-white">القائمة</h3>
                 <button onClick={() => setShowSidebar(false)} className="text-white hover:text-[var(--chart-10)] transition-colors">
-                  <X size={20} />
+                  <X size={18} className="sm:w-5 sm:h-5" />
                 </button>
               </div>
               
@@ -1325,16 +1325,16 @@ export default function QuranReader() {
 
         {/* Page Selector Modal */}
         {showPageSelector && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
             <div className="absolute inset-0 bg-black/50" onClick={() => setShowPageSelector(false)}></div>
-            <div className="bg-neutral-800 rounded-xl p-6 w-full max-w-md mx-4 relative">
-              <h3 className="text-lg font-bold text-sky-200 mb-4">اذهب إلى صفحة</h3>
+            <div className="bg-neutral-800 rounded-lg sm:rounded-xl p-4 sm:p-5 md:p-6 w-full max-w-sm sm:max-w-md relative">
+              <h3 className="text-base sm:text-lg font-bold text-sky-200 mb-3 sm:mb-4">اذهب إلى صفحة</h3>
               <input
                 type="number"
                 min="1"
                 max="604"
                 defaultValue={currentPage}
-                className="w-full bg-neutral-700 text-white px-4 py-2 rounded-lg border border-gray-600 focus:border-sky-400 focus:outline-none"
+                className="w-full bg-neutral-700 text-white px-3 py-2 sm:px-4 text-sm sm:text-base rounded-lg border border-gray-600 focus:border-sky-400 focus:outline-none"
                 placeholder="رقم الصفحة (1-604)"
                 onKeyPress={(e) => {
                   if (e.key === 'Enter') {
@@ -1345,7 +1345,7 @@ export default function QuranReader() {
                   }
                 }}
               />
-              <div className="flex gap-2 mt-4">
+              <div className="flex gap-2 mt-3 sm:mt-4">
                 <button
                   onClick={() => {
                     const input = document.querySelector('input[type="number"]');
@@ -1354,13 +1354,13 @@ export default function QuranReader() {
                       goToPage(pageNum);
                     }
                   }}
-                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-colors"
+                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 sm:px-4 text-sm sm:text-base rounded-lg transition-colors"
                 >
                   اذهب
                 </button>
                 <button
                   onClick={() => setShowPageSelector(false)}
-                  className="flex-1 bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded-lg transition-colors"
+                  className="flex-1 bg-gray-600 hover:bg-gray-700 text-white py-2 px-3 sm:px-4 text-sm sm:text-base rounded-lg transition-colors"
                 >
                   إلغاء
                 </button>

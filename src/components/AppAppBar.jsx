@@ -1,9 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Logo from './Logo';
-
-// نفس الimports الحالية - لم يتم تغييرها
 import SearchIcon from '@mui/icons-material/Search';
 import HomeIcon from '@mui/icons-material/Home';
 import BookIcon from '@mui/icons-material/Book';
@@ -16,8 +14,6 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 import CloseIcon from '@mui/icons-material/Close';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import ImportContactsIcon from '@mui/icons-material/ImportContacts';
-
-// نفس بيانات التنقل الحالية - لم يتم تغييرها
 const navigationItems = [
   { 
     text: 'الصفحة الرئيسية', 
@@ -76,59 +72,83 @@ const navigationItems = [
 ];
 
 function AppAppBar() {
-  // الحالات المبسطة - إزالة حالات الإخفاء التلقائي
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [hoveredItem, setHoveredItem] = useState(null);
-  const [isVisible, setIsVisible] = useState(true); // إظهار القائمة افتراضياً
+  const [isVisible, setIsVisible] = useState(false);
   const [shouldShakeLogo, setShouldShakeLogo] = useState(false);
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [isIndicatorTouched, setIsIndicatorTouched] = useState(false);
   
   const router = useRouter();
   const searchInputRef = useRef(null);
+  const hideMenuTimerRef = useRef(null);
+  const indicatorTouchTimerRef = useRef(null);
+
+  const isQuranReaderPage = router.pathname === '/quran-reader' || router.pathname.startsWith('/quran-pages');
+  const shouldShowLogo = !isVisible && !isQuranReaderPage;
+
+  // إظهار القائمة تلقائيًا عند فتح الموقع لأول مرة
+  useEffect(() => {
+    const hasSeenMenuOnLoad = sessionStorage.getItem('hasSeenMenuOnLoad');
+    
+    if (!hasSeenMenuOnLoad) {
+      // إظهار القائمة بعد نصف ثانية من التحميل
+      const showTimer = setTimeout(() => {
+        setIsVisible(true);
+        
+        // إخفاءها بعد 3 ثوانٍ
+        const hideTimer = setTimeout(() => {
+          setIsVisible(false);
+          sessionStorage.setItem('hasSeenMenuOnLoad', 'true');
+        }, 3000);
+        
+        return () => clearTimeout(hideTimer);
+      }, 500);
+      
+      return () => clearTimeout(showTimer);
+    }
+  }, []);
+
+  // إخفاء القائمة تلقائيًا بعد 5 ثوانٍ من عدم التفاعل
+  useEffect(() => {
+    if (isVisible) {
+      // إلغاء أي timer سابق
+      if (hideMenuTimerRef.current) {
+        clearTimeout(hideMenuTimerRef.current);
+      }
+      
+      // بدء timer جديد
+      hideMenuTimerRef.current = setTimeout(() => {
+        setIsVisible(false);
+      }, 5000); // 5 ثوانٍ
+    }
+    
+    return () => {
+      if (hideMenuTimerRef.current) {
+        clearTimeout(hideMenuTimerRef.current);
+      }
+    };
+  }, [isVisible]);
 
   useEffect(() => {
     setMounted(true);
-
-    // التحقق من sessionStorage (يُمسح عند إغلاق التاب)
     const hasSeenMenuInThisTab = sessionStorage.getItem('hasSeenMenuInThisTab');
 
     if (!hasSeenMenuInThisTab) {
-      // لم يرَ القائمة في هذا التاب - ابدأ الاهتزاز بعد ثانيتين
-      console.log('🎯 مستخدم جديد في هذا التاب - سيبدأ الاهتزاز');
       const timer = setTimeout(() => {
         setShouldShakeLogo(true);
       }, 2000);
-
       return () => clearTimeout(timer);
     } else {
-      // رأى القائمة من قبل في هذا التاب - لا اهتزاز
-      console.log('✅ المستخدم رأى القائمة من قبل في هذا التاب - لا اهتزاز');
       setShouldShakeLogo(false);
     }
   }, []);
 
-  // متابعة تغيير shouldShakeLogo
-  useEffect(() => {
-    console.log('🎯 shouldShakeLogo تغيرت إلى:', shouldShakeLogo);
-    console.log('🔍 فحص العنصر...');
-
-    setTimeout(() => {
-      const logoElement = document.querySelector('.logo-menu-button');
-      if (logoElement) {
-        console.log('📍 العنصر موجود!');
-        console.log('📝 الكلاسات:', logoElement.className);
-        console.log('🎨 الأنماط:', window.getComputedStyle(logoElement).animation);
-        console.log('🎯 data-shake:', logoElement.getAttribute('data-shake'));
-        console.log('🎨 border:', logoElement.style.border);
-      } else {
-        console.log('❌ العنصر غير موجود!');
-      }
-    }, 100);
-  }, [shouldShakeLogo]);
-
-  // إدارة الوضع المظلم (نفس الكود الحالي)
   useEffect(() => {
     if (mounted) {
       const savedTheme = localStorage.getItem('theme');
@@ -144,7 +164,6 @@ function AppAppBar() {
     }
   }, [mounted]);
 
-  // معالجة الأحداث (نفس المنطق الحالي)
   const toggleDarkMode = () => {
     const newTheme = !isDarkMode ? 'dark' : 'light';
     setIsDarkMode(!isDarkMode);
@@ -155,9 +174,7 @@ function AppAppBar() {
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      const searchPath = `/search/${encodeURIComponent(searchQuery.trim())}`;
-      console.log('Navigating to:', searchPath);
-      router.push(searchPath);
+      router.push(`/search/${encodeURIComponent(searchQuery.trim())}`);
       setIsSearchExpanded(false);
       setSearchQuery('');
     }
@@ -174,7 +191,6 @@ function AppAppBar() {
     }
   };
 
-  // إضافة معالج للـ Escape key
   useEffect(() => {
     const handleEscape = (e) => {
       if (e.key === 'Escape' && isSearchExpanded) {
@@ -201,73 +217,194 @@ function AppAppBar() {
     setHoveredItem(null);
   };
 
-  // معالج مبسط لتبديل الشريط الجانبي
+  const resetHideTimer = () => {
+    if (hideMenuTimerRef.current) {
+      clearTimeout(hideMenuTimerRef.current);
+    }
+    
+    if (isVisible) {
+      hideMenuTimerRef.current = setTimeout(() => {
+        setIsVisible(false);
+      }, 5000);
+    }
+  };
+
   const toggleSidebar = () => {
     setIsVisible(!isVisible);
   };
 
   const handleLogoClick = () => {
-    console.log('🖱️ تم النقر على اللوجو - المستخدم سيرى القائمة');
-
-    // إيقاف الاهتزاز نهائياً لهذا التاب
     setShouldShakeLogo(false);
-
-    // حفظ أن المستخدم رأى القائمة في هذا التاب (يُمسح عند إغلاق التاب)
     sessionStorage.setItem('hasSeenMenuInThisTab', 'true');
-
-    // فتح/إغلاق المنيو
     toggleSidebar();
   };
+
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+    setIsDragging(true);
+  };
+
+  const onTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[e.targetTouches.length - 1].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) {
+      setIsDragging(false);
+      return;
+    }
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+    
+    if (isRightSwipe && !isVisible) {
+      setIsVisible(true);
+      setShouldShakeLogo(false);
+      sessionStorage.setItem('hasSeenMenuInThisTab', 'true');
+    }
+    
+    if (isLeftSwipe && isVisible) {
+      setIsVisible(false);
+    }
+    
+    setIsDragging(false);
+  };
+
+  const onMouseDown = (e) => {
+    setTouchEnd(null);
+    setTouchStart(e.clientX);
+    setIsDragging(true);
+  };
+
+  const onMouseMove = (e) => {
+    if (isDragging) {
+      setTouchEnd(e.clientX);
+    }
+  };
+
+  const onMouseUp = useCallback(() => {
+    if (!touchStart || !touchEnd) {
+      setIsDragging(false);
+      return;
+    }
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+    
+    if (isRightSwipe && !isVisible) {
+      setIsVisible(true);
+      sessionStorage.setItem('menuSeen', 'true');
+    } else if (isLeftSwipe && isVisible) {
+      setIsVisible(false);
+    }
+    
+    setIsDragging(false);
+    setTouchStart(null);
+    setTouchEnd(null);
+  }, [touchStart, touchEnd, isVisible]);
+
+  useEffect(() => {
+    document.addEventListener('mouseup', onMouseUp);
+    return () => {
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+  }, [onMouseUp]);
+
+  useEffect(() => {
+    const timer = indicatorTouchTimerRef.current;
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
+  }, []);
 
   if (!mounted) return null;
 
   return (
     <>
-      {/* زر الهمبرجر الثابت */}
-      <div className={`logo-menu-button ${shouldShakeLogo ? 'shake-active' : ''}`}>
-        {isVisible ? (
+      {/* منطقة السحب - فقط عندما تكون القائمة مخفية */}
+      {!isVisible && (
+        <>
           <div
-            className="close-icon-wrapper"
-            onClick={toggleSidebar}
-            role="button"
-            tabIndex={0}
-            aria-label="إغلاق القائمة"
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                toggleSidebar();
-              }
-            }}
+            className="swipe-zone"
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
+            onMouseDown={onMouseDown}
+            onMouseMove={onMouseMove}
+            onMouseEnter={() => setIsIndicatorTouched(true)}
+            onMouseLeave={() => setIsIndicatorTouched(false)}
+          />
+          
+          {/* مؤشر القائمة المخفية - سهم وحافة متوهجة */}
+          <div 
+            className={`menu-indicator ${isIndicatorTouched ? 'touched' : ''}`}
+            data-tooltip="انقر لفتح القائمة"
+            onClick={() => setIsVisible(true)}
+            style={{ cursor: 'pointer', pointerEvents: 'none' }}
           >
-            <CloseIcon
-            sx={{
-              color: isDarkMode ? 'white' : 'black',
-              fontSize: '30px',
-            }}
-            
-            />
+            <div className="menu-edge-glow"></div>
+            <div className="menu-arrow">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
           </div>
-        ) : (
+        </>
+      )}
+
+      {/* منطقة السحب - فقط عندما تكون القائمة مرئية */}
+      {isVisible && (
+        <div
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
+          onMouseDown={onMouseDown}
+          onMouseMove={onMouseMove}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 999,
+            pointerEvents: 'auto',
+          }}
+        />
+      )}
+
+      {/* زر الهمبرجر الثابت */}
+      {shouldShowLogo && (
+        <div className={`logo-menu-button ${shouldShakeLogo ? 'shake-active' : ''}`}>
           <div onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
             <Logo size={85} disableLink={true} />
           </div>
-        )}
-      </div>
-
-
-
+        </div>
+      )}
 
       {/* الشريط الجانبي الثابت */}
       <div 
         className={`fixed-sidebar ${isVisible ? 'visible' : 'hidden'}`}
         role="navigation"
         aria-label="قائمة التنقل الرئيسية"
+        onMouseEnter={resetHideTimer}
+        onMouseMove={resetHideTimer}
+        onTouchStart={resetHideTimer}
       >
         {/* قسم البحث */}
         <div className="sidebar-search-section">
           <button
             className={`search-icon-btn ${isSearchExpanded ? 'active' : ''}`}
-            onClick={toggleSearch}
+            onClick={() => {
+              toggleSearch();
+              resetHideTimer();
+            }}
             aria-label={isSearchExpanded ? 'إغلاق البحث' : 'فتح البحث'}
             data-tooltip="البحث في القرآن"
           >
@@ -283,8 +420,12 @@ function AppAppBar() {
               <Link
                 href={item.href}
                 className={`nav-item ${isActive(item.href) ? 'active' : ''}`}
-                onMouseEnter={() => handleItemMouseEnter(index)}
+                onMouseEnter={() => {
+                  handleItemMouseEnter(index);
+                  resetHideTimer();
+                }}
                 onMouseLeave={handleItemMouseLeave}
+                onClick={resetHideTimer}
                 style={{
                   '--item-color': item.color,
                 }}
@@ -311,7 +452,11 @@ function AppAppBar() {
         <div className="sidebar-footer">
           <button 
             className="theme-toggle-btn"
-            onClick={toggleDarkMode}
+            onClick={() => {
+              toggleDarkMode();
+              resetHideTimer();
+            }}
+            onMouseEnter={resetHideTimer}
             title={isDarkMode ? 'الوضع الفاتح' : 'الوضع المظلم'}
           >
             {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
@@ -395,16 +540,6 @@ function AppAppBar() {
         .logo-menu-button:hover :global(.logo-img) {
           filter: brightness(1.5) contrast(1.3) saturate(1.2);
         }
-
-
-
-
-
-
-
-
-
-
 
         /* أنيميشن سريع مع توقف 4 ثوانٍ */
         .logo-menu-button.shake-active {
@@ -549,24 +684,220 @@ function AppAppBar() {
           filter: brightness(1.2) contrast(1.3) saturate(1.2);
         }
 
-        .close-icon-wrapper {
-          width: 56px;
-          height: 56px;
-    
+        /* منطقة السحب */
+        .swipe-zone {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 150px; /* عرض المنطقة على الكمبيوتر */
+          height: 100vh;
+          z-index: 999;
+          pointer-events: auto;
+          /* خلفية شفافة تماماً - للمستخدم العادي لا يراها */
+          background: transparent;
+        }
+
+        /* تأثير خفيف جداً عند التمرير لإظهار حدود المنطقة */
+        .swipe-zone:hover {
+          background: linear-gradient(
+            to right,
+            rgba(104, 123, 140, 0.03) 0%,
+            transparent 100%
+          );
+        }
+
+        [data-theme="dark"] .swipe-zone:hover {
+          background: linear-gradient(
+            to right,
+            rgba(147, 197, 253, 0.03) 0%,
+            transparent 100%
+          );
+        }
+
+        /* تكبير منطقة السحب على الشاشات الصغيرة */
+        @media (max-width: 768px) {
+          .swipe-zone {
+            width: 200px; /* أوسع على الموبايل */
+          }
+        }
+
+        @media (max-width: 480px) {
+          .swipe-zone {
+            width: 250px; /* أوسع جداً على الشاشات الصغيرة */
+          }
+        }
+
+        /* مؤشر القائمة المخفية */
+        .menu-indicator {
+          position: fixed;
+          left: 0;
+          top: 50%;
+          transform: translateY(-50%);
+          z-index: 998;
+          display: flex;
+          align-items: center;
+          transition: all 0.4s ease;
+        }
+
+        /* السهم مخفي بشكل افتراضي */
+        .menu-indicator .menu-arrow {
+          opacity: 0;
+          transform: translateX(-10px);
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* الحافة مخفية بشكل افتراضي */
+        .menu-edge-glow {
+          opacity: 0;
+          transition: all 0.4s ease;
+        }
+
+        /* عند التمرير أو اللمس - إظهار السهم والحافة */
+        .menu-indicator.touched,
+        .menu-indicator:hover {
+          transform: translateY(-50%);
+        }
+
+        .menu-indicator.touched .menu-arrow,
+        .menu-indicator:hover .menu-arrow {
+          opacity: 1;
+          transform: translateX(0) scale(1);
+          box-shadow: 0 4px 16px rgba(104, 123, 140, 0.5);
+        }
+
+        .menu-indicator.touched .menu-edge-glow,
+        .menu-indicator:hover .menu-edge-glow {
+          opacity: 1;
+        }
+
+        /* تأثير أقوى عند hover */
+        .menu-indicator:hover .menu-arrow {
+          transform: translateX(4px) scale(1.05);
+        }
+
+        /* عند الضغط */
+        .menu-indicator:active .menu-arrow {
+          transform: translateX(2px) scale(0.95);
+        }
+
+        .menu-edge-glow {
+          position: absolute;
+          left: 0;
+          width: 4px;
+          height: 120px;
+          background: linear-gradient(
+            to right,
+            rgba(104, 123, 140, 0.8) 0%,
+            rgba(104, 123, 140, 0.4) 50%,
+            transparent 100%
+          );
+          border-radius: 0 4px 4px 0;
+        }
+
+        [data-theme="dark"] .menu-edge-glow {
+          background: linear-gradient(
+            to right,
+            rgba(147, 197, 253, 0.6) 0%,
+            rgba(147, 197, 253, 0.3) 50%,
+            transparent 100%
+          );
+        }
+
+        .menu-arrow {
+          position: absolute;
+          left: 8px;
+          width: 32px;
+          height: 32px;
+          background: linear-gradient(135deg, rgba(104, 123, 140, 0.95), rgba(145, 151, 154, 0.95));
           border-radius: 50%;
-          background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-          color: white;
           display: flex;
           align-items: center;
           justify-content: center;
-          box-shadow: 0 4px 16px rgba(220, 38, 38, 0.3);
-          font-size: 24px;
-          transition: all 0.3s ease;
+          color: white;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+          backdrop-filter: blur(10px);
         }
 
-        .close-icon-wrapper:hover {
-          background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
-          box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+        [data-theme="dark"] .menu-arrow {
+          background: linear-gradient(135deg, rgba(30, 58, 138, 0.95), rgba(59, 130, 246, 0.95));
+          color: white;
+        }
+
+
+
+        /* إخفاء المؤشر على الشاشات الكبيرة جداً إذا لزم الأمر */
+        @media (min-width: 1920px) {
+          .menu-indicator {
+            opacity: 0.7;
+          }
+        }
+
+        /* تحسين المؤشر للموبايل */
+        @media (max-width: 768px) {
+          .menu-arrow {
+            width: 28px;
+            height: 28px;
+            left: 6px;
+          }
+          
+          .menu-edge-glow {
+            width: 3px;
+            height: 100px;
+          }
+        }
+
+        /* التلميح للمؤشر */
+        .menu-indicator[data-tooltip]:hover::after {
+          content: attr(data-tooltip);
+          position: absolute;
+          left: 50px;
+          top: 50%;
+          transform: translateY(-50%);
+          background: linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(30, 30, 30, 0.95) 100%);
+          color: white;
+          padding: 10px 15px;
+          border-radius: 12px;
+          font-size: 14px;
+          font-weight: 600;
+          white-space: nowrap;
+          z-index: 10000;
+          backdrop-filter: blur(15px);
+          border: 2px solid rgba(255, 255, 255, 0.2);
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+          font-family: 'Cairo', -apple-system, BlinkMacSystemFont, sans-serif;
+          animation: tooltipSlideIn 0.3s ease-out;
+          pointer-events: none;
+        }
+
+        .menu-indicator[data-tooltip]:hover::before {
+          content: '';
+          position: absolute;
+          left: 42px;
+          top: 50%;
+          transform: translateY(-50%);
+          border: 8px solid transparent;
+          border-right-color: rgba(0, 0, 0, 0.95);
+          z-index: 10001;
+          pointer-events: none;
+        }
+
+        @keyframes tooltipSlideIn {
+          0% {
+            opacity: 0;
+            transform: translateY(-50%) translateX(-10px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(-50%) translateX(0);
+          }
+        }
+
+        /* إخفاء التلميح على الموبايل */
+        @media (max-width: 768px) {
+          .menu-indicator[data-tooltip]:hover::after,
+          .menu-indicator[data-tooltip]:hover::before {
+            display: none;
+          }
         }
 
         /* الشريط الجانبي الثابت */
@@ -620,8 +951,8 @@ function AppAppBar() {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: var(--background-paper);
-          border: 2px solid var(--primary-color);
+          background: var(--chart-6);
+          border: 1px solid #464444ff;
           border-radius: 15px; /* تكبير border-radius */
           color: var(--primary-color);
           cursor: pointer;
@@ -631,16 +962,17 @@ function AppAppBar() {
         }
 
         .search-icon-btn:hover {
-          background: var(--primary-color);
+          background: var(--chart-10);
           color: white;
           transform: scale(1.05);
           box-shadow: 0 4px 12px rgba(52, 73, 94, 0.3);
+
         }
 
         .search-icon-btn.active {
           background: var(--primary-color);
           color: white;
-          box-shadow: 0 4px 12px rgba(52, 73, 94, 0.3);
+          box-shadow: 0 4px 12px rgba(52, 73, 94, 0.52);
         }
 
         .search-backdrop {
@@ -672,7 +1004,7 @@ function AppAppBar() {
           box-shadow: 0 8px 32px rgba(52, 73, 94, 0.15);
           transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
           z-index: 9999;
-          border: 1px solid var(--border-color);
+          border: 2px solid black !important;
         }
 
         .search-form-overlay.expanded {
@@ -895,7 +1227,7 @@ function AppAppBar() {
           align-items: center;
           justify-content: center;
           background: rgba(255, 255, 255, 0.1);
-          border: none;
+          border: 2px solid rgba(255, 255, 255, 0.3);
           border-radius: 15px; /* تكبير border-radius */
           color: rgba(255, 255, 255, 0.9);
           cursor: pointer;
@@ -913,8 +1245,8 @@ function AppAppBar() {
         [data-theme="dark"] .fixed-sidebar {
           background: linear-gradient(
             180deg,
-            rgba(18, 18, 18, 0.95) 0%,
-            rgba(30, 30, 30, 0.95) 50%,
+            rgba(32, 31, 31, 0.73) 0%,
+            rgba(30, 30, 30, 0.81) 50%,
             rgba(42, 42, 42, 0.95) 100%
           );
           border-left-color: rgba(255, 255, 255, 0.05);
@@ -933,11 +1265,6 @@ function AppAppBar() {
           color: #e0e0e0;
         }
 
-        /* إزالة البوردر من الأزرار في الوضع المظلم */
-        [data-theme="dark"] .nav-item {
-          border: none;
-        }
-
         [data-theme="dark"] .nav-item {
           border: none;
         }
@@ -952,12 +1279,6 @@ function AppAppBar() {
           .logo-menu-button {
             top: 15px;
             right: 15px; /* اللوجو في اليمين */
-          }
-
-          .close-icon-wrapper {
-            width: 48px;
-            height: 48px;
-            font-size: 20px;
           }
           
           .nav-item,
@@ -983,12 +1304,6 @@ function AppAppBar() {
 
           .fixed-sidebar {
             left: 10px; /* القائمة في اليسار */
-          }
-
-          .close-icon-wrapper {
-            width: 40px;
-            height: 40px;
-            font-size: 18px;
           }
         }
 
@@ -1088,8 +1403,6 @@ function AppAppBar() {
           }
         }
       `}</style>
-       
-
     </>
   );
 }
