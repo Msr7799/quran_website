@@ -406,31 +406,31 @@ export default function IslamicChatInline() {
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto arabic-font">
+    <div className="w-full max-w-7xl mx-auto arabic-font px-2 sm:px-0">
       {/* Header */}
-      <div className="bg-gradient-to-r from-chart-19 to-chart-12/80 p-6 rounded-t-3xl">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
+      <div className="bg-gradient-to-r from-chart-19 to-chart-12/80 p-3 sm:p-6 rounded-t-2xl sm:rounded-t-3xl">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
+          <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto">
             <div className="relative">
-              <div className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                <Sparkles className="w-7 h-7 text-white" />
+              <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                <Sparkles className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
               </div>
               <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-chart-13/50 rounded-full border-2 border-white" />
             </div>
-            <div>
-              <h2 className="text-white font-bold text-2xl arabic-font">نور - المساعد الإسلامي</h2>
-              <div className="flex items-center gap-2 flex-wrap">
-                <p className="text-orange-100 text-sm arabic-font">متصل الآن • جاهز للمساعدة</p>
+            <div className="flex-1">
+              <h2 className="text-white font-bold text-lg sm:text-2xl arabic-font">نور - المساعد الإسلامي</h2>
+              <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
+                <p className="text-orange-100 text-xs sm:text-sm arabic-font">متصل الآن • جاهز للمساعدة</p>
                 
                 {/* Memory Indicator */}
                 {messages.length > 1 && (
-                  <span className="text-xs bg-blue-500/20 mt-3 mr-3 border border-blue-400/30 text-blue-300 px-2 py-0.5 rounded-full arabic-font">
-                    💾 {messages.length} رسائل محفوظة
+                  <span className="text-[10px] sm:text-xs bg-blue-500/20 mt-1 sm:mt-3 mr-1 sm:mr-3 border border-blue-400/30 text-blue-300 px-1.5 sm:px-2 py-0.5 rounded-full arabic-font">
+                    💾 <span className="hidden sm:inline">{messages.length} رسائل</span><span className="sm:hidden">{messages.length}</span>
                   </span>
                 )}
                 
                 {/* Model Badge */}
-                <span className="text-xs mt-3 bg-neutral-500/50 mr-3 border border-green-500/30 text-green-300 px-3 py-1 rounded-full flex items-center gap-1.5 font-medium arabic-font">
+                <span className="text-[10px] sm:text-xs mt-1 sm:mt-3 bg-neutral-500/50 mr-1 sm:mr-3 border border-green-500/30 text-green-300 px-1.5 sm:px-3 py-0.5 sm:py-1 rounded-full flex items-center gap-0.5 sm:gap-1.5 font-medium arabic-font">
                   <span className="w-1.5 h-1.5 bg-neutral-400 rounded-full animate-pulse"></span>
                   {model.includes('Llama-3.2-3B') ? 'Llama 3.2 3B' :
                    model.includes('Llama-3.2-1B') ? 'Llama 3.2 1B' :
@@ -443,15 +443,15 @@ export default function IslamicChatInline() {
                 </span>
                 
                 {useTavily && (
-                  <span className="text-xs text-green-300 mt-3 bg-neutral-500/50 px-2 py-1 rounded-full border border-green-300 flex items-center gap-1 arabic-font">
-                    <Globe className="w-3 h-3" />
-                    بحث
+                  <span className="text-[10px] sm:text-xs text-green-300 mt-1 sm:mt-3 bg-neutral-500/50 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full border border-green-300 flex items-center gap-0.5 sm:gap-1 arabic-font">
+                    <Globe className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+                    <span className="hidden sm:inline">بحث</span>
                   </span>
                 )}
                 {useTime && (
-                  <span className="text-xs text-green-300 mt-3 bg-neutral-500/50 px-2 py-1 rounded-full border border-green-300 flex items-center gap-1 arabic-font">
-                    <Clock className="w-3 h-3" />
-                    وقت
+                  <span className="text-[10px] sm:text-xs text-green-300 mt-1 sm:mt-3 bg-neutral-500/50 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full border border-green-300 flex items-center gap-0.5 sm:gap-1 arabic-font">
+                    <Clock className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
+                    <span className="hidden sm:inline">وقت</span>
                   </span>
                 )}
               </div>
@@ -459,24 +459,24 @@ export default function IslamicChatInline() {
           </div>
           
           {/* Action Buttons */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2">
             {/* Clear Chat Button */}
             <button
               onClick={clearChat}
-              className="p-3 rounded-full bg-white/10 hover:bg-red-500/20 transition-all duration-300 group"
+              className="p-2 sm:p-3 rounded-full bg-white/10 hover:bg-red-500/20 transition-all duration-300 group"
               aria-label="مسح المحادثة"
               title="مسح المحادثة"
             >
-              <Trash2 className="w-5 h-5 text-white group-hover:text-red-400" />
+              <Trash2 className="w-4 h-4 sm:w-5 sm:h-5 text-white group-hover:text-red-400" />
             </button>
             
             {/* Settings Button */}
             <button
               onClick={() => setShowSettings(!showSettings)}
-              className="p-3 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300"
+              className="p-2 sm:p-3 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300"
               aria-label="الإعدادات"
             >
-              <Settings className="w-6 h-6 text-white" />
+              <Settings className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
             </button>
           </div>
         </div>
@@ -484,7 +484,7 @@ export default function IslamicChatInline() {
 
       {/* Settings Modal */}
       {showSettings && (
-        <div className="bg-neutral-800 border-x border-neutral-700 p-6 space-y-6">
+        <div className="bg-neutral-800 border-x border-neutral-700 p-3 sm:p-6 space-y-4 sm:space-y-6 max-h-[70vh] overflow-y-auto">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-white font-bold text-xl arabic-font">⚙️ الإعدادات</h3>
             <button
@@ -684,30 +684,30 @@ export default function IslamicChatInline() {
       {/* Chat Container */}
       <div className="bg-chart-17/20 border-x border-neutral-700">
         {/* Messages */}
-        <div className="h-[700px] overflow-y-auto p-6 space-y-6 bg-gradient-to-b from-[#111]/80 to-[#1131/80">
+        <div className="h-[600px] sm:h-[800px] md:h-[900px] overflow-y-auto p-3 sm:p-6 space-y-4 sm:space-y-6 bg-gradient-to-b from-[#111]/80 to-[#1131/80">
           {messages.map((message, index) => (
             <div key={index} className="w-full">
               <div
-                className={`w-[70%] rounded-2xl p-5 relative group ${
+                className={`w-[95%] sm:w-[85%] md:w-[70%] rounded-xl sm:rounded-2xl p-3 sm:p-5 relative group ${
                   message.role === 'user'
-                    ? 'mr-60 mb-5 mt-10 h-30 bg-gradient-to-br from-[#212121]/60 to-[#212121]/50 text-white shadow-xl shadow-chart-6/50 border border-[#3d3d3d]/30'
-                    : 'mr-40 mt-10 bg-gradient-to-br from-chart-21/70 to-chart-21/90 text-neutral-200 shadow-2xl shadow-chart-6/50 border-3 border-neutral-900'
+                    ? 'ml-auto mb-3 sm:mb-5 mt-4 sm:mt-10 bg-gradient-to-br from-[#212121]/60 to-[#212121]/50 text-white shadow-xl shadow-chart-6/50 border border-[#3d3d3d]/30'
+                    : 'mr-auto mt-4 sm:mt-10 bg-gradient-to-br from-chart-21/70 to-chart-21/90 text-neutral-200 shadow-2xl shadow-chart-6/50 border-3 border-neutral-900'
                 }`}
               >
                 {/* Copy Button */}
-                <div className="absolute top-3 left-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="absolute top-2 left-2 sm:top-3 sm:left-3 opacity-0 group-hover:opacity-100 transition-opacity">
                   <CopyButton
                     content={message.content}
                     variant="outline"
                     size="sm"
-                    className="bg-neutral-700/90 hover:bg-neutral-600 border-neutral-600"
+                    className="bg-neutral-700/90 hover:bg-neutral-600 border-neutral-600 scale-75 sm:scale-100"
                   />
                 </div>
 
                 {message.role === 'assistant' ? (
                   <div 
-                    className={`prose prose-sm prose-invert max-w-none prose-headings:text-chart-3 prose-a:text-chart-3 prose-strong:text-chart-16 prose-code:text-chart-3 prose-pre:bg-neutral-700 pr-12 ${getContentClass(message.content)}`}
-                    style={{ fontSize: `${fontSize}px` }}
+                    className={`prose prose-sm prose-invert max-w-none prose-headings:text-chart-3 prose-a:text-chart-3 prose-strong:text-chart-16 prose-code:text-chart-3 prose-pre:bg-neutral-700 pr-8 sm:pr-12 ${getContentClass(message.content)}`}
+                    style={{ fontSize: `${Math.max(14, fontSize - 2)}px` }}
                   >
                     <ReactMarkdown remarkPlugins={[remarkGfm]}>
                       {message.content}
@@ -715,8 +715,8 @@ export default function IslamicChatInline() {
                   </div>
                 ) : (
                   <p 
-                    className="whitespace-pre-wrap pr-12 arabic-font"
-                    style={{ fontSize: `${fontSize}px` }}
+                    className="whitespace-pre-wrap pr-8 sm:pr-12 arabic-font"
+                    style={{ fontSize: `${Math.max(14, fontSize - 2)}px` }}
                   >
                     {message.content}
                   </p>
@@ -727,7 +727,7 @@ export default function IslamicChatInline() {
           
           {isLoading && (
             <div className="flex justify-start">
-              <div className="bg-[#101010] rounded-2xl p-5 shadow-xl border border-neutral-700">
+              <div className="bg-[#101010] rounded-xl sm:rounded-2xl p-3 sm:p-5 shadow-xl border border-neutral-700">
                 <LoadingIndicator 
                   type={loadingType}
                   text={
@@ -745,8 +745,8 @@ export default function IslamicChatInline() {
 
         {/* Comparison Modal - مقارنة البروبت */}
         {showComparison && (
-          <div className="p-6 bg-chart-17 border-t border-neutral-700">
-            <div className="bg-gradient-to-r from-chart-3/10 to-chart-16/10 rounded-2xl p-6 border-2 border-chart-3/30">
+          <div className="p-3 sm:p-6 bg-chart-17 border-t border-neutral-700">
+            <div className="bg-gradient-to-r from-chart-3/10 to-chart-16/10 rounded-xl sm:rounded-2xl p-3 sm:p-6 border-2 border-chart-3/30">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-white font-bold text-xl arabic-font flex items-center gap-2">
                   <Sparkles className="w-6 h-6 text-chart-3" />
@@ -812,44 +812,43 @@ export default function IslamicChatInline() {
         )}
 
         {/* Input */}
-        <div className="p-6 bg-chart-17 border-t border-neutral-700">
-          <div className="flex gap-3">
+        <div className="p-3 sm:p-6 bg-chart-17 border-t border-neutral-700">
+          <div className="relative w-full">
             <textarea
               ref={inputRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="اكتب سؤالك هنا... (اضغط Enter للإرسال)"
-              className="flex-1 resize-none rounded-2xl border-2 border-neutral-600 bg-chart-17 px-5 py-4 focus:outline-none focus:ring-2 focus:ring-chart-3 focus:border-transparent text-white placeholder:text-neutral-500 arabic-font"
-              style={{ fontSize: `${fontSize}px` }}
-              rows={2}
+              className="w-full resize-none rounded-2xl border-2 border-neutral-600 bg-chart-17 px-4 pl-14 sm:pl-4 py-3 sm:py-4 focus:outline-none focus:ring-2 focus:ring-chart-19 focus:border-transparent text-white placeholder:text-neutral-500 arabic-font text-sm sm:text-base"
+              style={{ fontSize: `${Math.max(14, fontSize - 2)}px` }}
+              rows={3}
               disabled={isLoading}
             />
  
             <AnimatedOutlineButton variant='custom'
               onClick={sendMessage}
               disabled={isLoading || !input.trim()}
-              className=" !bg-chart-11  border border-muted/20 hover:scale-105 text-white px-6 rounded-2xl hover:shadow-lg hover:shadow-chart-3/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none flex items-center justify-center min-w-[80px]"
-              aria-label="إرسال"
+              className="absolute right-92 bottom-10 !bg-chart-11 border border-muted/20 hover:scale-105 text-white p-1.5 rounded-lg hover:shadow-lg hover:shadow-chart-3/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none flex items-center justify-center w-8 h-8"              aria-label="إرسال"
             >
               {isLoading ? (
-                <Loader2 className="w-6 h-6 animate-spin" />
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
               ) : (
-                <Send className="w-6 h-6" />
+                <Send className="w-3.5 h-3.5" />
               )}
             </AnimatedOutlineButton>
           </div>
 
           {/* أزرار التحسين والترجمة */}
-          <div className="flex gap-2 mt-3">
+          <div className="flex flex-row gap-1.5 sm:gap-2 mt-2">
             <AnimatedOutlineButton variant='custom'
               onClick={handleEnhance}
               disabled={isLoading || !input.trim()}
-              className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600/20 to-purple-500/20 border border-purple-500/30 text-purple-300 px-4 py-2.5 rounded-xl hover:from-purple-600/30 hover:to-purple-500/30 hover:border-purple-500/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed arabic-font text-sm"
+              className="flex-1 flex items-center justify-center gap-1 bg-gradient-to-r from-purple-600/20 to-purple-500/20 border border-purple-500/30 text-purple-300 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:from-purple-600/30 hover:to-purple-500/30 hover:border-purple-500/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed arabic-font text-[11px] sm:text-xs"
               title="تحسين السؤال باستخدام AI"
             >
-              <span className="text-lg">🎯</span>
-              <span>تحسين السؤال</span>
+              <span className="text-sm sm:text-base">🎯</span>
+              <span>تحسين</span>
             </AnimatedOutlineButton>
   
 
@@ -857,28 +856,28 @@ export default function IslamicChatInline() {
                
               onClick={handleTranslate}
               disabled={isLoading || !input.trim()}
-              className="flex-1 flex items-center justify-center gap-2 !bg-gradient-to-r !from-blue-600/20 !to-blue-500/20 !border !border-blue-500/30 text-blue-300 px-4 py-2.5 rounded-xl hover:from-blue-600/30 hover:to-blue-500/30 hover:border-blue-500/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed arabic-font text-sm"
+              className="flex-1 flex items-center justify-center gap-1 !bg-gradient-to-r !from-blue-600/20 !to-blue-500/20 !border !border-blue-500/30 text-blue-300 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:from-blue-600/30 hover:to-blue-500/30 hover:border-blue-500/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed arabic-font text-[11px] sm:text-xs"
               title={`ترجمة إلى ${targetLanguage === 'ar' ? 'العربية' : targetLanguage}`}
             >
-              <span className="text-lg">🌐</span>
+              <span className="text-sm sm:text-base">🌐</span>
               <span>ترجمة</span>
               </AnimatedOutlineButton>
           
           </div>
           
-          <p className="text-sm text-neutral-400 mt-3 text-center arabic-font">
+          <p className="text-xs sm:text-sm text-neutral-400 mt-2 sm:mt-3 text-center arabic-font hidden sm:block">
             💡 نصيحة: يمكنك الضغط على Shift+Enter للسطر الجديد
           </p>
         </div>
       </div>
 
       {/* Footer */}
-      <div className="bg-chart-12 p-4 rounded-b-3xl border-x border-b border-neutral-700">
-        <div className="space-y-2">
-          <p className="text-xs text-center text-neutral-400 arabic-font">
+      <div className="bg-chart-12 p-2 sm:p-4 rounded-b-2xl sm:rounded-b-3xl border-x border-b border-neutral-700">
+        <div className="space-y-1 sm:space-y-2">
+          <p className="text-[10px] sm:text-xs text-center text-neutral-400 arabic-font">
             ⚠️ المساعد ليس مفتياً - للمسائل الكبيرة، يُنصح بالرجوع للعلماء المتخصصين
           </p>
-          <p className="text-xs text-center text-neutral-300 arabic-font">
+          <p className="text-[10px] sm:text-xs text-center text-neutral-300 arabic-font">
             💾 المحادثة محفوظة مؤقتاً - تُحذف عند إغلاق التبويب
           </p>
         </div>
