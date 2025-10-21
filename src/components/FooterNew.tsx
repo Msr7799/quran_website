@@ -256,6 +256,13 @@ export default function FooterNew() {
                   <FaGlobe className="size-6" />
                 </a>
               </div>
+
+              {/* زر المساعد الإسلامي */}
+              <div className="mt-6 flex justify-center lg:justify-start">
+                <p className="text-gray-700 dark:text-gray-300 text-sm mb-2" style={{ fontFamily: '"Amiri", "Times New Roman", serif' }}>
+                  💡 ابحث عن الزر الأخضر العائم في الأسفل يسار الشاشة لفتح المساعد الإسلامي &ldquo;نور&rdquo; 🤖✨
+                </p>
+              </div>
             </div>
 
             {/* الكلمات المفتاحية */}

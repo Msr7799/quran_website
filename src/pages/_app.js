@@ -14,6 +14,8 @@ import AppAppBar from '../components/AppAppBar';
 import Layout from '../components/Layout';
 import Footer from '../components/FooterNew';
 import AuthProvider from '../components/auth/AuthProvider';
+import IslamicChatbot from '../components/IslamicChatbot';
+import { Toaster } from 'sonner';
 
 /**
  * المكون الأساسي للتطبيق
@@ -142,6 +144,24 @@ export default function MyApp({ Component, pageProps }) {
         {/* التذييل */}
       <Footer />
       </div>
+
+      {/* المساعد الإسلامي - يظهر في جميع الصفحات */}
+      <IslamicChatbot />
+
+      {/* Toaster للإشعارات */}
+      <Toaster 
+        position="top-center"
+        richColors
+        closeButton
+        duration={3000}
+        toastOptions={{
+          style: {
+            fontFamily: "'Cairo', 'Amiri', sans-serif",
+            direction: 'rtl',
+            fontSize: '16px'
+          }
+        }}
+      />
    
    
       {/* الأنماط العامة للتطبيق */}

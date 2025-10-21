@@ -90,9 +90,9 @@ const ScrollToTop: React.FC<ScrollToTopProps> = ({
       case 'small':
         return 'w-10 h-10 text-sm';
       case 'large':
-        return 'w-16 h-16 text-xl';
+        return 'w-12 h-12 text-xl';
       default:
-        return 'w-12 h-12 text-base';
+        return 'w-10 h-10 text-base';
     }
   };
 
@@ -100,13 +100,13 @@ const ScrollToTop: React.FC<ScrollToTopProps> = ({
   const getVariantClasses = () => {
     switch (variant) {
       case 'secondary':
-        return 'bg-gray-600 hover:bg-gray-700 text-white';
+        return 'bg-chart-17/20 hover:bg-gray-950 text-white ';
       case 'dark':
-        return 'bg-gray-800 hover:bg-gray-900 text-white';
+        return 'bg-chart-17/20 hover:bg-gray-950 text-white';
       case 'light':
-        return 'bg-white hover:bg-gray-50 text-gray-800 border border-gray-200';
+        return 'bg-chart-17/20 hover:bg-gray-950 text-white';
       default:
-        return 'bg-blue-600 hover:bg-blue-700 text-white';
+        return 'bg-chart-17/20 hover:bg-gray-950 text-white';
     }
   };
 

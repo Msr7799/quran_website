@@ -375,7 +375,17 @@ body {
 
 /* كلاس للخط العربي الجديد */
 .arabic-font {
-  font-family: 'Arabic Font', 'Uthmanic Hafs', 'Amiri', 'Traditional Arabic', 'Noto Sans Arabic', 'Arial', sans-serif;
+  font-family: 'Arabic Font', 'Amiri', 'Traditional Arabic', 'Noto Sans Arabic', 'Arial', sans-serif;
   font-weight: normal;
   text-rendering: optimizeLegibility;
+  font-variant-numeric: lining-nums; /* أرقام عادية بدلاً من الأرقام القرآنية */
+}
+
+/* كلاس للخط العثماني (للقرآن والسلام فقط) */
+.quran-font {
+  font-family: 'Uthmanic Hafs', 'Amiri', 'Traditional Arabic', 'Noto Sans Arabic', 'Arial', sans-serif;
+  font-weight: 800;
+  text-rendering: optimizeLegibility;
+  line-height: 2;
+  font-variant-numeric: normal; /* أرقام قرآنية مخصصة */
 }

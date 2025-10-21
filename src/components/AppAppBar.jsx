@@ -14,12 +14,20 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 import CloseIcon from '@mui/icons-material/Close';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import ImportContactsIcon from '@mui/icons-material/ImportContacts';
+import PsychologyIcon from '@mui/icons-material/Psychology';
+
 const navigationItems = [
   { 
     text: 'الصفحة الرئيسية', 
     icon: HomeIcon, 
     href: '/',
     color: '#4CAF50'
+  },
+  {
+    text: 'المساعد الإسلامي',
+    icon: PsychologyIcon,
+    href: '/chat-bot',
+    color: '#FF6B35'
   },
   {
     text: 'تصفح المصحف',

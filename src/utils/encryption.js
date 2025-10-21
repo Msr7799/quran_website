@@ -5,7 +5,7 @@
 
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || process.env.ENCRYPTION_KEY || 'please-change-this-secret-in-prod';
+const JWT_SECRET = process.env.UNSUBSCRIBE_SECRET || process.env.ENCRYPTION_KEY || process.env.JWT_SECRET || 'please-change-this-secret-in-prod';
 
 // Generate token valid for `hours` hours (default 24)
 export function generateUnsubscribeToken(email, hours = 24) {

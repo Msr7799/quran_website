@@ -348,7 +348,7 @@ ${tafseerData?.[0]?.text || ''}
           onClick={handleBookmark}
           startIcon={<BookmarkIcon />}
           sx={{ 
-            color: bookmarked ? 'var(--chart-12)' : '#cccccc',
+            color: bookmarked ? 'var(--chart-3)' : '#cccccc',
             fontSize: { xs: '0.9rem', sm: '1rem', md: '1.1rem' }
           }}
         >
