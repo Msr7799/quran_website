@@ -172,6 +172,6 @@ public/
 
 **بُني بـ ❤️ لخدمة كتاب الله الكريم**
 
-[🌐 الموقع المباشر](https://msr-quran-app.vercel.app) | [📚 دليل API](API_USE.md) | [🐛 الإبلاغ عن خطأ](https://github.com/Msr7799/test_quran_app/issues)
+[🌐 الموقع المباشر](https://msr-quran-app.vercel.app) | [📚 دليل API](Docs/API_USE.md) | [🐛 الإبلاغ عن خطأ](https://github.com/Msr7799/test_quran_app/issues)
 
 </div>
