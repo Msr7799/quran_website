@@ -1,7 +1,9 @@
 // src/pages/_app.js - النسخة الجديدة بدون theme folder
 import Head from 'next/head';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ThemeProvider } from 'next-themes';
+import { useRouter } from 'next/router';
+import { NextIntlClientProvider } from 'next-intl';
 
 // استيراد ملفات CSS الموحدة
 import '../styles/variables.css';
@@ -15,14 +17,41 @@ import Layout from '../components/Layout';
 import Footer from '../components/FooterNew';
 import AuthProvider from '../components/auth/AuthProvider';
 import IslamicChatbot from '../components/IslamicChatbot';
+import LanguageSwitcher from '../components/LanguageSwitcher';
 import { Toaster } from 'sonner';
 
 /**
  * المكون الأساسي للتطبيق
  * يستخدم النظام الجديد المعتمد على CSS المتغيرات
  * بدلاً من Material-UI theme
+ * مع دعم 15 لغة عبر next-intl
  */
 export default function MyApp({ Component, pageProps }) {
+  const router = useRouter();
+  const [messages, setMessages] = useState(pageProps.messages || null);
+  
+  // تحميل الترجمات عند تغيير اللغة
+  useEffect(() => {
+    const loadMessages = async () => {
+      const locale = router.locale || 'ar';
+      try {
+        const loadedMessages = await import(`../messages/${locale}.json`);
+        setMessages(loadedMessages.default);
+      } catch (error) {
+        console.error(`Failed to load messages for locale: ${locale}`, error);
+        // Fallback to Arabic if loading fails
+        if (locale !== 'ar') {
+          const fallback = await import(`../messages/ar.json`);
+          setMessages(fallback.default);
+        }
+      }
+    };
+    
+    if (!pageProps.messages) {
+      loadMessages();
+    }
+  }, [router.locale, pageProps.messages]);
+  
   // إعداد الوضع المظلم عند تحميل التطبيق ومنع الوميض
   useEffect(() => {
     // إظهار المحتوى فوراً عند تحميل React
@@ -42,10 +71,32 @@ export default function MyApp({ Component, pageProps }) {
     if (!savedTheme) {
       localStorage.setItem('theme', theme);
     }
-  }, []);
+    
+    // تعيين اتجاه النص (RTL/LTR) حسب اللغة
+    const rtlLanguages = ['ar', 'ur'];
+    const currentLocale = router.locale || 'ar';
+    const direction = rtlLanguages.includes(currentLocale) ? 'rtl' : 'ltr';
+    document.documentElement.setAttribute('dir', direction);
+  }, [router.locale]);
+
+  // عدم عرض المحتوى حتى تحميل الترجمات
+  if (!messages) {
+    return null;
+  }
 
   return (
-    <AuthProvider session={pageProps.session}>
+    <NextIntlClientProvider
+      locale={router.locale || 'ar'}
+      messages={messages}
+      timeZone="Asia/Riyadh"
+      onError={(error) => {
+        // تجاهل أخطاء الترجمة المفقودة في Development
+        if (process.env.NODE_ENV === 'development') {
+          console.warn('next-intl warning:', error.message);
+        }
+      }}
+    >
+      <AuthProvider session={pageProps.session}>
       <ThemeProvider
         defaultTheme="system"
         enableSystem
@@ -145,8 +196,8 @@ export default function MyApp({ Component, pageProps }) {
       <Footer />
       </div>
 
-      {/* المساعد الإسلامي - يظهر في جميع الصفحات */}
-      <IslamicChatbot />
+      {/* المساعد الإسلامي - يظهر في جميع الصفحات عدا صفحة الشات بوت */}
+      {router.pathname !== '/chat-bot' && <IslamicChatbot />}
 
       {/* Toaster للإشعارات */}
       <Toaster 
@@ -221,5 +272,6 @@ export default function MyApp({ Component, pageProps }) {
       `}</style>
       </ThemeProvider>
     </AuthProvider>
+    </NextIntlClientProvider>
   );
 }

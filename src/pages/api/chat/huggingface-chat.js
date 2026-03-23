@@ -1,6 +1,7 @@
 /**
  * 🤖 Unified Islamic Chat API
  * يدعم نماذج Hugging Face و Google Gemini المجانية
+ * مع دعم HF Router (OpenAI-compatible) مثل HuggingChat
  */
 
 import { HfInference } from '@huggingface/inference';
@@ -8,6 +9,10 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const hf = new HfInference(process.env.HF_TOKEN);
 const genAI = process.env.GEMINI_API_KEY ? new GoogleGenerativeAI(process.env.GEMINI_API_KEY) : null;
+
+// HF Router Configuration (مثل HuggingChat)
+const HF_ROUTER_URL = process.env.HF_ROUTER_URL || 'https://router.huggingface.co/v1';
+const HF_ROUTER_ENABLED = process.env.HF_ROUTER_ENABLED === 'true';
 
 // System Prompt إسلامي متخصص
 const ISLAMIC_SYSTEM_PROMPT = `أنت "نور"، مساعد إسلامي ذكي ومتخصص. مهمتك مساعدة المسلمين في:
@@ -145,7 +150,61 @@ export default async function handler(req, res) {
     ];
 
     try {
-      // استدعاء Hugging Face Inference API مع Streaming
+      // إذا كان HF Router مفعّل، نستخدم OpenAI-compatible endpoint
+      if (HF_ROUTER_ENABLED) {
+        const response = await fetch(`${HF_ROUTER_URL}/chat/completions`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${process.env.HF_TOKEN}`
+          },
+          body: JSON.stringify({
+            model: selectedModel,
+            messages: formattedMessages,
+            temperature: parseFloat(temperature),
+            max_tokens: parseInt(max_tokens),
+            stream: true
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error(`Router error: ${response.status} ${response.statusText}`);
+        }
+
+        // Stream من HF Router
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          const chunk = decoder.decode(value);
+          const lines = chunk.split('\n').filter(line => line.trim().startsWith('data:'));
+
+          for (const line of lines) {
+            const data = line.replace('data: ', '').trim();
+            if (data === '[DONE]') break;
+
+            try {
+              const parsed = JSON.parse(data);
+              if (parsed.choices?.[0]?.delta?.content) {
+                res.write(`data: ${JSON.stringify({ 
+                  content: parsed.choices[0].delta.content 
+                })}\n\n`);
+              }
+            } catch (e) {
+              console.error('Error parsing Router chunk:', e);
+            }
+          }
+        }
+
+        res.write('data: [DONE]\n\n');
+        res.end();
+        return;
+      }
+
+      // Fallback: استدعاء Hugging Face Inference API المباشر
       const stream = await hf.chatCompletionStream({
         model: selectedModel,
         messages: formattedMessages,

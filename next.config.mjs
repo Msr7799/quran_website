@@ -1,3 +1,7 @@
+import createNextIntlPlugin from 'next-intl/plugin';
+
+const withNextIntl = createNextIntlPlugin('./src/i18n.ts');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     trailingSlash: true,
@@ -13,7 +17,12 @@ const nextConfig = {
     typescript: {
       ignoreBuildErrors: false,
     },
+    // إعدادات i18n للغات المدعومة
+    i18n: {
+      locales: ['ar', 'en', 'tr', 'hi', 'ur', 'ru', 'es', 'fr', 'de', 'it', 'pt', 'zh', 'ja', 'ko', 'id'],
+      defaultLocale: 'ar',
+      localeDetection: true,
+    },
   };
   
-  export default nextConfig;
-  
+  export default withNextIntl(nextConfig);

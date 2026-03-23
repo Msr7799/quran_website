@@ -1,0 +1,62 @@
+{
+  "common": {
+    "appName": "Heiliger Koran",
+    "home": "Startseite",
+    "about": "Über",
+    "search": "Suchen",
+    "settings": "Einstellungen",
+    "close": "Schließen",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "loading": "Laden...",
+    "error": "Ein Fehler ist aufgetreten",
+    "success": "Erfolg"
+  },
+  "navigation": {
+    "quranPages": "Koran durchsuchen",
+    "quranSound": "Anhören",
+    "quranReader": "Leser",
+    "live": "Live-Übertragung",
+    "chatBot": "Islamischer Assistent",
+    "components": "Komponenten"
+  },
+  "chat": {
+    "title": "Noor - Islamischer Assistent",
+    "subtitle": "Ihr intelligenter Assistent für islamische Fragen",
+    "placeholder": "Geben Sie Ihre Frage hier ein...",
+    "send": "Senden",
+    "translate": "Übersetzen",
+    "enhance": "Frage verbessern",
+    "clear": "Chat löschen",
+    "settings": "Einstellungen",
+    "model": "Modell",
+    "temperature": "Kreativität / Temperatur",
+    "maxTokens": "Token-Limit",
+    "targetLanguage": "Übersetzungssprache",
+    "mcpTools": "MCP-Tools",
+    "tavilySearch": "Internetsuche",
+    "systemTime": "Systemzeit",
+    "fontSize": "Schriftgröße",
+    "translating": "Wird übersetzt...",
+    "enhancing": "Frage wird verbessert...",
+    "copySuccess": "Erfolgreich kopiert",
+    "clearConfirm": "Sind Sie sicher, dass Sie den Chat löschen möchten?"
+  },
+  "quran": {
+    "read": "Koran lesen",
+    "listen": "Anhören",
+    "surah": "Sure",
+    "ayah": "Vers",
+    "juz": "Juz",
+    "page": "Seite",
+    "reciter": "Rezitator",
+    "translation": "Übersetzung",
+    "tafseer": "Tafsir"
+  },
+  "footer": {
+    "copyright": "Alle Rechte vorbehalten",
+    "contact": "Kontaktieren Sie uns",
+    "privacy": "Datenschutz",
+    "terms": "Geschäftsbedingungen"
+  }
+}

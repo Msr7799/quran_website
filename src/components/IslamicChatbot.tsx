@@ -14,6 +14,15 @@ interface Message {
   content: string;
 }
 
+interface Model {
+  id: string;
+  object: string;
+  created?: number;
+  owned_by?: string;
+  description?: string;
+  category?: string;
+}
+
 export default function IslamicChatbot() {
   const router = useRouter();
   
@@ -57,7 +66,11 @@ export default function IslamicChatbot() {
   const [useTavily, setUseTavily] = useState(false);
   const [useTime, setUseTime] = useState(false);
   const [fontSize, setFontSize] = useState(16);
-  const [targetLanguage, setTargetLanguage] = useState('ar'); // لغة الترجمة
+  const [targetLanguage, setTargetLanguage] = useState('EN'); // لغة الترجمة (DeepL format)
+  
+  // Dynamic Models من API
+  const [availableModels, setAvailableModels] = useState<Model[]>([]);
+  const [modelsLoading, setModelsLoading] = useState(true);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -66,6 +79,38 @@ export default function IslamicChatbot() {
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
+
+  // تحميل النماذج من API
+  useEffect(() => {
+    const fetchModels = async () => {
+      try {
+        console.log('🔄 [IslamicChatbot] جاري تحميل النماذج من API...');
+        setModelsLoading(true);
+        const response = await fetch('/api/chat/models');
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch models');
+        }
+        
+        const data = await response.json();
+        console.log('✅ [IslamicChatbot] تم تحميل النماذج بنجاح!');
+        console.log(`📊 [IslamicChatbot] عدد النماذج: ${data.data?.length || 0}`);
+        console.log(`🔗 [IslamicChatbot] المصدر: ${data.source}`);
+        console.log('📋 [IslamicChatbot] النماذج:', data.data);
+        
+        setAvailableModels(data.data || []);
+      } catch (error) {
+        console.error('❌ [IslamicChatbot] Error fetching models:', error);
+        toast.error('فشل تحميل النماذج. تحقق من HF_TOKEN في .env');
+        setAvailableModels([]);
+      } finally {
+        setModelsLoading(false);
+        console.log('🏁 [IslamicChatbot] انتهى تحميل النماذج');
+      }
+    };
+    
+    fetchModels();
+  }, []);
 
   // تحميل الإعدادات عند البدء (أولاً)
   useEffect(() => {
@@ -290,36 +335,38 @@ export default function IslamicChatbot() {
     toast.success('تم تطبيق السؤال المحسّن! 🎯');
   };
 
-  // ترجمة البروبت
+  // ترجمة البروبت باستخدام DeepL
   const handleTranslate = async () => {
     if (!input.trim()) return;
     
     setLoadingType("syncing");
     setIsLoading(true);
     try {
-      const response = await fetch('/api/enhance-prompt-hf', {
+      console.log('🌌 [Translate] جاري الترجمة باستخدام DeepL...');
+      
+      const response = await fetch('/api/translate/deepl', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          prompt: input,
-          action: 'translate',
+          text: input,
           targetLanguage: targetLanguage
         })
       });
 
       const data = await response.json();
       
-      if (response.ok) {
-        setInput(data.result);
-        const modelInfo = data.usedModel ? ` (${data.usedModel})` : '';
-        toast.success(`تم الترجمة بنجاح! 🌐${modelInfo}`);
+      if (response.ok && data.success) {
+        setInput(data.translatedText);
+        const detectedLang = data.detectedSourceLanguage || 'غير محدد';
+        toast.success(`✅ تمت الترجمة بنجاح! (${detectedLang} → ${targetLanguage}) 🌌`);
+        console.log('✅ [Translate] تمت الترجمة بنجاح');
       } else {
-        console.error('❌ Translation failed:', data);
-        toast.error(`فشل الترجمة: ${data.errorMessage || data.error}`);
+        console.error('❌ [Translate] Translation failed:', data);
+        toast.error(`❌ فشل الترجمة: ${data.error || 'خطأ غير معروف'}`);
       }
     } catch (error) {
-      console.error('❌ Error translating prompt:', error);
-      toast.error('حدث خطأ في الاتصال بالخادم');
+      console.error('❌ [Translate] Error:', error);
+      toast.error('❌ حدث خطأ في الاتصال بالخادم. تحقق من DEEPL_AUTH_KEY');
     } finally {
       setIsLoading(false);
     }
@@ -477,43 +524,60 @@ export default function IslamicChatbot() {
 
             {/* Model Selection */}
             <div className="space-y-2">
-              <label className="text-white font-semibold text-sm arabic-font">🤖 النموذج</label>
+              <div className="flex items-center justify-between">
+                <label className="text-white font-semibold text-sm arabic-font">🤖 النموذج</label>
+                {modelsLoading && (
+                  <span className="text-xs text-chart-3 arabic-font">⏳ جاري التحميل...</span>
+                )}
+              </div>
+              
               <select
                 value={model}
                 onChange={(e) => setModel(e.target.value)}
-                className="w-full bg-neutral-900 text-white border-2 border-neutral-600 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-chart-3 arabic-font text-sm"
+                disabled={modelsLoading || availableModels.length === 0}
+                className="w-full bg-neutral-900 text-white border-2 border-neutral-600 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-chart-3 arabic-font text-sm disabled:opacity-50"
               >
-                <optgroup label="🌟 Google Gemini (موصى به - مجاني 100%)">
-                  <option value="gemini-2.5-flash">⭐ Gemini 2.5 Flash (افتراضي - الأفضل)</option>
-                  <option value="gemini-2.5-flash-lite">Gemini 2.5 Flash-Lite (الأسرع ⚡⚡⚡⚡)</option>
-                  <option value="gemini-1.5-pro">Gemini 1.5 Pro (المهام المعقدة)</option>
-                  <option value="gemini-1.5-flash">Gemini 1.5 Flash (متوازن)</option>
-                </optgroup>
-                
-                <optgroup label="📖 نماذج إسلامية متخصصة">
-                  <option value="Ellbendls/Qwen-2.5-3b-Quran">Qwen 2.5 3B Quran (تفسير القرآن)</option>
-                  <option value="ibrax/qwen2.5-32B_muslim_belief">Qwen 32B Muslim Belief (العقيدة)</option>
-                </optgroup>
-                
-                <optgroup label="🇦🇪 نماذج عربية إماراتية">
-                  <option value="inceptionai/jais-adapted-70b">Jais Adapted 70B (الأضخم! 🔥)</option>
-                </optgroup>
-                
-                <optgroup label="🔥 نماذج LLM قوية ومتوازنة">
-                  <option value="meta-llama/Llama-3.2-3B-Instruct">Llama 3.2 3B Instruct</option>
-                  <option value="meta-llama/Llama-3.2-1B-Instruct">Llama 3.2 1B Instruct (أسرع)</option>
-                  <option value="microsoft/Phi-3-mini-4k-instruct">Microsoft Phi-3 Mini 4K</option>
-                  <option value="google/gemma-2-2b-it">Google Gemma 2 2B IT</option>
-                </optgroup>
-                
-                <optgroup label="⚡ نماذج سريعة وخفيفة">
-                  <option value="HuggingFaceH4/zephyr-7b-beta">Zephyr 7B Beta</option>
-                  <option value="mistralai/Mistral-7B-Instruct-v0.3">Mistral 7B Instruct v0.3</option>
-                </optgroup>
+                {availableModels.length > 0 ? (
+                  (() => {
+                    const grouped: Record<string, Model[]> = {};
+                    availableModels.forEach(m => {
+                      const cat = m.category || 'other';
+                      if (!grouped[cat]) grouped[cat] = [];
+                      grouped[cat].push(m);
+                    });
+                    
+                    const categoryLabels: Record<string, string> = {
+                      'gemini': '🌟 Google Gemini (موصى به - مجاني 100%)',
+                      'islamic': '📖 نماذج إسلامية متخصصة',
+                      'arabic': '🇦🇪 نماذج عربية',
+                      'llama': '🦙 Meta Llama',
+                      'microsoft': '🔷 Microsoft',
+                      'google': '💎 Google',
+                      'fast': '⚡ نماذج سريعة',
+                      'other': '🤖 نماذج أخرى'
+                    };
+                    
+                    return Object.entries(grouped).map(([cat, models]) => (
+                      <optgroup key={cat} label={categoryLabels[cat] || cat}>
+                        {models.map(m => (
+                          <option key={m.id} value={m.id}>
+                            {m.description || m.id}
+                          </option>
+                        ))}
+                      </optgroup>
+                    ));
+                  })()
+                ) : (
+                  <option disabled>❌ فشل تحميل النماذج</option>
+                )}
               </select>
               
               <p className="text-xs text-neutral-400 arabic-font">
-                🤗 النماذج من Hugging Face • 🌟 Google Gemini - مجانية 100٪
+                {availableModels.length > 0 ? (
+                  `✅ ${availableModels.length} نموذج متاح • 🤗 HF Router`
+                ) : (
+                  modelsLoading ? '⏳ جاري التحميل...' : '❌ فشل تحميل النماذج - تحقق من HF_TOKEN'
+                )}
               </p>
             </div>
 
@@ -634,29 +698,41 @@ export default function IslamicChatbot() {
               </div>
             </div>
 
-            {/* Translation Language */}
+            {/* Translation Language - تصميم محسّن */}
             <div className="space-y-2">
-              <label className="text-white font-semibold text-sm arabic-font">🌐 لغة الترجمة</label>
+              <label className="text-white font-semibold text-sm arabic-font flex items-center gap-2">
+                🌌 لغة الترجمة
+                <span className="text-xs text-chart-3 font-normal">(لزر الترجمة)</span>
+              </label>
               <select
                 value={targetLanguage}
                 onChange={(e) => setTargetLanguage(e.target.value)}
-                className="w-full bg-neutral-900 text-white border-2 border-neutral-600 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-chart-3 arabic-font text-sm"
+                className="w-full bg-gradient-to-r from-neutral-900 to-neutral-800 text-white border-2 border-neutral-600 hover:border-chart-3 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-chart-3 arabic-font text-sm cursor-pointer transition-all"
               >
-                <option value="ar">🇸🇦 العربية</option>
-                <option value="en">🇬🇧 English</option>
-                <option value="tr">🇹🇷 Türkçe</option>
-                <option value="hi">🇮🇳 हिन्दी</option>
-                <option value="ur">🇵🇰 اردو</option>
-                <option value="ml">🇮🇳 മലയാളം (Kerala)</option>
-                <option value="si">🇱🇰 සිංහල (Sri Lanka)</option>
-                <option value="tl">🇵🇭 Filipino</option>
-                <option value="ru">🇷🇺 Русский</option>
-                <option value="th">🇹🇭 ไทย</option>
-                <option value="es">🇪🇸 Español</option>
+                <option value="AR" className="bg-neutral-900">🇸🇦 العربية (Arabic)</option>
+                <option value="EN" className="bg-neutral-900">🇬🇧 English (إنجليزي)</option>
+                <option value="TR" className="bg-neutral-900">🇹🇷 Türkçe (تركي)</option>
+                <option value="HI" className="bg-neutral-900">🇮🇳 हिन्दी (Hindi)</option>
+                <option value="UR" className="bg-neutral-900">🇵🇰 اردو (Urdu)</option>
+                <option value="RU" className="bg-neutral-900">🇷🇺 Русский (Russian)</option>
+                <option value="ES" className="bg-neutral-900">🇪🇸 Español (Spanish)</option>
+                <option value="FR" className="bg-neutral-900">🇫🇷 Français (French)</option>
+                <option value="DE" className="bg-neutral-900">🇩🇪 Deutsch (German)</option>
+                <option value="IT" className="bg-neutral-900">🇮🇹 Italiano (Italian)</option>
+                <option value="PT" className="bg-neutral-900">🇧🇷 Português (Portuguese)</option>
+                <option value="ZH" className="bg-neutral-900">🇨🇳 中文 (Chinese)</option>
+                <option value="JA" className="bg-neutral-900">🇯🇵 日本語 (Japanese)</option>
+                <option value="KO" className="bg-neutral-900">🇰🇷 한국어 (Korean)</option>
+                <option value="ID" className="bg-neutral-900">🇮🇩 Bahasa Indonesia</option>
               </select>
-              <p className="text-xs text-neutral-400 arabic-font">
-                اختر اللغة التي تريد الترجمة إليها عند الضغط على زر الترجمة
-              </p>
+              <div className="flex items-center gap-2 text-xs">
+                <span className="text-neutral-400 arabic-font">
+                  ✅ ترجمة فورية بواسطة DeepL
+                </span>
+                <span className="px-2 py-0.5 bg-green-500/20 text-green-400 rounded-full text-[10px] border border-green-500/30">
+                  15 لغة
+                </span>
+              </div>
             </div>
           </div>
         )}

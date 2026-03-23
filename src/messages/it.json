@@ -1,0 +1,62 @@
+{
+  "common": {
+    "appName": "Sacro Corano",
+    "home": "Home",
+    "about": "Chi siamo",
+    "search": "Cerca",
+    "settings": "Impostazioni",
+    "close": "Chiudi",
+    "save": "Salva",
+    "cancel": "Annulla",
+    "loading": "Caricamento...",
+    "error": "Si è verificato un errore",
+    "success": "Successo"
+  },
+  "navigation": {
+    "quranPages": "Esplora il Corano",
+    "quranSound": "Ascolta",
+    "quranReader": "Lettore",
+    "live": "Trasmissione in diretta",
+    "chatBot": "Assistente Islamico",
+    "components": "Componenti"
+  },
+  "chat": {
+    "title": "Noor - Assistente Islamico",
+    "subtitle": "Il tuo assistente intelligente per domande islamiche",
+    "placeholder": "Scrivi la tua domanda qui...",
+    "send": "Invia",
+    "translate": "Traduci",
+    "enhance": "Migliora Domanda",
+    "clear": "Cancella Chat",
+    "settings": "Impostazioni",
+    "model": "Modello",
+    "temperature": "Creatività / Temperatura",
+    "maxTokens": "Limite Token",
+    "targetLanguage": "Lingua di Traduzione",
+    "mcpTools": "Strumenti MCP",
+    "tavilySearch": "Ricerca Internet",
+    "systemTime": "Ora di Sistema",
+    "fontSize": "Dimensione Font",
+    "translating": "Traduzione in corso...",
+    "enhancing": "Miglioramento domanda...",
+    "copySuccess": "Copiato con successo",
+    "clearConfirm": "Sei sicuro di voler cancellare la chat?"
+  },
+  "quran": {
+    "read": "Leggi il Corano",
+    "listen": "Ascolta",
+    "surah": "Sura",
+    "ayah": "Versetto",
+    "juz": "Juz",
+    "page": "Pagina",
+    "reciter": "Recitatore",
+    "translation": "Traduzione",
+    "tafseer": "Tafsir"
+  },
+  "footer": {
+    "copyright": "Tutti i diritti riservati",
+    "contact": "Contattaci",
+    "privacy": "Privacy Policy",
+    "terms": "Termini e Condizioni"
+  }
+}

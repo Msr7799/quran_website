@@ -25,6 +25,9 @@ import { LightRays } from "@/registry/magicui/light-rays";
 import dynamic from 'next/dynamic';
 import { signIn } from 'next-auth/react';
 import DrawOutlineButton from '../components/ui/animated-button';
+import LanguageSwitcher from '../components/LanguageSwitcher';
+import { useTranslations } from 'next-intl';
+
 // تحميل SwipeCarousel ديناميكياً للشاشات الكبيرة فقط
 const SwipeCarousel = dynamic(() => import('../components/SwipCarsouel').then(mod => mod.SwipeCarousel), {
   ssr: false,
@@ -40,6 +43,7 @@ const SwipeCarousel = dynamic(() => import('../components/SwipCarsouel').then(mo
  * تدعم التصميم المتجاوب مع تأثيرات Light Rays
  */
 const HomePage = () => {
+  const t = useTranslations();
   const [mounted, setMounted] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
@@ -125,6 +129,31 @@ const HomePage = () => {
       src: 'img/hero2.png',
       alt: 'الاستماع للقرآن',
       title: 'الاستماع للقرآن'
+    },
+    {
+      src: 'img/hero3.png',
+      alt: 'القرآن الكريم',
+      title: 'كلام الله'
+    },
+    {
+      src: 'img/hero4.png',
+      alt: 'آيات القرآن',
+      title: 'نور وهداية'
+    },
+    {
+      src: 'img/hero5.png',
+      alt: 'المصحف المبارك',
+      title: 'الذكر الحكيم'
+    },
+    {
+      src: 'img/hero6.png',
+      alt: 'القرآن العظيم',
+      title: 'الفرقان'
+    },
+    {
+      src: 'img/hero7.png',
+      alt: 'التلاوة المباركة',
+      title: 'القرآن المجيد'
     }
   ];
 
@@ -174,43 +203,43 @@ const HomePage = () => {
   const features = [
     {
       icon: BookOpen,
-      title: 'تصفح المصحف',
-      description: 'تصفح القرآن الكريم صفحة بصفحة بتصميم جميل وواضح',
+      title: t('quran.browseQuran'),
+      description: t('quran.browseQuranDesc'),
       href: '/quran-pages/1',
       color: '#2196F3'
     },
     {
       icon: Volume2,
-      title: 'الصوتيات',
-      description: 'استمع للقرآن الكريم بأصوات أشهر القراء',
+      title: t('quran.audioQuran'),
+      description: t('quran.audioQuranDesc'),
       href: '/quran-sound',
       color: '#FF9800'
     },
     {
       icon: FileText,
-      title: 'المصحف PDF',
-      description: 'حمل المصحف الشريف بصيغة PDF لتصفحه في أي وقت',
+      title: t('quran.pdfQuran'),
+      description: t('quran.pdfQuranDesc'),
       href: '/quran-pdf',
       color: '#F44336'
     },
     {
       icon: Radio,
-      title: 'الإذاعة المباشرة',
-      description: 'استمع للبث المباشر من إذاعة القرآن الكريم',
+      title: t('quran.liveRadio'),
+      description: t('quran.liveRadioDesc'),
       href: '/live',
       color: '#E91E63'
     },
     {
       icon: Search,
-      title: 'البحث في القرآن',
-      description: 'ابحث في آيات القرآن الكريم بسهولة ويسر',
+      title: t('quran.searchQuran'),
+      description: t('quran.searchQuranDesc'),
       href: '/search',
       color: '#9C27B0'
     },
     {
       icon: Zap,
-      title: 'API للمطورين',
-      description: 'استخدم API القرآن الكريم في تطبيقاتك',
+      title: t('quran.apiDevelopers'),
+      description: t('quran.apiDevelopersDesc'),
       href: 'https://msr-quran-data.vercel.app',
       color: '#607D8B'
     }
@@ -218,17 +247,17 @@ const HomePage = () => {
 
   // إحصائيات الموقع
   const stats = [
-    { number: '114', label: 'سورة', icon: BookMarked },
-    { number: '6236', label: 'آية', icon: Sparkles },
-    { number: '30', label: 'جزء', icon: Book },
-    { number: '153', label: 'قارئ', icon: Mic }
+    { number: '114', label: t('homepage.stats.surahs'), icon: BookMarked },
+    { number: '6236', label: t('homepage.stats.ayahs'), icon: Sparkles },
+    { number: '30', label: t('homepage.stats.juz'), icon: Book },
+    { number: '153', label: t('homepage.stats.reciters'), icon: Mic }
   ];
 
   return (
     <>
       <Head>
-        <title>القرآن الكريم - القرآن الإلكتروني</title>
-        <meta name="description" content="موقع شامل لتلاوة وتصفح واستماع القرآن الكريم بأفضل جودة وأسهل طريقة." />
+        <title>{t('homepage.title')}</title>
+        <meta name="description" content={t('homepage.description')} />
         <meta name="keywords" content="القرآن الكريم, تلاوة القرآن, تصفح القرآن, استماع القرآن, القرآن الإلكتروني, القرآن الكريم الإلكتروني" />
       </Head> 
 
@@ -244,6 +273,11 @@ const HomePage = () => {
             speed={18}
             length="85vh"
           />
+        </div>
+
+        {/* مبدل اللغة - في أعلى اليسار */}
+        <div className="absolute top-4 left-4 z-[9999]">
+          <LanguageSwitcher />
         </div>
 
         {/* البسملة في أعلى الموقع */}
@@ -339,13 +373,13 @@ const HomePage = () => {
               </button>
             </div>
             <div className="mb-4 sm:mb-6 flex flex-col arabic-font sm:flex-row lg:flex-row gap-3 sm:gap-4 md:gap-6 items-center justify-center">
-              <DrawOutlineButton>ابدأ التصفح</DrawOutlineButton>
+              <DrawOutlineButton>{t('common.startBrowsing')}</DrawOutlineButton>
               
               <Link 
                 href="/quran-reader?page=1" 
                 className="group relative w-full arabic-font sm:w-auto px-4 py-3 sm:px-6 sm:py-3.5 md:px-8 md:py-4 text-base sm:text-lg md:text-xl font-bold rounded-lg sm:rounded-xl transition-all duration-300 bg-gradient-to-br from-[#4a5568] via-[#2d3748] to-[#1a202c] hover:from-[#5a6578] hover:via-[#4a5568] hover:to-[#2d3748] text-white shadow-2xl shadow-black/40 hover:shadow-[0_20px_40px_rgba(0,0,0,0.6)] hover:scale-105 hover:-translate-y-1 border border-[#606060]/30 hover:border-[#707070]/50 overflow-hidden"
               >
-                <span>تفسير القرآن آيه بآيه</span>
+                <span>{t('quran.tafseerAyahByAyah')}</span>
                 {/* TOP - الخط العلوي */}
                 <span className="absolute left-0 top-0 h-[1px] w-0 border-t-2 border-white/60 transition-all duration-200 group-hover:w-full" />
                 {/* RIGHT - الخط الأيمن */}
@@ -360,7 +394,7 @@ const HomePage = () => {
                 href="/quran-sound" 
                 className="group relative w-full sm:w-auto px-4 py-3 sm:px-6 sm:py-3.5 md:px-8 md:py-4 text-base sm:text-lg md:text-xl font-bold rounded-lg sm:rounded-xl transition-all duration-300 bg-gradient-to-br from-[#4a5568] via-[#2d3748] to-[#1a202c] hover:from-[#5a6578] hover:via-[#4a5568] hover:to-[#2d3748] text-white shadow-2xl shadow-black/40 hover:shadow-[0_20px_40px_rgba(0,0,0,0.6)] hover:scale-105 hover:-translate-y-1 border border-[#606060]/30 hover:border-[#707070]/50 overflow-hidden"
               >
-                <span>استمع الآن</span>
+                <span>{t('common.listenNow')}</span>
                 {/* TOP - الخط العلوي */}
                 <span className="absolute left-0 top-0 h-[1px]  w-0 border-t-2 border-white/60 transition-all duration-200 group-hover:w-full" />
                 {/* RIGHT - الخط الأيمن */}
@@ -413,10 +447,10 @@ const HomePage = () => {
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-8 sm:mb-10 md:mb-12 lg:mb-16">
               <h2 className="text-2xl sm:text-3xl md:text-4xl pb-3 sm:pb-4 md:pb-5 font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#f9f9f9] via-[#f9f9f9] to-[#25344e] mb-3 sm:mb-4 drop-shadow-xl">
-                ميزات الموقع
+                {t('common.websiteFeatures')}
               </h2>
               <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-chart-10 max-w-2xl mx-auto px-4">
-                اكتشف جميع الخدمات التي يوفرها موقع القرآن الكريم
+                {t('common.allServicesDescription')}
               </p>
             </div>
             
@@ -455,7 +489,7 @@ const HomePage = () => {
                       </p>
                       <div className="mt-3 sm:mt-4 md:mt-6 flex items-center justify-center text-[#565656] group-hover:text-chart-16 transition-all duration-300 group-hover:translate-x-[-8px] arabic-font">
                         <ArrowLeft size={16} strokeWidth={2} className="sm:w-5 sm:h-5 md:w-6 md:h-6" />
-                        <span className="mr-2 font-semibold text-xs sm:text-sm md:text-base">اكتشف المزيد</span>
+                        <span className="mr-2 font-semibold text-xs sm:text-sm md:text-base">{t('common.discoverMore')}</span>
                       </div>
                     </div>
                   </LinkComponent>
@@ -469,23 +503,23 @@ const HomePage = () => {
         <section className="relative z-10 py-8 sm:py-12 md:py-16 lg:py-20 px-3 sm:px-4 md:px-6 lg:px-8 bg-gradient-to-br from-[#565656]/20 via-[#262626]/20 to-[#525252]/20 backdrop-blur-sm border-y-5 border-[#565656]/30 shadow-xl">
           <div className="max-w-5xl mx-auto text-center">
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-transparent bg-clip-text pb-3 sm:pb-4 bg-gradient-to-r from-[#f8f8f8] via-[#f9f9f9] to-[#565656] mb-4 sm:mb-5 md:mb-6 drop-shadow-xl">
-              ابدأ رحلتك مع القرآن الكريم
+              {t('common.startYourJourney')}
             </h2>
             <p className="text-sm sm:text-base md:text-lg lg:text-xl text-[#cccccc]/80 leading-relaxed mb-6 sm:mb-8 md:mb-10 max-w-3xl mx-auto px-4">
-              انضم إلى الملايين الذين يستخدمون موقعنا لتلاوة وتصفح القرآن الكريم
+              {t('common.joinMillions')}
             </p>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 justify-center items-center">
               <Link 
                 href="/quran-pages/1" 
                 className="w-full sm:w-auto px-6 py-3.5 sm:px-8 sm:py-4 md:px-10 md:py-5 text-base sm:text-lg md:text-xl lg:text-2xl font-bold rounded-lg sm:rounded-xl transition-all duration-300 bg-gradient-to-r from-[#16697a]/50 to-[#16697a]/50 hover:from-[#1aa3b5] hover:to-[#1aa3b5]/50 text-white shadow-xl shadow-[#000]/50 hover:shadow-sm hover:shadow-[#f9f9f9]/20 hover:border-6 hover:border-[#535353] hover:scale-105 border-none"
               >
-                ابدأ الآن
+                {t('common.startNow')}
               </Link>
               <Link 
                 href="/about" 
                 className="w-full sm:w-auto px-6 py-3.5 sm:px-8 sm:py-4 md:px-10 md:py-5 text-base sm:text-lg md:text-xl lg:text-2xl font-bold rounded-lg sm:rounded-xl transition-all duration-300 bg-transparent border-2 border-chart-10 bg-chart-17 text-chart-10 hover:bg-chart-17 shadow-lg hover:shadow-xl hover:scale-105"
               >
-                اعرف المزيد
+                {t('common.learnMore')}
               </Link>
             </div>
           </div>

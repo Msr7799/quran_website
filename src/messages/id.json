@@ -1,0 +1,62 @@
+{
+  "common": {
+    "appName": "Al-Quran Suci",
+    "home": "Beranda",
+    "about": "Tentang",
+    "search": "Cari",
+    "settings": "Pengaturan",
+    "close": "Tutup",
+    "save": "Simpan",
+    "cancel": "Batal",
+    "loading": "Memuat...",
+    "error": "Terjadi kesalahan",
+    "success": "Berhasil"
+  },
+  "navigation": {
+    "quranPages": "Jelajahi Quran",
+    "quranSound": "Dengarkan",
+    "quranReader": "Pembaca",
+    "live": "Siaran Langsung",
+    "chatBot": "Asisten Islam",
+    "components": "Komponen"
+  },
+  "chat": {
+    "title": "Noor - Asisten Islam",
+    "subtitle": "Asisten cerdas Anda untuk pertanyaan Islam",
+    "placeholder": "Ketik pertanyaan Anda di sini...",
+    "send": "Kirim",
+    "translate": "Terjemahkan",
+    "enhance": "Tingkatkan Pertanyaan",
+    "clear": "Hapus Obrolan",
+    "settings": "Pengaturan",
+    "model": "Model",
+    "temperature": "Kreativitas / Suhu",
+    "maxTokens": "Batas Token",
+    "targetLanguage": "Bahasa Terjemahan",
+    "mcpTools": "Alat MCP",
+    "tavilySearch": "Pencarian Internet",
+    "systemTime": "Waktu Sistem",
+    "fontSize": "Ukuran Font",
+    "translating": "Menerjemahkan...",
+    "enhancing": "Meningkatkan pertanyaan...",
+    "copySuccess": "Berhasil disalin",
+    "clearConfirm": "Apakah Anda yakin ingin menghapus obrolan?"
+  },
+  "quran": {
+    "read": "Baca Quran",
+    "listen": "Dengarkan",
+    "surah": "Surah",
+    "ayah": "Ayat",
+    "juz": "Juz",
+    "page": "Halaman",
+    "reciter": "Qari",
+    "translation": "Terjemahan",
+    "tafseer": "Tafsir"
+  },
+  "footer": {
+    "copyright": "Hak cipta dilindungi",
+    "contact": "Hubungi Kami",
+    "privacy": "Kebijakan Privasi",
+    "terms": "Syarat dan Ketentuan"
+  }
+}

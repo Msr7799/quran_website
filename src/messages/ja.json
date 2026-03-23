@@ -1,0 +1,62 @@
+{
+  "common": {
+    "appName": "神聖なるコーラン",
+    "home": "ホーム",
+    "about": "について",
+    "search": "検索",
+    "settings": "設定",
+    "close": "閉じる",
+    "save": "保存",
+    "cancel": "キャンセル",
+    "loading": "読み込み中...",
+    "error": "エラーが発生しました",
+    "success": "成功"
+  },
+  "navigation": {
+    "quranPages": "コーランを閲覧",
+    "quranSound": "聞く",
+    "quranReader": "リーダー",
+    "live": "ライブ配信",
+    "chatBot": "イスラムアシスタント",
+    "components": "コンポーネント"
+  },
+  "chat": {
+    "title": "Noor - イスラムアシスタント",
+    "subtitle": "イスラムに関する質問のためのインテリジェントアシスタント",
+    "placeholder": "ここに質問を入力してください...",
+    "send": "送信",
+    "translate": "翻訳",
+    "enhance": "質問を改善",
+    "clear": "チャットをクリア",
+    "settings": "設定",
+    "model": "モデル",
+    "temperature": "創造性/温度",
+    "maxTokens": "トークン制限",
+    "targetLanguage": "翻訳言語",
+    "mcpTools": "MCPツール",
+    "tavilySearch": "インターネット検索",
+    "systemTime": "システム時刻",
+    "fontSize": "フォントサイズ",
+    "translating": "翻訳中...",
+    "enhancing": "質問を改善中...",
+    "copySuccess": "正常にコピーされました",
+    "clearConfirm": "チャットをクリアしてもよろしいですか？"
+  },
+  "quran": {
+    "read": "コーランを読む",
+    "listen": "聞く",
+    "surah": "章",
+    "ayah": "節",
+    "juz": "ジュズ",
+    "page": "ページ",
+    "reciter": "朗読者",
+    "translation": "翻訳",
+    "tafseer": "タフシール"
+  },
+  "footer": {
+    "copyright": "全著作権所有",
+    "contact": "お問い合わせ",
+    "privacy": "プライバシーポリシー",
+    "terms": "利用規約"
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "common": {
+    "appName": "神圣古兰经",
+    "home": "首页",
+    "about": "关于",
+    "search": "搜索",
+    "settings": "设置",
+    "close": "关闭",
+    "save": "保存",
+    "cancel": "取消",
+    "loading": "加载中...",
+    "error": "发生错误",
+    "success": "成功"
+  },
+  "navigation": {
+    "quranPages": "浏览古兰经",
+    "quranSound": "聆听",
+    "quranReader": "阅读器",
+    "live": "直播",
+    "chatBot": "伊斯兰助手",
+    "components": "组件"
+  },
+  "chat": {
+    "title": "Noor - 伊斯兰助手",
+    "subtitle": "您的伊斯兰问题智能助手",
+    "placeholder": "在此输入您的问题...",
+    "send": "发送",
+    "translate": "翻译",
+    "enhance": "改进问题",
+    "clear": "清除聊天",
+    "settings": "设置",
+    "model": "模型",
+    "temperature": "创造力/温度",
+    "maxTokens": "令牌限制",
+    "targetLanguage": "翻译语言",
+    "mcpTools": "MCP 工具",
+    "tavilySearch": "互联网搜索",
+    "systemTime": "系统时间",
+    "fontSize": "字体大小",
+    "translating": "翻译中...",
+    "enhancing": "改进问题中...",
+    "copySuccess": "复制成功",
+    "clearConfirm": "您确定要清除聊天吗？"
+  },
+  "quran": {
+    "read": "阅读古兰经",
+    "listen": "聆听",
+    "surah": "章",
+    "ayah": "节",
+    "juz": "卷",
+    "page": "页",
+    "reciter": "诵读者",
+    "translation": "翻译",
+    "tafseer": "注释"
+  },
+  "footer": {
+    "copyright": "版权所有",
+    "contact": "联系我们",
+    "privacy": "隐私政策",
+    "terms": "条款和条件"
+  }
+}

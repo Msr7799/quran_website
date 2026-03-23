@@ -1,0 +1,62 @@
+{
+  "common": {
+    "appName": "पवित्र कुरान",
+    "home": "होम",
+    "about": "के बारे में",
+    "search": "खोजें",
+    "settings": "सेटिंग्स",
+    "close": "बंद करें",
+    "save": "सहेजें",
+    "cancel": "रद्द करें",
+    "loading": "लोड हो रहा है...",
+    "error": "एक त्रुटि हुई",
+    "success": "सफलता"
+  },
+  "navigation": {
+    "quranPages": "कुरान ब्राउज़ करें",
+    "quranSound": "सुनें",
+    "quranReader": "रीडर",
+    "live": "लाइव प्रसारण",
+    "chatBot": "इस्लामी सहायक",
+    "components": "घटक"
+  },
+  "chat": {
+    "title": "नूर - इस्लामी सहायक",
+    "subtitle": "इस्लामी प्रश्नों के लिए आपका बुद्धिमान सहायक",
+    "placeholder": "यहाँ अपना प्रश्न टाइप करें...",
+    "send": "भेजें",
+    "translate": "अनुवाद करें",
+    "enhance": "प्रश्न सुधारें",
+    "clear": "चैट साफ़ करें",
+    "settings": "सेटिंग्स",
+    "model": "मॉडल",
+    "temperature": "रचनात्मकता / तापमान",
+    "maxTokens": "टोकन सीमा",
+    "targetLanguage": "अनुवाद भाषा",
+    "mcpTools": "MCP उपकरण",
+    "tavilySearch": "इंटरनेट खोज",
+    "systemTime": "सिस्टम समय",
+    "fontSize": "फ़ॉन्ट आकार",
+    "translating": "अनुवाद हो रहा है...",
+    "enhancing": "प्रश्न सुधार रहा है...",
+    "copySuccess": "सफलतापूर्वक कॉपी किया गया",
+    "clearConfirm": "क्या आप वाकई चैट साफ़ करना चाहते हैं?"
+  },
+  "quran": {
+    "read": "कुरान पढ़ें",
+    "listen": "सुनें",
+    "surah": "सूरह",
+    "ayah": "आयत",
+    "juz": "जुज़",
+    "page": "पृष्ठ",
+    "reciter": "पाठक",
+    "translation": "अनुवाद",
+    "tafseer": "तफ़सीर"
+  },
+  "footer": {
+    "copyright": "सर्वाधिकार सुरक्षित",
+    "contact": "हमसे संपर्क करें",
+    "privacy": "गोपनीयता नीति",
+    "terms": "नियम और शर्तें"
+  }
+}

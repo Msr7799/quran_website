@@ -1,0 +1,62 @@
+{
+  "common": {
+    "appName": "Kuran-ı Kerim",
+    "home": "Ana Sayfa",
+    "about": "Hakkında",
+    "search": "Ara",
+    "settings": "Ayarlar",
+    "close": "Kapat",
+    "save": "Kaydet",
+    "cancel": "İptal",
+    "loading": "Yükleniyor...",
+    "error": "Bir hata oluştu",
+    "success": "Başarılı"
+  },
+  "navigation": {
+    "quranPages": "Kuran'a Göz At",
+    "quranSound": "Dinle",
+    "quranReader": "Okuyucu",
+    "live": "Canlı Yayın",
+    "chatBot": "İslami Asistan",
+    "components": "Bileşenler"
+  },
+  "chat": {
+    "title": "Nur - İslami Asistan",
+    "subtitle": "İslami sorularınız için akıllı asistanınız",
+    "placeholder": "Sorunuzu buraya yazın...",
+    "send": "Gönder",
+    "translate": "Çevir",
+    "enhance": "Soruyu İyileştir",
+    "clear": "Sohbeti Temizle",
+    "settings": "Ayarlar",
+    "model": "Model",
+    "temperature": "Yaratıcılık / Sıcaklık",
+    "maxTokens": "Token Limiti",
+    "targetLanguage": "Çeviri Dili",
+    "mcpTools": "MCP Araçları",
+    "tavilySearch": "İnternet Araması",
+    "systemTime": "Sistem Saati",
+    "fontSize": "Yazı Boyutu",
+    "translating": "Çevriliyor...",
+    "enhancing": "Soru iyileştiriliyor...",
+    "copySuccess": "Başarıyla kopyalandı",
+    "clearConfirm": "Sohbeti temizlemek istediğinizden emin misiniz?"
+  },
+  "quran": {
+    "read": "Kuran Oku",
+    "listen": "Dinle",
+    "surah": "Sure",
+    "ayah": "Ayet",
+    "juz": "Cüz",
+    "page": "Sayfa",
+    "reciter": "Okuyucu",
+    "translation": "Çeviri",
+    "tafseer": "Tefsir"
+  },
+  "footer": {
+    "copyright": "Tüm hakları saklıdır",
+    "contact": "Bize Ulaşın",
+    "privacy": "Gizlilik Politikası",
+    "terms": "Şartlar ve Koşullar"
+  }
+}

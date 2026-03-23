@@ -1,0 +1,62 @@
+{
+  "common": {
+    "appName": "신성한 코란",
+    "home": "홈",
+    "about": "소개",
+    "search": "검색",
+    "settings": "설정",
+    "close": "닫기",
+    "save": "저장",
+    "cancel": "취소",
+    "loading": "로딩 중...",
+    "error": "오류가 발생했습니다",
+    "success": "성공"
+  },
+  "navigation": {
+    "quranPages": "코란 탐색",
+    "quranSound": "듣기",
+    "quranReader": "리더",
+    "live": "라이브 방송",
+    "chatBot": "이슬람 어시스턴트",
+    "components": "컴포넌트"
+  },
+  "chat": {
+    "title": "Noor - 이슬람 어시스턴트",
+    "subtitle": "이슬람 질문을 위한 지능형 어시스턴트",
+    "placeholder": "여기에 질문을 입력하세요...",
+    "send": "전송",
+    "translate": "번역",
+    "enhance": "질문 개선",
+    "clear": "채팅 지우기",
+    "settings": "설정",
+    "model": "모델",
+    "temperature": "창의성 / 온도",
+    "maxTokens": "토큰 제한",
+    "targetLanguage": "번역 언어",
+    "mcpTools": "MCP 도구",
+    "tavilySearch": "인터넷 검색",
+    "systemTime": "시스템 시간",
+    "fontSize": "글꼴 크기",
+    "translating": "번역 중...",
+    "enhancing": "질문 개선 중...",
+    "copySuccess": "성공적으로 복사되었습니다",
+    "clearConfirm": "채팅을 지우시겠습니까?"
+  },
+  "quran": {
+    "read": "코란 읽기",
+    "listen": "듣기",
+    "surah": "장",
+    "ayah": "절",
+    "juz": "주즈",
+    "page": "페이지",
+    "reciter": "낭송자",
+    "translation": "번역",
+    "tafseer": "타프시르"
+  },
+  "footer": {
+    "copyright": "모든 권리 보유",
+    "contact": "문의하기",
+    "privacy": "개인정보 보호정책",
+    "terms": "이용 약관"
+  }
+}

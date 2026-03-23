@@ -8,6 +8,26 @@ export default function Document() {
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        
+        {/* === إعدادات الـ SEO الاحترافية === */}
+        <meta name="description" content="تطبيق القرآن الكريم الشامل. استمع واقرأ وابحث في القرآن الكريم والأحاديث النبوية، مع ترجمات وتفاسير متعددة ومميزات متقدمة الذكاء الاصطناعي." />
+        <meta name="keywords" content="القرآن الكريم, استماع القرآن, قراءة القرآن, القرآن اونلاين, تفسير القرآن, أحاديث نبوية, الذكاء الاصطناعي الإسلامي, quran, quran online, quran audio, islamic chatbot, quran translation" />
+        <meta name="author" content="Mohamed Saud Alromaihi" />
+        <meta name="robots" content="index, follow" />
+        
+        {/* === Open Graph (للمشاركة على واتساب، تويتر، فيسبوك) === */}
+        <meta property="og:title" content="منصة القرآن الكريم الذكية" />
+        <meta property="og:description" content="اقرأ واستمع للقرآن الكريم، وابحث في الأحاديث النبوية مع مساعد إسلامي ذكي." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://msr-quran-app.vercel.app/" />
+        <meta property="og:image" content="https://msr-quran-app.vercel.app/logo.png" />
+        
+        {/* === Twitter Card === */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="القرآن الكريم الشامل" />
+        <meta name="twitter:description" content="أفضل تجربة تفاعلية لقراءة واستماع القرآن الكريم." />
+        <meta name="twitter:image" content="https://msr-quran-app.vercel.app/logo.png" />
+
         <link rel="manifest" href="/manifest.json" />
         <link rel="icon" href="/favicon.ico" />
         <link rel="icon" type="image/png" sizes="192x192" href="/logo.png" />
