@@ -10,8 +10,14 @@ export default function Document() {
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         
         {/* === إعدادات الـ SEO الاحترافية === */}
+        <meta name="google-site-verification" content="ycNyhEdJMXnREHv1Ez1RlLYDNN-sC5AlVPe9oyfh4l4" />
         <meta name="description" content="تطبيق القرآن الكريم الشامل. استمع واقرأ وابحث في القرآن الكريم والأحاديث النبوية، مع ترجمات وتفاسير متعددة ومميزات متقدمة الذكاء الاصطناعي." />
         <meta name="keywords" content="القرآن الكريم, استماع القرآن, قراءة القرآن, القرآن اونلاين, تفسير القرآن, أحاديث نبوية, الذكاء الاصطناعي الإسلامي, quran, quran online, quran audio, islamic chatbot, quran translation" />
+        
+        {/* إشارة لملفات الكلمات المفتاحية بـ 19 لغة عالمية (+9700 كلمة) لدعم محركات البحث */}
+        <link rel="alternate" type="application/json" href="/seo-keywords.json" title="Quran Global SEO Keywords JSON" />
+        <link rel="alternate" type="text/csv" href="/seo-keywords.csv" title="Quran Global SEO Keywords CSV" />
+        
         <meta name="author" content="Mohamed Saud Alromaihi" />
         <meta name="robots" content="index, follow" />
         
