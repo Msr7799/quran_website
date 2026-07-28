@@ -1,0 +1,16 @@
+{
+  "name": "القرآن المجيد",
+  "short_name": "القرآن",
+  "description": "قراءة واستماع وبحث وتصفّح في القرآن الكريم",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#071813",
+  "theme_color": "#0c7652",
+  "icons": [
+    { "src": "/favicon.ico", "sizes": "16x16 32x32 48x48", "type": "image/x-icon" },
+    { "src": "/images/logo.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

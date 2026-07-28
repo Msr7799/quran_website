@@ -1,0 +1,53 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { SynchronizedReader } from "@/components/SynchronizedReader";
+import { getSurah, getSurahs } from "@/lib/quran";
+
+type Props = { params: Promise<{ surahId: string }> };
+export async function generateStaticParams() {
+  return (await getSurahs()).map((s) => ({ surahId: String(s.number) }));
+}
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const id = Number((await params).surahId);
+  const surah = await getSurah(id);
+  if (!surah) return {};
+  return {
+    title: `سورة ${surah.name.ar}`,
+    description: `قراءة سورة ${surah.name.ar} كاملة بالتشكيل، وعدد آياتها ${surah.verses_count} آية.`,
+    alternates: { canonical: `/quran/${id}` },
+  };
+}
+
+export default async function SurahPage({ params }: Props) {
+  const id = Number((await params).surahId);
+  const [surah, surahs] = await Promise.all([getSurah(id), getSurahs()]);
+  if (!surah) notFound();
+  const previousSurah = surahs[id - 2];
+  const nextSurah = surahs[id];
+  return (
+    <article className="reader-shell">
+      <header className="surah-header">
+        <span>سورة رقم {surah.number}</span>
+        <h1>سورة {surah.name.ar}</h1>
+        <p>
+          {surah.revelation_place.ar} · {surah.verses_count} آية · الجزء{" "}
+          {surah.verses[0]?.juz}
+        </p>
+        <nav className="surah-header-navigation" aria-label="التنقل بين السور">
+          {previousSurah ? (
+            <Link href={`/quran/${previousSurah.number}`} className="previous-surah">
+              <small>سورة {previousSurah.name.ar}</small><strong><span aria-hidden="true">→</span> السابقة</strong>
+            </Link>
+          ) : <span />}
+          {nextSurah ? (
+            <Link href={`/quran/${nextSurah.number}`} className="next-surah">
+              <small>سورة {nextSurah.name.ar}</small><strong>التالية <span aria-hidden="true">←</span></strong>
+            </Link>
+          ) : <span />}
+        </nav>
+      </header>
+      <SynchronizedReader surah={surah} surahs={surahs} />
+    </article>
+  );
+}

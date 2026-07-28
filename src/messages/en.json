@@ -1,4 +1,15 @@
 {
+  "home": {
+    "allInOne": "Everything you need in one place",
+    "readDescription": "Read surahs and verses with translation and synchronized recitation.",
+    "browseDescription": "Browse the pages of the Mushaf as naturally as reading from the book.",
+    "listenDescription": "Listen to complete recitations by a selection of renowned reciters.",
+    "pdfDescription": "Choose from a library of Mushafs and books in PDF format.",
+    "liveDescription": "Listen to Quran radio broadcasts around the clock.",
+    "calendarDescription": "Follow the Hijri and Gregorian calendars and religious occasions.",
+    "searchDescription": "Search for verses and words throughout the Quran.",
+    "assistantDescription": "Ask Noor AI and receive organized answers with useful sources."
+  },
   "common": {
     "appName": "Holy Quran",
     "home": "Home",
@@ -31,7 +42,8 @@
     "quranPDF": "Quran PDF",
     "quranSearch": "Search Quran",
     "quranRadio": "Live Radio",
-    "api": "API for Developers"
+    "api": "API for Developers",
+    "calendar": "Hijri and Gregorian Calendar"
   },
   "chat": {
     "title": "Noor - Islamic Assistant",

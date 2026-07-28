@@ -1,0 +1,146 @@
+.footer {
+  position: relative;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 50% 0, color-mix(in srgb, var(--brand-2) 10%, transparent), transparent 36%),
+    #e9e4d8;
+  border-top: 1px solid var(--line);
+}
+
+:global(:root[data-theme="dark"]) .footer {
+  background:
+    radial-gradient(circle at 50% 0, color-mix(in srgb, var(--brand-2) 12%, transparent), transparent 36%),
+    #202624;
+}
+
+.inner {
+  width: min(1280px, calc(100% - 40px));
+  margin: auto;
+  padding: 56px 0 28px;
+}
+
+.channel {
+  width: min(590px, 100%);
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.channelLogo {
+  width: 112px;
+  height: 112px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #313131;
+  border: 4px solid var(--surface);
+  border-radius: 50%;
+  box-shadow: 0 12px 32px rgba(75, 52, 8, .26), 0 0 0 1px var(--line);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.channelLogo:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 16px 38px rgba(75, 52, 8, .32), 0 0 0 2px var(--brand-2);
+}
+
+.channelLogo img { width: 100%; height: 100%; object-fit: cover; }
+.channel h2 { margin: 18px 0 3px; color: var(--text); font-size: clamp(1.7rem, 4vw, 2.35rem); }
+.channel p { max-width: 540px; margin: 5px 0 18px; color: var(--muted); font-size: 1rem; }
+
+.youtubeButton {
+  min-height: 50px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 9px 22px;
+  color: #fff;
+  background: #222124;
+  border: 1px solid #000000;
+  border-radius: 999px;
+  box-shadow: 0 9px 24px rgba(44, 37, 37, 0.24);
+  font-size: 1rem;
+  font-weight: 800;
+  transition: transform .18s ease, background .18s ease, box-shadow .18s ease;
+}
+
+.youtubeButton:hover { transform: translateY(-2px); background: #920505; box-shadow: 0 12px 28px rgba(3, 2, 2, 0.32); }
+.youtubeButton img { width: 30px; height: 30px; object-fit: contain; filter: invert(1); }
+
+.mainContent {
+  margin-top: 52px;
+  padding-top: 42px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(420px, .9fr);
+  gap: clamp(45px, 8vw, 105px);
+  border-top: 1px solid var(--line);
+}
+
+.about h2 { margin: 0 0 10px; color: var(--brand); font-family: Uthmanic, serif; font-size: 2rem; }
+.about p { max-width: 620px; margin: 7px 0; color: var(--muted); line-height: 2; }
+.socialLinks { display: flex; gap: 10px; margin-top: 20px; }
+.socialLinks a {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  transition: color .18s ease, border-color .18s ease, transform .18s ease;
+}
+.socialLinks a:hover { color: var(--brand); border-color: var(--brand); transform: translateY(-2px); }
+.socialLinks svg { width: 20px; }
+.socialLinks img { width: 23px; height: 23px; object-fit: contain; }
+:global(:root[data-theme="dark"]) .socialLinks img { filter: invert(1); }
+
+.linkGroups { display: grid; grid-template-columns: 1fr 1fr; gap: 35px; }
+.linkGroups h3 { margin: 0 0 15px; color: var(--text); font-size: 1.05rem; }
+.linkGroups ul { margin: 0; padding: 0; display: grid; gap: 5px; list-style: none; }
+.linkGroups a { color: var(--muted); font-size: .92rem; transition: color .16s ease, padding .16s ease; }
+.linkGroups h3,.linkGroups a,.about p,.bottom { overflow-wrap:anywhere; }
+.linkGroups a:hover { color: var(--brand); padding-inline-start: 4px; }
+
+.bottom {
+  margin-top: 42px;
+  padding-top: 24px;
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  text-align: center;
+  color: var(--muted);
+  border-top: 1px solid var(--line);
+  font-size: .86rem;
+}
+.bottom p { max-width: 900px; margin: 0; }
+.bottom strong { color: var(--text); font-weight: 650; }
+
+@media (max-width: 850px) {
+  .inner { width: min(100% - 28px, 1280px); padding-top: 45px; }
+  .mainContent { grid-template-columns: 1fr; gap: 35px; }
+  .about { text-align: center; }
+  .about p { margin-inline: auto; }
+  .socialLinks { justify-content: center; }
+}
+
+@media (max-width: 520px) {
+  .inner { width: min(100% - 22px, 1280px); }
+  .channelLogo { width: 94px; height: 94px; }
+  .youtubeButton { width: 100%; max-width: 310px; }
+  .mainContent { margin-top: 42px; padding-top: 34px; }
+  .linkGroups { grid-template-columns:1fr; gap: 28px; text-align:center; }
+  .linkGroups h3 { font-size: .95rem; }
+  .linkGroups a { font-size: .84rem; }
+  .bottom { margin-top: 34px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .channelLogo,
+  .youtubeButton,
+  .socialLinks a,
+  .linkGroups a { transition: none; }
+}

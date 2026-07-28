@@ -1,0 +1,238 @@
+{
+  "categories": [
+    {
+      "name": "قسم الفقه والأحكام",
+      "books": [
+        {
+          "title": {
+            "ar": "الفقه الإسلامي وأدلته",
+            "en": "Al-Fiqh_Al-Islami_Wa_Adillatuh"
+          },
+          "cover_url": "https://archive.org/download/fia2_20200228/%D8%A7%D9%84%D9%81%D9%82%D9%87%20%D8%A7%D9%84%D8%A5%D8%B3%D9%84%D8%A7%D9%85%D9%8A%20%D9%88%D8%A3%D8%AF%D9%84%D8%AA%D9%87/fia0.pdf",
+          "volumes_count": 8,
+          "volumes": [
+            {
+              "volume": 1,
+              "files": [
+                {
+                  "type": "pdf",
+                  "size": "12.5M",
+                  "url": "https://archive.org/download/fia2_20200228/%D8%A7%D9%84%D9%81%D9%82%D9%87%20%D8%A7%D9%84%D8%A5%D8%B3%D9%84%D8%A7%D9%85%D9%8A%20%D9%88%D8%A3%D8%AF%D9%84%D8%AA%D9%87/fia1.pdf"
+                }
+              ]
+            },
+            {
+              "volume": 2,
+              "files": [
+                {
+                  "type": "pdf",
+                  "size": "14.1M",
+                  "url": "https://archive.org/download/fia2_20200228/%D8%A7%D9%84%D9%81%D9%82%D9%87%20%D8%A7%D9%84%D8%A5%D8%B3%D9%84%D8%A7%D9%85%D9%8A%20%D9%88%D8%A3%D8%AF%D9%84%D8%AA%D9%87/fia2.pdf"
+                }
+              ]
+            },
+            {
+              "volume": 3,
+              "files": [
+                {
+                  "type": "pdf",
+                  "size": "10.6M",
+                  "url": "https://archive.org/download/fia2_20200228/%D8%A7%D9%84%D9%81%D9%82%D9%87%20%D8%A7%D9%84%D8%A5%D8%B3%D9%84%D8%A7%D9%85%D9%8A%20%D9%88%D8%A3%D8%AF%D9%84%D8%AA%D9%87/fia3.pdf"
+                }
+              ]
+            },
+            {
+              "volume": 4,
+              "files": [
+                {
+                  "type": "pdf",
+                  "size": "13.7M",
+                  "url": "https://archive.org/download/fia2_20200228/%D8%A7%D9%84%D9%81%D9%82%D9%87%20%D8%A7%D9%84%D8%A5%D8%B3%D9%84%D8%A7%D9%85%D9%8A%20%D9%88%D8%A3%D8%AF%D9%84%D8%AA%D9%87/fia4.pdf"
+                }
+              ]
+            },
+            {
+              "volume": 5,
+              "files": [
+                {
+                  "type": "pdf",
+                  "size": "12.6M",
+                  "url": "https://archive.org/download/fia2_20200228/%D8%A7%D9%84%D9%81%D9%82%D9%87%20%D8%A7%D9%84%D8%A5%D8%B3%D9%84%D8%A7%D9%85%D9%8A%20%D9%88%D8%A3%D8%AF%D9%84%D8%AA%D9%87/fia5.pdf"
+                }
+              ]
+            },
+            {
+              "volume": 6,
+              "files": [
+                {
+                  "type": "pdf",
+                  "size": "12.3M",
+                  "url": "https://archive.org/download/fia2_20200228/%D8%A7%D9%84%D9%81%D9%82%D9%87%20%D8%A7%D9%84%D8%A5%D8%B3%D9%84%D8%A7%D9%85%D9%8A%20%D9%88%D8%A3%D8%AF%D9%84%D8%AA%D9%87/fia6.pdf"
+                }
+              ]
+            },
+            {
+              "volume": 7,
+              "files": [
+                {
+                  "type": "pdf",
+                  "size": "13.1M",
+                  "url": "https://archive.org/download/fia2_20200228/%D8%A7%D9%84%D9%81%D9%82%D9%87%20%D8%A7%D9%84%D8%A5%D8%B3%D9%84%D8%A7%D9%85%D9%8A%20%D9%88%D8%A3%D8%AF%D9%84%D8%AA%D9%87/fia7.pdf"
+                }
+              ]
+            },
+            {
+              "volume": 8,
+              "files": [
+                {
+                  "type": "pdf",
+                  "size": "10.6M",
+                  "url": "https://archive.org/download/fia2_20200228/%D8%A7%D9%84%D9%81%D9%82%D9%87%20%D8%A7%D9%84%D8%A5%D8%B3%D9%84%D8%A7%D9%85%D9%8A%20%D9%88%D8%A3%D8%AF%D9%84%D8%AA%D9%87/fia8.pdf"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "قسم الأحاديث النبوية",
+      "books": [
+        {
+          "title": {
+            "ar": "صحيح البخاري",
+            "en": "Sahih_Bukhari"
+          },
+          "cover_url": "https://archive.org/download/79565_20220227_2311/%D8%B5%D8%AD%D9%8A%D8%AD%20%D8%A7%D9%84%D8%A8%D8%AE%D8%A7%D8%B1%D9%8A.jpg",
+          "files": [
+            {
+              "type": "pdf",
+              "size": "43.2M",
+              "url": "https://dn720001.ca.archive.org/0/items/79565_20220227_2311/79565.pdf"
+            }
+          ]
+        },
+        {
+          "title": {
+            "ar": "صحيح مسلم",
+            "en": "Sahih_Muslim"
+          },
+          "cover_url": "https://dn710103.ca.archive.org/0/items/SahihMuslimKarmi/__ia_thumb.jpg",
+          "files": [
+            {
+              "type": "pdf",
+              "size": "36.9M",
+              "url": "https://dn760100.eu.archive.org/0/items/SahihMuslimKarmi/Sahih_Muslim_Karmi.pdf"
+            }
+          ]
+        },
+        {
+          "title": {
+            "ar": "رياض الصالحين من كلام رسول الله سيد العارفين- النووي",
+            "en": "Riyad_El-Saleheen"
+          },
+          "cover_url": "https://dn790003.ca.archive.org/0/items/20230104_20230104/__ia_thumb.jpg",
+          "files": [
+            {
+              "type": "pdf",
+              "size": "27.7M",
+              "url": "https://archive.org/download/20230104_20230104/%D8%B1%D9%8A%D8%A7%D8%B6%20%D8%A7%D9%84%D8%B5%D8%A7%D9%84%D8%AD%D9%8A%D9%86%20%D9%85%D9%86%20%D9%83%D9%84%D8%A7%D9%85%20%D8%B1%D8%B3%D9%88%D9%84%20%D8%A7%D9%84%D9%84%D9%87%20%D8%B3%D9%8A%D8%AF%20%D8%A7%D9%84%D8%B9%D8%A7%D8%B1%D9%81%D9%8A%D9%86-%20%D8%A7%D9%84%D9%86%D9%88%D9%88%D9%8A%20-%20%D8%B7%20%D8%AF%D8%A7%D8%B1%20%D8%A7%D9%84%D9%85%D9%86%D9%87%D8%A7%D8%AC.pdf"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "قسم التوحيد",
+      "books": [
+        {
+          "title": {
+            "ar": "القول المفيد على كتاب التوحيد - ابن عثيمين",
+            "en": "Ketab_El-Tawheed"
+          },
+          "cover_url": "https://dn721601.ca.archive.org/0/items/20231016_20231016_0702/__ia_thumb.jpg",
+          "files": [
+            {
+              "type": "pdf",
+              "size": "16.7M",
+              "url": "https://archive.org/download/20231016_20231016_0702/%D8%A7%D9%84%D9%82%D9%88%D9%84%20%D8%A7%D9%84%D9%85%D9%81%D9%8A%D8%AF%20%D8%B9%D9%84%D9%89%20%D9%83%D8%AA%D8%A7%D8%A8%20%D8%A7%D9%84%D8%AA%D9%88%D8%AD%D9%8A%D8%AF%20-%20%D8%A7%D8%A8%D9%86%20%D8%B9%D8%AB%D9%8A%D9%85%D9%8A%D9%86.pdf"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "قسم قصص الانبياء وسيرة النبي ﷺ  ",
+      "books": [
+        {
+          "title": {
+            "ar": "الموسوعة الكبرى لقصص الأنبياء من بداية الخلق حتى خاتم المرسلين",
+            "en": "qesas_al-anbyaa"
+          },
+          "cover_url": "https://archive.org/download/al-mwsoa_al-kobra_leqesas_al-anbyaa/al-mwsoa_al-kobra_leqesas_al-anbyaa.jpg",
+          "files": [
+            {
+              "type": "pdf",
+              "size": "9.6M",
+              "url": "https://ia601505.us.archive.org/33/items/al-mwsoa_al-kobra_leqesas_al-anbyaa/al-mwsoa_al-kobra_leqesas_al-anbyaa.pdf"
+            }
+          ]
+        },
+        {
+          "title": {
+            "ar": "كتاب سيرة النبي",
+            "en": "Seeret_El-Naby"
+          },
+          "volumes_count": 5,
+          "volumes": [
+            {
+              "volume": 1,
+              "files": [
+                {
+                  "type": "pdf",
+                  "url": "https://archive.org/download/seebn/se01.pdf"
+                }
+              ]
+            },
+            {
+              "volume": 2,
+              "files": [
+                {
+                  "type": "pdf",
+                  "url": "https://archive.org/download/seebn/se02.pdf"
+                }
+              ]
+            },
+            {
+              "volume": 3,
+              "files": [
+                {
+                  "type": "pdf",
+                  "url": "https://archive.org/download/seebn/se03.pdf"
+                }
+              ]
+            },
+            {
+              "volume": 4,
+              "files": [
+                {
+                  "type": "pdf",
+                  "url": "https://archive.org/download/seebn/se04.pdf"
+                }
+              ]
+            },
+            {
+              "volume": 5,
+              "files": [
+                {
+                  "type": "pdf",
+                  "url": "https://archive.org/download/seebn/se05in.pdf"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

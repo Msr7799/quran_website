@@ -1,0 +1,15 @@
+.sources { margin-top: 14px; padding-top: 12px; border-top: 1px solid color-mix(in srgb,currentColor 14%,transparent); }
+.sources h4 { margin: 0 0 9px; font-size: .82rem; font-weight: 800; opacity: .76; }
+.grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+.card { min-width: 0; display: grid; grid-template-columns: 32px minmax(0,1fr) 16px; align-items: center; gap: 8px; padding: 9px; color: inherit; background: color-mix(in srgb,currentColor 7%,transparent); border: 1px solid color-mix(in srgb,currentColor 13%,transparent); border-radius: 12px; text-decoration: none!important; transition: transform .18s ease,border-color .18s ease,background .18s ease; }
+.card:hover { transform: translateY(-2px); border-color: color-mix(in srgb,var(--brand,#7da0cc) 55%,transparent); background: color-mix(in srgb,var(--brand,#7da0cc) 10%,transparent); }
+.favicon,.inlineFavicon { flex: none; background-color: #fff; background-repeat: no-repeat; background-position: center; background-size: contain; box-shadow: 0 0 0 1px #0002; }
+.favicon { width: 32px; height: 32px; border-radius: 9px; }
+.text { min-width: 0; display: grid; gap: 2px; }
+.text strong { overflow: hidden; color: inherit; font-size: .78rem; line-height: 1.35; text-overflow: ellipsis; white-space: nowrap; }
+.text small { overflow: hidden; opacity: .62; font-family: "Google Sans",sans-serif; font-size: .66rem; direction: ltr; text-align: start; text-overflow: ellipsis; white-space: nowrap; }
+.external { width: 14px; opacity: .55; }
+.inlineLink { display: inline-flex; align-items: center; gap: 5px; max-width: 100%; vertical-align: middle; overflow-wrap: anywhere; }
+.inlineFavicon { width: 16px; height: 16px; border-radius: 4px; }
+@media (max-width:560px) { .grid { grid-template-columns:1fr; }.card { padding:8px; } }
+@media (prefers-reduced-motion:reduce) { .card { transition:none; } }
