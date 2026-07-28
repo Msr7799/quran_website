@@ -16,6 +16,7 @@ type Timing = { ayah: number; timestamp_from: number; timestamp_to: number; segm
 type AudioTrack = { ayah: number; audioUrl: string; timestamp_from: number; timestamp_to: number; duration: number };
 type Recitation = { audioMode: "surah" | "ayah"; audioUrl: string; duration: number; tracks: AudioTrack[]; segments: Timing[]; estimated: boolean };
 type Translation = { locale: string; surah: number; verses: Array<{ verse: number; text: string }>; author: string; source: string; repository: string };
+const EMPTY_TRACKS: AudioTrack[] = [];
 const VERSES_PER_BATCH = 20;
 const RECITER_STORAGE_KEY = "alquran-reader-reciter";
 const PROGRESS_STORAGE_KEY = "alquran-reader-progress";
@@ -87,7 +88,8 @@ export function SynchronizedReader({ surah, surahs }: { surah: Surah; surahs: Su
   }, [locale, surah.number]);
   const activeTranslation = translation?.locale === locale && translation.surah === surah.number ? translation : null;
   const translatedVerses = useMemo(() => new Map(activeTranslation?.verses.map((verse) => [verse.verse, verse.text]) ?? []), [activeTranslation]);
-  const activeTrack = data?.audioMode === "ayah" ? data.tracks[activeTrackIndex] : null;
+  const tracks = data?.tracks ?? EMPTY_TRACKS;
+  const activeTrack = data?.audioMode === "ayah" ? tracks[activeTrackIndex] : null;
   const audioSource = activeTrack?.audioUrl ?? data?.audioUrl;
   const currentTiming = useMemo(() => data?.segments.find((segment) => currentTime * 1000 >= segment.timestamp_from && currentTime * 1000 < segment.timestamp_to), [currentTime, data]);
   const currentAyah = currentTiming?.ayah ?? 0;
@@ -108,7 +110,7 @@ export function SynchronizedReader({ surah, surahs }: { surah: Surah; surahs: Su
     resumePendingAyah.current = savedAyah;
     pendingPlay.current = false;
     if (data.audioMode === "ayah") {
-      const trackIndex = data.tracks.findIndex((track) => track.ayah === savedAyah);
+      const trackIndex = tracks.findIndex((track) => track.ayah === savedAyah);
       if (trackIndex >= 0) {
         pendingLocalTime.current = 0;
         queueMicrotask(() => setActiveTrackIndex(trackIndex));
@@ -118,7 +120,7 @@ export function SynchronizedReader({ surah, surahs }: { surah: Surah; surahs: Su
       if (audio.current?.readyState) audio.current.currentTime = pendingLocalTime.current;
     }
     queueMicrotask(() => setCurrentTime(timing.timestamp_from / 1000));
-  }, [data, surah.number, surah.verses.length]);
+  }, [data, surah.number, surah.verses.length, tracks]);
   useEffect(() => {
     if (!currentAyah || (resumePendingAyah.current && currentAyah !== resumePendingAyah.current)) return;
     resumePendingAyah.current = null;
@@ -185,9 +187,9 @@ export function SynchronizedReader({ surah, surahs }: { surah: Surah; surahs: Su
       return;
     }
     const targetMs = target * 1000;
-    const index = data.tracks.findIndex((track, trackIndex) => targetMs >= track.timestamp_from && (targetMs < track.timestamp_to || trackIndex === data.tracks.length - 1));
+    const index = tracks.findIndex((track, trackIndex) => targetMs >= track.timestamp_from && (targetMs < track.timestamp_to || trackIndex === tracks.length - 1));
     if (index < 0) return;
-    const track = data.tracks[index];
+    const track = tracks[index];
     const localTime = Math.max(0, (targetMs - track.timestamp_from) / 1000);
     if (index === activeTrackIndex) {
       audio.current.currentTime = localTime;
@@ -224,11 +226,11 @@ export function SynchronizedReader({ surah, surahs }: { surah: Surah; surahs: Su
     }
   }
   function handleEnded() {
-    if (data?.audioMode === "ayah" && activeTrackIndex < data.tracks.length - 1) {
+    if (data?.audioMode === "ayah" && activeTrackIndex < tracks.length - 1) {
       const nextIndex = activeTrackIndex + 1;
       pendingLocalTime.current = 0;
       pendingPlay.current = true;
-      setCurrentTime(data.tracks[nextIndex].timestamp_from / 1000);
+      setCurrentTime(tracks[nextIndex].timestamp_from / 1000);
       setActiveTrackIndex(nextIndex);
       return;
     }

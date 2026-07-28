@@ -1,8 +1,10 @@
-import { readFile } from "node:fs/promises";
-import path from "node:path";
-import { DatabaseSync } from "node:sqlite";
 import { NextResponse } from "next/server";
-import { getSurah } from "@/lib/quran";
+import {
+  loadAyahReciterFile,
+  loadSurahForRecitation,
+  loadSurahReciterFiles,
+  openSqliteRecitationDatabase,
+} from "@/lib/recitation-data-loader";
 import { getSynchronizedReciter, type SynchronizedReciter } from "@/lib/reciters";
 import type { Surah } from "@/lib/types";
 
@@ -22,10 +24,6 @@ type AyahAudio = Record<string, {
 type Track = { ayah: number; audioUrl: string; timestamp_from: number; timestamp_to: number; duration: number };
 type SqliteAudioRow = { audio_url: string; duration: number };
 type SqliteSegmentRow = { ayah_number: number; timestamp_from: number; timestamp_to: number; duration_sec: number; segments: string | null };
-
-async function json<T>(file: string): Promise<T> {
-  return JSON.parse(await readFile(file, "utf8")) as T;
-}
 
 function estimatedSegments(surah: Surah, durationSeconds: number) {
   const durationMs = durationSeconds * 1000;
@@ -89,20 +87,16 @@ function normalizedSurahSegments(surah: Surah, segmentMap: SegmentMap, duration:
     : { segments: estimatedSegments(surah, duration), estimated: true };
 }
 
-async function loadSurahJson(reciter: Extract<SynchronizedReciter, { source: "surah-json" }>, surah: Surah) {
-  const directory = path.join(process.cwd(), "public", reciter.folder);
-  const [audioData, segmentMap] = await Promise.all([
-    json<SurahAudio>(path.join(directory, "surah.json")),
-    json<SegmentMap>(path.join(directory, "segments.json")),
-  ]);
+async function loadSurahJson(request: Request, reciter: Extract<SynchronizedReciter, { source: "surah-json" }>, surah: Surah) {
+  const { audioData, segmentMap } = await loadSurahReciterFiles<SurahAudio, SegmentMap>(request, reciter);
   const audio = audioData[String(surah.number)];
   if (!audio) return null;
   const timing = normalizedSurahSegments(surah, segmentMap, audio.duration);
   return { audioMode: "surah" as const, audioUrl: audio.audio_url, duration: audio.duration, tracks: [] as Track[], ...timing };
 }
 
-async function loadAyahJson(reciter: Extract<SynchronizedReciter, { source: "ayah-json" }>, surah: Surah) {
-  const audioData = await json<AyahAudio>(path.join(process.cwd(), "public", reciter.file));
+async function loadAyahJson(request: Request, reciter: Extract<SynchronizedReciter, { source: "ayah-json" }>, surah: Surah) {
+  const audioData = await loadAyahReciterFile<AyahAudio>(request, reciter);
   let cursor = 0;
   const tracks: Track[] = [];
   const segments = surah.verses.map((verse) => {
@@ -131,7 +125,7 @@ async function loadAyahJson(reciter: Extract<SynchronizedReciter, { source: "aya
 }
 
 function loadSqlite(reciter: Extract<SynchronizedReciter, { source: "sqlite" }>, surah: Surah) {
-  const database = new DatabaseSync(path.join(process.cwd(), "public", reciter.file), { readOnly: true });
+  const database = openSqliteRecitationDatabase(reciter);
   try {
     const audio = database.prepare("SELECT audio_url, duration FROM surah_list WHERE surah_number = ?").get(surah.number) as SqliteAudioRow | undefined;
     if (!audio) return null;
@@ -157,13 +151,13 @@ export async function GET(request: Request, { params }: { params: Promise<{ reci
     return NextResponse.json({ error: "Invalid reciter or surah" }, { status: 404 });
   }
 
-  const surah = await getSurah(surahNumber);
+  const surah = await loadSurahForRecitation(request, surahNumber);
   if (!surah) return NextResponse.json({ error: "Recitation unavailable" }, { status: 404 });
 
   const data = reciter.source === "surah-json"
-    ? await loadSurahJson(reciter, surah)
+    ? await loadSurahJson(request, reciter, surah)
     : reciter.source === "ayah-json"
-      ? await loadAyahJson(reciter, surah)
+      ? await loadAyahJson(request, reciter, surah)
       : loadSqlite(reciter, surah);
   if (!data) return NextResponse.json({ error: "Recitation unavailable" }, { status: 404 });
 
