@@ -30,29 +30,34 @@ export type QuranSearchResult = {
   lineEnd: number;
 };
 
-const publicPath = (...parts: string[]) => path.join(process.cwd(), "public", ...parts);
+const HAFS_SMART_FILE = path.join(process.cwd(), "public", "hafs_smart.json");
+const QURAN_DATA_DIR = path.join(process.cwd(), "public", "data");
+const SURAH_DATA_DIR = path.join(QURAN_DATA_DIR, "surah");
+const SURAH_METADATA_FILE = path.join(QURAN_DATA_DIR, "metadata.json");
+const RECITERS_FILE = path.join(QURAN_DATA_DIR, "quranMp3.json");
+const RADIOS_FILE = path.join(QURAN_DATA_DIR, "radios.json");
 let hafsSmartData: Promise<HafsSmartAyah[]> | undefined;
 
-async function readJson<T>(...parts: string[]): Promise<T> {
-  return JSON.parse(await readFile(publicPath(...parts), "utf8")) as T;
+async function readJson<T>(filePath: string): Promise<T> {
+  return JSON.parse(await readFile(filePath, "utf8")) as T;
 }
 
 function getHafsSmartAyahs() {
-  hafsSmartData ??= readJson<HafsSmartAyah[]>("hafs_smart.json");
+  hafsSmartData ??= readJson<HafsSmartAyah[]>(HAFS_SMART_FILE);
   return hafsSmartData;
 }
 
-export const getSurahs = () => readJson<SurahMeta[]>("data", "metadata.json");
+export const getSurahs = () => readJson<SurahMeta[]>(SURAH_METADATA_FILE);
 
 export async function getSurah(id: number) {
   if (!Number.isInteger(id) || id < 1 || id > 114) return null;
-  return readJson<Surah>("data", "surah", `surah_${id}.json`);
+  return readJson<Surah>(path.join(SURAH_DATA_DIR, `surah_${id}.json`));
 }
 
-export const getReciters = () => readJson<Reciter[]>("data", "quranMp3.json");
+export const getReciters = () => readJson<Reciter[]>(RECITERS_FILE);
 
 export async function getRadios() {
-  return (await readJson<{ radios: Radio[] }>("data", "radios.json")).radios;
+  return (await readJson<{ radios: Radio[] }>(RADIOS_FILE)).radios;
 }
 
 export async function getPage(page: number) {

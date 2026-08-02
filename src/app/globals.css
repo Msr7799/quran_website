@@ -1877,17 +1877,22 @@ body:has(.book-viewer) .basmala-header img { width: min(340px, 45vw); height: 82
 .mushaf-player-minimize:hover { color: #fff; background: #ffffff16; }.mushaf-player-minimize svg { width: 15px; }
 .mushaf-audio-controls { display: flex; align-items: center; justify-content: center; gap: 10px; direction: ltr; }
 .mushaf-audio-controls button { width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid #46504c; border-radius: 50%; color: #e9f0ec; background: #252c29; }
+.mushaf-audio-download { width: 34px; height: 34px; display: grid; place-items: center; flex: 0 0 34px; border: 1px solid #46504c; border-radius: 8px; color: #e9f0ec; background: #252c29; text-decoration: none; }
+.mushaf-audio-download:hover { color: #111; border-color: var(--brand); background: var(--brand); }
+.mushaf-audio-download[aria-disabled="true"] { opacity: .45; pointer-events: none; }
+.mushaf-audio-download svg { width: 19px; }
 .mushaf-audio-controls button.main { width: 40px; height: 40px; color: #111; background: var(--brand); }
 .mushaf-audio-controls button:disabled { opacity: .45; }.mushaf-audio-controls svg { width: 19px; }
 .mushaf-audio-timeline { display: grid; grid-template-columns: auto minmax(0,1fr) auto; align-items: center; gap: 6px; direction: ltr; font-size: .66rem; line-height: 1; color: #c5cfca; }
 .mushaf-audio-timeline input { width: 100%; accent-color: var(--brand); }
-.mushaf-mini-player { position: absolute; z-index: 7; left: 268px; width: 400px; height: 46px; padding: 4px 6px; display: flex; align-items: center; gap: 6px; direction: ltr; border: 1px solid #3d4541; border-radius: 10px; background: #202522; box-shadow: 0 8px 24px #0005; }
+.mushaf-mini-player { position: absolute; z-index: 7; left: 268px; width: 440px; height: 46px; padding: 4px 6px; display: flex; align-items: center; gap: 6px; direction: ltr; border: 1px solid #3d4541; border-radius: 10px; background: #202522; box-shadow: 0 8px 24px #0005; }
 .mushaf-mini-player .site-dropdown-trigger { position: relative; width: 210px; min-width: 210px; flex: 0 0 210px; min-height: 36px; padding: 5px 10px 5px 36px; overflow: hidden; direction: rtl; color: #fff; background: #29302d; border-color: #414a46; border-radius: 8px; }
 .mushaf-mini-player .site-dropdown-trigger span { width: 100%; overflow: hidden; text-align: right; text-overflow: ellipsis; white-space: nowrap; }
 .mushaf-mini-player .site-dropdown-trigger > svg { position: absolute; left: 10px; right: auto; }
 .mushaf-mini-time { flex: 0 0 auto; direction: ltr; white-space: nowrap; color: #cbd3cf; font-size: .68rem; font-variant-numeric: tabular-nums; }
 .viewer-toolbar .mushaf-mini-player > button:not(.site-dropdown-trigger) { width: 34px; height: 34px; flex: 0 0 34px; border-radius: 50%; border-color: #46504c; background: #252c29; }
 .viewer-toolbar .mushaf-mini-player > button.mushaf-mini-play:not(.site-dropdown-trigger) { color: #111; background: var(--brand); border-color: color-mix(in srgb,var(--brand) 70%,#fff); }
+.viewer-toolbar .mushaf-mini-player > .mushaf-audio-download { border-radius: 7px; }
 .mushaf-mini-player button:disabled { opacity: .45; cursor: not-allowed; }
 @media (max-width: 1639px) and (min-width: 781px) {
   .mushaf-mini-player { position: fixed; left: 50%; top: auto; bottom: 12px; width: min(430px,calc(100vw - 24px)); min-width: 0; translate: -50% 0; }

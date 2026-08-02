@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion, useDragControls } from "motion/react";
 import type { PDFDocumentProxy, RenderTask } from "pdfjs-dist";
-import { ChevronLeft, ChevronRight, GripHorizontal, LoaderCircle, Maximize, Minimize, Minus, Pause, Play, Plus, RotateCcw, RotateCw, Volume2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Download, GripHorizontal, LoaderCircle, Maximize, Minimize, Minus, Pause, Play, Plus, RotateCcw, RotateCw, Volume2 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { SelectDropdown } from "@/components/ui/dropdown-menu";
 import { useLocale } from "@/i18n/LocaleProvider";
@@ -144,6 +144,8 @@ export function MushafViewer({ page }: { page: number }) {
   const quality = Math.round(1100 * Math.max(1, zoom / 100));
   const selectedReciter = audioReciters.find((item) => String(item.id) === reciter) ?? audioReciters[0];
   const audioUrl = selectedReciter?.link;
+  const downloadUrl = selectedSurah && selectedReciter ? `/api/audio-download/${selectedSurah}/${selectedReciter.id}` : undefined;
+  const downloadLabel = locale === "ar" ? "تحميل التلاوة" : "Download recitation";
   const reciterOptions = audioReciters.map((item) => ({
     value: String(item.id),
     label: locale === "ar" ? item.reciter.ar : item.reciter.en,
@@ -212,6 +214,7 @@ export function MushafViewer({ page }: { page: number }) {
         <SelectDropdown value={reciter} ariaLabel="اختر القارئ" options={reciterOptions} onValueChange={changeReciter} />
         <span className="mushaf-mini-time number-font" aria-label="توقيت التشغيل">{clock(audioTime)} / {clock(audioDuration)}</span>
         <button className="mushaf-mini-play" type="button" onClick={() => void toggleAudio()} disabled={!audioUrl || audioLoading} aria-label={playing ? "إيقاف مؤقت" : "تشغيل"}>{audioLoading ? <LoaderCircle className="spin" /> : playing ? <Pause /> : <Play />}</button>
+        <a className="mushaf-audio-download" href={downloadUrl} aria-disabled={!downloadUrl} aria-label={downloadLabel} title={downloadLabel}><Download /></a>
         <button type="button" onClick={() => setPlayerSize(false)} aria-label="تكبير مشغل التلاوة" title="تكبير المشغل"><Maximize /></button>
       </div>}
       <div className="surah-jump"><span>{labels.jump}</span><SelectDropdown value={String(selectedSurah)} placeholder={t("ui.chooseSurah", "اختر السورة")} ariaLabel={labels.jump} options={surahs.map((surah) => ({ value: String(surah.number), label: `${surah.number}. ${surah.name}`, searchText: `${surah.number} ${surah.name}` }))} onValueChange={(value) => { const surah = surahs.find((item) => item.number === Number(value)); if (surah) { setChosenSurah(surah.number); go(surah.page, true); } }} /></div>
@@ -251,6 +254,7 @@ export function MushafViewer({ page }: { page: number }) {
         <button type="button" onClick={() => { if (audio.current) audio.current.currentTime = Math.max(0, audio.current.currentTime - 10); }} aria-label="رجوع عشر ثوان"><RotateCcw /></button>
         <button className="main" type="button" onClick={() => void toggleAudio()} disabled={!audioUrl || audioLoading} aria-label={playing ? "إيقاف مؤقت" : "تشغيل"}>{audioLoading ? <LoaderCircle className="spin" /> : playing ? <Pause /> : <Play />}</button>
         <button type="button" onClick={() => { if (audio.current) audio.current.currentTime = Math.min(audio.current.duration || 0, audio.current.currentTime + 10); }} aria-label="تقديم عشر ثوان"><RotateCw /></button>
+        <a className="mushaf-audio-download" href={downloadUrl} aria-disabled={!downloadUrl} aria-label={downloadLabel} title={downloadLabel}><Download /></a>
         <Volume2 />
       </div>
       <div className="mushaf-audio-timeline number-font"><span>{clock(audioTime)}</span><input type="range" min="0" max={audioDuration || 0} step="0.1" value={audioTime} onChange={(event) => { const value = Number(event.target.value); if (audio.current) audio.current.currentTime = value; setAudioTime(value); }} aria-label="توقيت التلاوة" /><span>{clock(audioDuration)}</span></div>
