@@ -2,6 +2,7 @@ import { HeroCarousel } from "@/components/HeroCarousel";
 import { HomeContent } from "@/components/HomeContent";
 import { getAzkar, getCollections, getSurahs } from "@/lib/quran";
 import { getHeroMedia } from "@/lib/hero-media";
+import { getYouTubeHomeContent } from "@/lib/youtube";
 import { connection } from "next/server";
 
 type AzkarFile = { data: Array<{ id: number; category: string; zekr: string; reference: string }> };
@@ -22,9 +23,9 @@ async function loadHomeData() {
 export default async function Home() {
   // Read live content after deployment so MongoDB and Cloudinary updates appear without rebuilding.
   await connection();
-  const [surahs, content, heroMedia] = await Promise.all([getSurahs(), loadHomeData(), getHeroMedia()]);
+  const [surahs, content, heroMedia, youtubeContent] = await Promise.all([getSurahs(), loadHomeData(), getHeroMedia(), getYouTubeHomeContent()]);
   return <>
     <HeroCarousel desktopMedia={heroMedia.desktop} mobileMedia={heroMedia.mobile} />
-    <HomeContent surahs={surahs} azkar={content.azkar} collections={content.collections} />
+    <HomeContent surahs={surahs} azkar={content.azkar} collections={content.collections} youtubeContent={youtubeContent} />
   </>;
 }

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { cloudinaryAsset } from "@/lib/cloudinary-assets";
 import type { ComponentType } from "react";
-import { Bot, CalendarDays, Headphones, Home, Info, Radio } from "lucide-react";
+import { Bot, CalendarDays, Headphones, Home, Info, Radio, Video } from "lucide-react";
 
 type IconComponent = ComponentType<{ className?: string }>;
 const assetIcon = (src: string, alt: string): IconComponent => function AssetIcon({ className }) {
@@ -22,6 +22,7 @@ export const navigation: NavItem[] = [
   { href: "/quran-sound", label: "الاستماع", translationKey: "navigation.quranSound", icon: Headphones },
   { href: "/quran-pdf", label: "المصحف PDF", translationKey: "navigation.quranPDF", icon: BooksPdfIcon },
   { href: "/live", label: "البث المباشر", translationKey: "navigation.live", icon: Radio },
+  { href: "/youtube", label: "محتوى اليوتيوب", translationKey: "youtube.navigation", icon: Video },
   { href: "/calendar", label: "التقويم الهجري والميلادي", translationKey: "navigation.calendar", icon: CalendarDays },
   { href: "/search", label: "البحث في القرآن", translationKey: "navigation.quranSearch", icon: ResearchIcon },
   { href: "/chat-bot", label: "المساعد الإسلامي", translationKey: "navigation.chatBot", icon: Bot },

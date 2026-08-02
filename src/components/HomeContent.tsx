@@ -5,9 +5,11 @@ import { ArrowLeft } from "lucide-react";
 import { AzkarCarousel } from "@/components/AzkarCarousel";
 import { CollectionsCarousel } from "@/components/CollectionsCarousel";
 import { SurahGrid } from "@/components/SurahGrid";
+import { YouTubeShowcase } from "@/components/YouTubeShowcase";
 import { navigation } from "@/components/icons";
 import { useLocale } from "@/i18n/LocaleProvider";
 import type { SurahMeta } from "@/lib/types";
+import type { YouTubeHomeContent } from "@/lib/youtube-types";
 
 type Zekr = { id: number; category: string; zekr: string; reference: string };
 type Collection = { bookNumber: number; bookName: string; aboutBook: string; parts_count: number };
@@ -25,7 +27,7 @@ const featureDescriptionKeys: Record<string, string> = {
 
 const features = navigation.filter((item) => featureDescriptionKeys[item.href]);
 
-export function HomeContent({ surahs, azkar, collections }: { surahs: SurahMeta[]; azkar: Zekr[]; collections: Collection[] }) {
+export function HomeContent({ surahs, azkar, collections, youtubeContent }: { surahs: SurahMeta[]; azkar: Zekr[]; collections: Collection[]; youtubeContent: YouTubeHomeContent | null }) {
   const { t } = useLocale();
 
   return <>
@@ -52,6 +54,7 @@ export function HomeContent({ surahs, azkar, collections }: { surahs: SurahMeta[
       </div>
       <div className="home-data-columns"><AzkarCarousel items={azkar} /><CollectionsCarousel items={collections} /></div>
     </section>
+    {youtubeContent && <YouTubeShowcase content={youtubeContent} compact />}
     <section className="section muted-section">
       <div className="section-heading home-arabic-heading">
         <span className="eyebrow">{t("ui.index", "فهرس القرآن الكريم")}</span>

@@ -21,6 +21,7 @@ export function Footer() {
   ];
   const siteLinks = [
     { href: "/live", label: t("footer.live") },
+    { href: "/youtube", label: t("youtube.navigation", "محتوى اليوتيوب") },
     { href: "/calendar", label: t("footer.calendar") },
     { href: "/chat-bot", label: t("footer.noor") },
     { href: "/quran-reader", label: t("footer.reader") },

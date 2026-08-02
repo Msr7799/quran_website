@@ -11,6 +11,9 @@ const nextConfig: NextConfig = {
         hostname: "res.cloudinary.com",
         pathname: `/${process.env.CLOUDINARY_CLOUD_NAME}/**`,
       },
+      { protocol: "https", hostname: "i.ytimg.com" },
+      { protocol: "https", hostname: "yt3.ggpht.com" },
+      { protocol: "https", hostname: "yt3.googleusercontent.com" },
     ],
   },
 };

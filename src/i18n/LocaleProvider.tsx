@@ -9,6 +9,7 @@ import { uiTranslations } from "./uiTranslations";
 import { footerLiveTranslations } from "./footerLiveTranslations";
 import { aiTranslations } from "./aiTranslations";
 import { tafsirTranslations } from "./tafsirTranslations";
+import { youtubeTranslations } from "./youtubeTranslations";
 
 export const localeInfo = {
   ar: { native: "العربية", english: "Arabic", flag: "🇸🇦", dir: "rtl" }, en: { native: "English", english: "English", flag: "🇬🇧", dir: "ltr" }, tr: { native: "Türkçe", english: "Turkish", flag: "🇹🇷", dir: "ltr" }, hi: { native: "हिन्दी", english: "Hindi", flag: "🇮🇳", dir: "ltr" }, ur: { native: "اردو", english: "Urdu", flag: "🇵🇰", dir: "rtl" }, ru: { native: "Русский", english: "Russian", flag: "🇷🇺", dir: "ltr" }, es: { native: "Español", english: "Spanish", flag: "🇪🇸", dir: "ltr" }, fr: { native: "Français", english: "French", flag: "🇫🇷", dir: "ltr" }, de: { native: "Deutsch", english: "German", flag: "🇩🇪", dir: "ltr" }, it: { native: "Italiano", english: "Italian", flag: "🇮🇹", dir: "ltr" }, pt: { native: "Português", english: "Portuguese", flag: "🇧🇷", dir: "ltr" }, zh: { native: "中文", english: "Chinese", flag: "🇨🇳", dir: "ltr" }, ja: { native: "日本語", english: "Japanese", flag: "🇯🇵", dir: "ltr" }, ko: { native: "한국어", english: "Korean", flag: "🇰🇷", dir: "ltr" }, id: { native: "Bahasa Indonesia", english: "Indonesian", flag: "🇮🇩", dir: "ltr" },
@@ -32,6 +33,7 @@ const messages = Object.fromEntries(Object.entries(sourceMessages).map(([locale,
     live: content.live,
     ai: aiTranslations[locale as Locale],
     tafsir: tafsirTranslations[locale as Locale],
+    youtube: youtubeTranslations[locale as Locale],
   })];
 })) as Record<Locale, Messages>;
 function flatten(source: Messages, prefix = "", output: Record<string, string> = {}) { for (const [key, value] of Object.entries(source)) { const path = prefix ? `${prefix}.${key}` : key; if (typeof value === "string") output[path] = value; else if (value && typeof value === "object") flatten(value as Messages, path, output); } return output; }
