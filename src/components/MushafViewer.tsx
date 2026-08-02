@@ -7,12 +7,18 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { SelectDropdown } from "@/components/ui/dropdown-menu";
 import { useLocale } from "@/i18n/LocaleProvider";
 import type { Locale } from "@/i18n/LocaleProvider";
-import { synchronizedReciters } from "@/lib/reciters";
 
 const mushaf = { url: "/Quran_Tafseel-Mawdo_text.pdf", first: 7, last: 610 } as const;
 const playerStateKey = "mushaf-player-minimized";
+const defaultReciterId = "101";
 type SurahOption = { number: number; name: string; page: number };
-type AudioData = { audioUrl: string; duration: number; segments: { ayah: number; page: number; timestamp_from: number; timestamp_to: number }[] };
+type AudioReciter = {
+  id: number;
+  reciter: { ar: string; en: string };
+  rewaya: { ar: string; en: string };
+  server: string;
+  link: string;
+};
 
 function clock(value: number) {
   if (!Number.isFinite(value)) return "0:00";
@@ -77,8 +83,9 @@ export function MushafViewer({ page }: { page: number }) {
   const [surahs, setSurahs] = useState<SurahOption[]>([]);
   const [chosenSurah, setChosenSurah] = useState<number | null>(null);
   const audio = useRef<HTMLAudioElement>(null);
-  const [reciter, setReciter] = useState("maher-al-muaiqly");
-  const [audioData, setAudioData] = useState<AudioData | null>(null);
+  const [reciter, setReciter] = useState(defaultReciterId);
+  const [audioReciters, setAudioReciters] = useState<AudioReciter[]>([]);
+  const [audioDuration, setAudioDuration] = useState(0);
   const [audioLoading, setAudioLoading] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [audioTime, setAudioTime] = useState(0);
@@ -135,13 +142,25 @@ export function MushafViewer({ page }: { page: number }) {
   const selectedSurah = chosenSurah ?? [...surahs].reverse().find((surah) => surah.page <= current)?.number ?? "";
   const spreadStart = current === 1 ? 1 : current % 2 === 0 ? current : current - 1;
   const quality = Math.round(1100 * Math.max(1, zoom / 100));
-  const selectedReciter = synchronizedReciters.find((item) => item.id === reciter) ?? synchronizedReciters[0];
-  const reciterOptions = synchronizedReciters.map((item) => ({ value: item.id, label: locale === "ar" ? item.ar : item.en, searchText: `${item.ar} ${item.en}` }));
+  const selectedReciter = audioReciters.find((item) => String(item.id) === reciter) ?? audioReciters[0];
+  const audioUrl = selectedReciter?.link;
+  const reciterOptions = audioReciters.map((item) => ({
+    value: String(item.id),
+    label: locale === "ar" ? item.reciter.ar : item.reciter.en,
+    searchText: `${item.reciter.ar} ${item.reciter.en} ${item.rewaya.ar} ${item.rewaya.en}`,
+  }));
   const step = () => window.matchMedia("(min-width: 781px)").matches ? 2 : 1;
   const toggleFullscreen = async () => fullscreen ? document.exitFullscreen() : viewer.current?.requestFullscreen();
   const setPlayerSize = (minimized: boolean) => {
     setPlayerMinimized(minimized);
     try { window.localStorage.setItem(playerStateKey, String(minimized)); } catch { /* The player still works without persistence. */ }
+  };
+  const changeReciter = (value: string) => {
+    audio.current?.pause();
+    setPlaying(false);
+    setAudioTime(0);
+    setAudioDuration(0);
+    setReciter(value);
   };
 
   useEffect(() => {
@@ -150,41 +169,27 @@ export function MushafViewer({ page }: { page: number }) {
     void (async () => {
       await Promise.resolve();
       if (controller.signal.aborted) return;
-      setAudioLoading(true); setPlaying(false); setAudioTime(0); setAudioData(null);
+      audio.current?.pause();
+      setAudioLoading(true); setPlaying(false); setAudioTime(0); setAudioDuration(0); setAudioReciters([]);
       try {
-        const response = await fetch(`/api/recitation/${reciter}/${selectedSurah}`, { signal: controller.signal });
+        const response = await fetch(`/data/audio/audio_surah_${selectedSurah}.json`, { signal: controller.signal });
         if (!response.ok) throw new Error("recitation");
-        setAudioData(await response.json() as AudioData);
+        const items = await response.json() as AudioReciter[];
+        setAudioReciters(items);
+        setReciter((currentReciter) => items.some((item) => String(item.id) === currentReciter) ? currentReciter : String(items[0]?.id ?? ""));
       } catch (reason) {
-        if (!(reason instanceof DOMException && reason.name === "AbortError")) setAudioData(null);
+        if (!(reason instanceof DOMException && reason.name === "AbortError")) setAudioReciters([]);
       } finally {
         if (!controller.signal.aborted) setAudioLoading(false);
       }
     })();
     return () => controller.abort();
-  }, [reciter, selectedSurah]);
-
-  const updateAudio = () => {
-    const element = audio.current;
-    if (!element || !audioData) return;
-    setAudioTime(element.currentTime);
-    const milliseconds = element.currentTime * 1000;
-    const segment = audioData.segments.find((item) => milliseconds >= item.timestamp_from && milliseconds < item.timestamp_to);
-    if (!segment) return;
-    const pdfPage = segment.page + 6;
-    const visibleStart = current === 1 ? 1 : current % 2 === 0 ? current : current - 1;
-    const visibleEnd = window.matchMedia("(min-width: 781px)").matches ? visibleStart + 1 : current;
-    if (pdfPage < visibleStart || pdfPage > visibleEnd) go(pdfPage, true);
-  };
+  }, [selectedSurah]);
 
   const toggleAudio = async () => {
     const element = audio.current;
-    if (!element || !audioData) return;
+    if (!element || !audioUrl) return;
     if (!element.paused) { element.pause(); return; }
-    if (element.currentTime < .1) {
-      const start = audioData.segments.find((item) => item.page + 6 >= current && item.page + 6 <= current + step() - 1);
-      if (start) element.currentTime = start.timestamp_from / 1000;
-    }
     await element.play();
   };
 
@@ -204,9 +209,9 @@ export function MushafViewer({ page }: { page: number }) {
         <button title="الصفحة السابقة" aria-label="الصفحة السابقة" disabled={current <= mushaf.first} onClick={() => go(current - step())}><ChevronRight /></button>
       </div>
       {playerMinimized && <div className="mushaf-mini-player" aria-label="مشغل التلاوة المصغر">
-        <SelectDropdown value={reciter} ariaLabel="اختر القارئ" options={reciterOptions} onValueChange={setReciter} />
-        <span className="mushaf-mini-time number-font" aria-label="توقيت التشغيل">{clock(audioTime)} / {clock(audioData?.duration || 0)}</span>
-        <button className="mushaf-mini-play" type="button" onClick={() => void toggleAudio()} disabled={!audioData || audioLoading} aria-label={playing ? "إيقاف مؤقت" : "تشغيل"}>{audioLoading ? <LoaderCircle className="spin" /> : playing ? <Pause /> : <Play />}</button>
+        <SelectDropdown value={reciter} ariaLabel="اختر القارئ" options={reciterOptions} onValueChange={changeReciter} />
+        <span className="mushaf-mini-time number-font" aria-label="توقيت التشغيل">{clock(audioTime)} / {clock(audioDuration)}</span>
+        <button className="mushaf-mini-play" type="button" onClick={() => void toggleAudio()} disabled={!audioUrl || audioLoading} aria-label={playing ? "إيقاف مؤقت" : "تشغيل"}>{audioLoading ? <LoaderCircle className="spin" /> : playing ? <Pause /> : <Play />}</button>
         <button type="button" onClick={() => setPlayerSize(false)} aria-label="تكبير مشغل التلاوة" title="تكبير المشغل"><Maximize /></button>
       </div>}
       <div className="surah-jump"><span>{labels.jump}</span><SelectDropdown value={String(selectedSurah)} placeholder={t("ui.chooseSurah", "اختر السورة")} ariaLabel={labels.jump} options={surahs.map((surah) => ({ value: String(surah.number), label: `${surah.number}. ${surah.name}`, searchText: `${surah.number} ${surah.name}` }))} onValueChange={(value) => { const surah = surahs.find((item) => item.number === Number(value)); if (surah) { setChosenSurah(surah.number); go(surah.page, true); } }} /></div>
@@ -241,16 +246,16 @@ export function MushafViewer({ page }: { page: number }) {
         <button className="mushaf-player-handle" type="button" onPointerDown={(event) => playerDrag.start(event)} aria-label="اسحب لتحريك مشغل التلاوة"><GripHorizontal /><span>حرّك المشغل</span></button>
         <button className="mushaf-player-minimize" type="button" onClick={() => setPlayerSize(true)} aria-label="تصغير مشغل التلاوة" title="تصغير المشغل"><Minimize /></button>
       </div>
-      <SelectDropdown value={reciter} ariaLabel="اختر القارئ" options={reciterOptions} onValueChange={setReciter} />
+      <SelectDropdown value={reciter} ariaLabel="اختر القارئ" options={reciterOptions} onValueChange={changeReciter} />
       <div className="mushaf-audio-controls number-font">
         <button type="button" onClick={() => { if (audio.current) audio.current.currentTime = Math.max(0, audio.current.currentTime - 10); }} aria-label="رجوع عشر ثوان"><RotateCcw /></button>
-        <button className="main" type="button" onClick={() => void toggleAudio()} disabled={!audioData || audioLoading} aria-label={playing ? "إيقاف مؤقت" : "تشغيل"}>{audioLoading ? <LoaderCircle className="spin" /> : playing ? <Pause /> : <Play />}</button>
+        <button className="main" type="button" onClick={() => void toggleAudio()} disabled={!audioUrl || audioLoading} aria-label={playing ? "إيقاف مؤقت" : "تشغيل"}>{audioLoading ? <LoaderCircle className="spin" /> : playing ? <Pause /> : <Play />}</button>
         <button type="button" onClick={() => { if (audio.current) audio.current.currentTime = Math.min(audio.current.duration || 0, audio.current.currentTime + 10); }} aria-label="تقديم عشر ثوان"><RotateCw /></button>
         <Volume2 />
       </div>
-      <div className="mushaf-audio-timeline number-font"><span>{clock(audioTime)}</span><input type="range" min="0" max={audioData?.duration || 0} step="0.1" value={audioTime} onChange={(event) => { const value = Number(event.target.value); if (audio.current) audio.current.currentTime = value; setAudioTime(value); }} aria-label="توقيت التلاوة" /><span>{clock(audioData?.duration || 0)}</span></div>
+      <div className="mushaf-audio-timeline number-font"><span>{clock(audioTime)}</span><input type="range" min="0" max={audioDuration || 0} step="0.1" value={audioTime} onChange={(event) => { const value = Number(event.target.value); if (audio.current) audio.current.currentTime = value; setAudioTime(value); }} aria-label="توقيت التلاوة" /><span>{clock(audioDuration)}</span></div>
     </motion.aside>}
-    <audio ref={audio} src={audioData?.audioUrl} onTimeUpdate={updateAudio} onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} onEnded={() => setPlaying(false)} preload="metadata" aria-label={`تلاوة بصوت ${locale === "ar" ? selectedReciter.ar : selectedReciter.en}`} />
+    <audio ref={audio} src={audioUrl} onLoadedMetadata={(event) => setAudioDuration(event.currentTarget.duration)} onTimeUpdate={(event) => setAudioTime(event.currentTarget.currentTime)} onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} onEnded={() => setPlaying(false)} preload="metadata" aria-label={`تلاوة بصوت ${selectedReciter ? (locale === "ar" ? selectedReciter.reciter.ar : selectedReciter.reciter.en) : ""}`} />
 
   </div>;
 }

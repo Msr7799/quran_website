@@ -29,6 +29,7 @@
 .choiceList button > span:nth-child(2) { min-width: 0; }
 .choiceList strong,.choiceList small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .choiceList strong { font-size: .93rem; }
+.selectionPanel[aria-labelledby="surah-list-title"] .choiceList strong { font-family: Uthmanic, serif; }
 .choiceList small { margin-top: 2px; color: var(--muted); font-size: .72rem; }
 .choiceList i { color: var(--brand); font-style: normal; font-weight: 800; }
 .choiceIcon,.surahNumber { width: 36px; height: 36px; display: grid!important; place-items: center; color: var(--brand); background: var(--bg); border: 1px solid var(--line); border-radius: 50%; }
@@ -48,6 +49,7 @@
 .nowPlaying span { min-width: 0; }
 .nowPlaying strong,.nowPlaying small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .nowPlaying small { margin-top: 2px; color: #9ba5ad; }
+.nowPlaying small { font-family: Uthmanic, serif; }
 .nowPlaying button { width: 32px; height: 32px; display: grid; place-items: center; padding: 0; color: #aeb6bc; background: #272c30; border: 0; border-radius: 50%; cursor: pointer; }
 .nowPlaying svg { width: 16px; }
 .progress,.volumeControl input { width: 100%; accent-color: #2f93f5; }

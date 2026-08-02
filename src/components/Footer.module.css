@@ -79,7 +79,7 @@
   border-top: 1px solid var(--line);
 }
 
-.about h2 { margin: 0 0 10px; color: var(--brand); font-family: Uthmanic, serif; font-size: 2rem; }
+.about h2 { margin: 0 0 10px; color: var(--brand); font-family: inherit; font-size: 2rem; }
 .about p { max-width: 620px; margin: 7px 0; color: var(--muted); line-height: 2; }
 .socialLinks { display: flex; gap: 10px; margin-top: 20px; }
 .socialLinks a {

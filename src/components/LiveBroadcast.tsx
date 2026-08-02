@@ -16,7 +16,11 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { SelectDropdown } from "@/components/ui/dropdown-menu";
 import { useLocale } from "@/i18n/LocaleProvider";
-import { liveSunnahChannelTranslations } from "@/i18n/footerLiveTranslations";
+import {
+  liveSaudiChannelTranslations,
+  liveSports1ChannelTranslations,
+  liveSunnahChannelTranslations,
+} from "@/i18n/footerLiveTranslations";
 import type { Radio as RadioType } from "@/lib/types";
 import styles from "./LiveBroadcast.module.css";
 
@@ -25,7 +29,9 @@ export function LiveBroadcast({ radios }: { radios: RadioType[] }) {
   const channels = [
     { id: 1, type: "hls" as const, name: t("live.primary") },
     { id: 2, type: "hls" as const, name: liveSunnahChannelTranslations[locale] },
-    { id: 3, type: "youtube" as const, name: t("live.backup"), url: "https://www.youtube.com/embed/CmppEPGps1w?autoplay=1&mute=0" },
+    { id: 3, type: "hls" as const, name: liveSports1ChannelTranslations[locale] },
+    { id: 4, type: "hls" as const, name: liveSaudiChannelTranslations[locale] },
+    { id: 5, type: "youtube" as const, name: t("live.backup"), url: "https://www.youtube.com/embed/CmppEPGps1w?autoplay=1&mute=0" },
   ];
   const [channelId, setChannelId] = useState(1);
   const [videoLoading, setVideoLoading] = useState(true);
@@ -51,7 +57,15 @@ export function LiveBroadcast({ radios }: { radios: RadioType[] }) {
 
   useEffect(() => {
     const video = videoRef.current;
-    const streamChannel = channelId === 1 ? "quran" : channelId === 2 ? "sunnah" : null;
+    const streamChannel = channelId === 1
+      ? "quran"
+      : channelId === 2
+        ? "sunnah"
+        : channelId === 3
+          ? "sports1"
+          : channelId === 4
+            ? "saudi"
+            : null;
     if (!streamChannel || !video) return;
     let disposed = false;
     let retries = 0;
