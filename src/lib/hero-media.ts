@@ -1,53 +1,25 @@
-import { readdir, stat } from "node:fs/promises";
-import path from "node:path";
+import "server-only";
+import { cloudinaryAsset } from "./cloudinary-assets";
+import { getDatabase } from "./mongodb";
 
-const HERO_DIRECTORY = path.join(process.cwd(), "public", "images", "heroes");
-const SUPPORTED_EXTENSIONS = "(?:mp4|png|jpe?g|webp)";
-const desktopName = new RegExp(`^hero(?:-?(\\d+))?\\.${SUPPORTED_EXTENSIONS}$`, "i");
-const mobileName = new RegExp(`^mobile-hero(?:-?(\\d+))?\\.${SUPPORTED_EXTENSIONS}$`, "i");
+const desktopName = /^images\/heroes\/hero(?:-?(\d+))?\.(?:mp4|png|jpe?g|webp)$/i;
+const mobileName = /^images\/heroes\/mobile-hero(?:-?(\d+))?\.(?:mp4|png|jpe?g|webp)$/i;
 
-type HeroFile = { name: string; order: number };
+type MediaAsset = { _id: string; publicPath: string };
 
-function matchHeroFile(name: string, pattern: RegExp): HeroFile | null {
-  const match = name.match(pattern);
-  if (!match) return null;
-
-  return {
-    name,
-    // The unnumbered file (hero/mobile-hero) always comes first.
-    order: match[1] === undefined ? -1 : Number(match[1]),
-  };
-}
-
-function sortHeroFiles(files: HeroFile[]) {
-  return files.sort((first, second) =>
-    first.order - second.order ||
-    first.name.localeCompare(second.name, "en", { numeric: true, sensitivity: "base" }),
-  );
+function collect(paths: string[], pattern: RegExp) {
+  return paths.flatMap((publicPath) => {
+    const match = publicPath.match(pattern);
+    return match ? [{ publicPath, order: match[1] === undefined ? -1 : Number(match[1]) }] : [];
+  }).sort((first, second) => first.order - second.order || first.publicPath.localeCompare(second.publicPath, "en", { numeric: true }))
+    .map((item) => cloudinaryAsset(item.publicPath));
 }
 
 export async function getHeroMedia() {
-  const entries = await readdir(HERO_DIRECTORY, { withFileTypes: true });
-  const fileNames = entries.filter((entry) => entry.isFile()).map((entry) => entry.name);
-  const toPublicUrl = async (file: HeroFile) => {
-    const details = await stat(path.join(HERO_DIRECTORY, file.name));
-    const version = `${Math.trunc(details.mtimeMs)}-${details.size}`;
-    return `/images/heroes/${file.name}?v=${version}`;
-  };
-  const collect = (pattern: RegExp) => Promise.all(sortHeroFiles(
-    fileNames.flatMap((name) => {
-      const file = matchHeroFile(name, pattern);
-      return file ? [file] : [];
-    }),
-  ).map(toPublicUrl));
-
-  const [desktop, mobile] = await Promise.all([
-    collect(desktopName),
-    collect(mobileName),
-  ]);
-
-  return {
-    desktop,
-    mobile,
-  };
+  const database = await getDatabase();
+  const assets = await database.collection<MediaAsset>("media_assets")
+    .find({ publicPath: { $regex: "^images/heroes/" } }, { projection: { publicPath: 1 } })
+    .toArray();
+  const paths = assets.map((asset) => asset.publicPath);
+  return { desktop: collect(paths, desktopName), mobile: collect(paths, mobileName) };
 }

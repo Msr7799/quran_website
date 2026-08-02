@@ -6,13 +6,17 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "migrate:content": "node scripts/migrate-content.mjs"
   },
   "dependencies": {
     "@google/genai": "^2.12.0",
+    "@next/env": "^16.2.12",
     "@radix-ui/react-dropdown-menu": "^2.1.20",
+    "cloudinary": "^2.10.0",
     "hls.js": "^1.6.16",
     "lucide-react": "^1.25.0",
+    "mongodb": "^7.5.0",
     "motion": "^12.42.2",
     "next": "16.2.10",
     "next-intl": "^4.13.2",

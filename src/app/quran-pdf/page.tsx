@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { IslamicLibrary } from "@/components/IslamicLibrary";
+import { getLibraryBooks } from "@/lib/quran";
 
 export const metadata: Metadata = {
   title: "المكتبة الإلكترونية للمصاحف والكتب",
@@ -7,6 +8,6 @@ export const metadata: Metadata = {
     "تحميل المصاحف الشريفة والكتب الإسلامية بصيغة PDF بروابط مباشرة.",
   alternates: { canonical: "/quran-pdf" },
 };
-export default function PdfLibraryPage() {
-  return <IslamicLibrary />;
+export default async function PdfLibraryPage() {
+  return <IslamicLibrary booksPayload={await getLibraryBooks()} />;
 }

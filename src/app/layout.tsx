@@ -4,6 +4,7 @@ import { Footer } from "@/components/Footer";
 import { FloatingTools } from "@/components/FloatingTools";
 import { Header } from "@/components/Header";
 import { LocaleProvider } from "@/i18n/LocaleProvider";
+import { cloudinaryAsset } from "@/lib/cloudinary-assets";
 import "./globals.css";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://alquran-almajeed.vercel.app";
@@ -27,12 +28,12 @@ export const metadata: Metadata = {
     siteName: "القرآن المجيد",
     title,
     description,
-    images: [{ url: "/images/social-card.png", width: 1200, height: 630, alt: "القرآن المجيد" }],
+    images: [{ url: cloudinaryAsset("/images/social-card.png"), width: 1200, height: 630, alt: "القرآن المجيد" }],
   },
-  twitter: { card: "summary_large_image", title, description, images: ["/images/social-card.png"] },
+  twitter: { card: "summary_large_image", title, description, images: [cloudinaryAsset("/images/social-card.png")] },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 } },
   manifest: "/manifest.webmanifest",
-  icons: { icon: "/alf.png", shortcut: "/alf.png", apple: "/alf.png" },
+  icons: { icon: cloudinaryAsset("/alf.png"), shortcut: cloudinaryAsset("/alf.png"), apple: cloudinaryAsset("/alf.png") },
   category: "education",
 };
 

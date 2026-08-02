@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Code2, House, Info, Mail } from "lucide-react";
 import { useLocale } from "@/i18n/LocaleProvider";
+import { cloudinaryAsset } from "@/lib/cloudinary-assets";
 import { GitHubPreview } from "./GitHubPreview";
 import styles from "./about.module.css";
 
@@ -48,7 +49,7 @@ export function AboutContent() {
             {technologies.map((technology) => (
               <article className={styles.techItem} key={technology.name}>
                 <div className={styles.techIcon}>
-                  <Image src={`${technology.image}?v=2`} alt="" fill sizes="80px" unoptimized />
+                  <Image src={cloudinaryAsset(technology.image)} alt="" fill sizes="80px" unoptimized />
                 </div>
                 <span>{technology.translationKey ? t(technology.translationKey, technology.name) : technology.name}</span>
               </article>
@@ -60,7 +61,7 @@ export function AboutContent() {
           <h2 id="developer" className={styles.title}><Mail aria-hidden="true" />{t("about.developer", "المطور")}</h2>
           <p>{t("about.apiDescription", "موقع بيانات القرآن يوفر واجهة API لإنشاء مواقع القرآن الكريم، ويحتوي على بيانات للتحميل المباشر ونقاط نهاية جاهزة للاستخدام.")}</p>
           <a className={styles.projectImage} href="https://msr-quran-data.vercel.app/" target="_blank" rel="noreferrer">
-            <Image src="/quran_data_website.png" alt={t("about.quranDataAlt", "موقع بيانات القرآن الكريم")} width={1200} height={630} sizes="(max-width: 760px) 90vw, 720px" />
+            <Image src={cloudinaryAsset("/quran_data_website.png")} alt={t("about.quranDataAlt", "موقع بيانات القرآن الكريم")} width={1200} height={630} sizes="(max-width: 760px) 90vw, 720px" />
           </a>
           <GitHubPreview />
           <p>{t("about.developedDescription", "تم تطوير هذا الموقع كجزء من مشروع لتقديم محتوى القرآن الكريم بشكل متكامل وسهل الاستخدام. نؤمن بأهمية توفير موارد تعليمية ودينية عالية الجودة للمستخدمين.")}</p>

@@ -1,8 +1,6 @@
-import { readFile } from "node:fs/promises";
-import path from "node:path";
 import { HeroCarousel } from "@/components/HeroCarousel";
 import { HomeContent } from "@/components/HomeContent";
-import { getSurahs } from "@/lib/quran";
+import { getAzkar, getCollections, getSurahs } from "@/lib/quran";
 import { getHeroMedia } from "@/lib/hero-media";
 import { connection } from "next/server";
 
@@ -14,13 +12,7 @@ function decodeText(value: string) {
 }
 
 async function loadHomeData() {
-  const root = path.join(process.cwd(), "public", "data");
-  const [azkarRaw, collectionsRaw] = await Promise.all([
-    readFile(path.join(root, "azkar.json"), "utf8"),
-    readFile(path.join(root, "collections.json"), "utf8"),
-  ]);
-  const azkar = JSON.parse(azkarRaw) as AzkarFile;
-  const collections = JSON.parse(collectionsRaw) as Collection[];
+  const [azkar, collections] = await Promise.all([getAzkar() as Promise<AzkarFile>, getCollections() as Promise<Collection[]>]);
   return {
     azkar: azkar.data.slice(0, 12).map((item) => ({ ...item, category: decodeText(item.category), zekr: decodeText(item.zekr), reference: decodeText(item.reference) })),
     collections: collections.map((item) => ({ ...item, bookName: decodeText(item.bookName), aboutBook: decodeText(item.aboutBook) })),
@@ -28,7 +20,7 @@ async function loadHomeData() {
 }
 
 export default async function Home() {
-  // Scan the folder per request so newly added hero files appear automatically.
+  // Read live content after deployment so MongoDB and Cloudinary updates appear without rebuilding.
   await connection();
   const [surahs, content, heroMedia] = await Promise.all([getSurahs(), loadHomeData(), getHeroMedia()]);
   return <>

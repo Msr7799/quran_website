@@ -1,16 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  env: {
+    NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: process.env.CLOUDINARY_CLOUD_NAME,
+  },
   images: {
-    // Hero URLs include a file-based version query to invalidate stale images.
-    // Omitting `search` allows that changing query only inside this directory.
-    localPatterns: [
+    remotePatterns: [
       {
-        pathname: "/**",
-        search: "",
-      },
-      {
-        pathname: "/images/heroes/**",
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        pathname: `/${process.env.CLOUDINARY_CLOUD_NAME}/**`,
       },
     ],
   },

@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { cloudinaryAsset } from "@/lib/cloudinary-assets";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Check, Languages, Menu, Moon, Search, Sun, X } from "lucide-react";
@@ -17,12 +18,12 @@ export function Header() {
   function toggleTheme() { const value = !dark; setDark(value); document.documentElement.dataset.theme = value ? "dark" : "light"; document.documentElement.style.colorScheme = value ? "dark" : "light"; localStorage.setItem("theme", value ? "dark" : "light"); }
   function search(event: FormEvent) { event.preventDefault(); if (query.trim()) { router.push(`/search/${encodeURIComponent(query.trim())}`); setSearchOpen(false); } }
   const basmala = <>
-    <Image className="basmala-image basmala-light" src="/images/basmalh-light.svg" width={520} height={120} loading="eager" style={{ width: "100%", height: "auto" }} alt="" />
-    <Image className="basmala-image basmala-dark" src="/images/basmalh-dark.svg" width={520} height={120} loading="eager" style={{ width: "100%", height: "auto" }} alt="" />
+    <Image className="basmala-image basmala-light" src={cloudinaryAsset("/images/basmalh-light.svg")} width={520} height={120} loading="eager" style={{ width: "100%", height: "auto" }} alt="" />
+    <Image className="basmala-image basmala-dark" src={cloudinaryAsset("/images/basmalh-dark.svg")} width={520} height={120} loading="eager" style={{ width: "100%", height: "auto" }} alt="" />
   </>;
   return <>
     <header className={pathname === "/" ? "basmala-header home-basmala-header" : "basmala-header"}>{pathname === "/" ? <span aria-label="القرآن المجيد">{basmala}</span> : <Link href="/" prefetch={false} aria-label="القرآن المجيد">{basmala}</Link>}</header>
-    <button className="site-logo" type="button" onClick={() => setMenu((value) => !value)} aria-label="فتح القائمة الرئيسية" aria-expanded={menu}><Image src="/alf.png" width={1028} height={884} alt="شعار القرآن المجيد" priority /></button>
+    <button className="site-logo" type="button" onClick={() => setMenu((value) => !value)} aria-label="فتح القائمة الرئيسية" aria-expanded={menu}><Image src={cloudinaryAsset("/alf.png")} width={1028} height={884} alt="شعار القرآن المجيد" priority /></button>
     <button className="language-orb" onClick={() => setLanguagesOpen(!languagesOpen)} aria-label="اختيار اللغة"><Languages /><small>{locale.toUpperCase()}</small></button>
     {languagesOpen && <aside className="language-panel"><header><strong>اختر اللغة / Select Language</strong><button onClick={() => setLanguagesOpen(false)}><X /></button></header><div>{Object.entries(localeInfo).map(([code, language]) => <button className={locale === code ? "selected" : ""} onClick={() => { setLocale(code as keyof typeof localeInfo); setLanguagesOpen(false); }} key={code}><span>{locale === code && <Check />}</span><strong>{language.native}<small>{language.english}</small></strong><b>{language.flag}</b></button>)}</div><footer>متوفر بـ 15 لغة · Powered by next-intl</footer></aside>}
     <button className="rail-trigger" onClick={() => setMenu(!menu)} aria-label="القائمة">{menu ? <X /> : <Menu />}</button>

@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { cloudinaryAsset } from "@/lib/cloudinary-assets";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
@@ -14,7 +15,7 @@ export default function manifest(): MetadataRoute.Manifest {
     dir: "rtl",
     icons: [
       { src: "/favicon.ico", sizes: "16x16 32x32 48x48", type: "image/x-icon" },
-      { src: "/alf.png", sizes: "1028x884", type: "image/png", purpose: "any" },
+      { src: cloudinaryAsset("/alf.png"), sizes: "1028x884", type: "image/png", purpose: "any" },
     ],
   };
 }

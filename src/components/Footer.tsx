@@ -3,8 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { GitFork, Globe2 } from "lucide-react";
-import channelLogo from "../../public/images/yt-logo.png";
 import { useLocale } from "@/i18n/LocaleProvider";
+import { cloudinaryAsset } from "@/lib/cloudinary-assets";
 import styles from "./Footer.module.css";
 
 const channelUrl = "https://www.youtube.com/channel/UCseM-nFP_VlkEO7LveaD72Q";
@@ -33,12 +33,12 @@ export function Footer() {
       <div className={styles.inner}>
         <section className={styles.channel} aria-labelledby="youtube-channel-title">
           <a href={channelUrl} target="_blank" rel="noopener noreferrer" className={styles.channelLogo} aria-label={t("footer.visitChannel")}>
-            <Image src={channelLogo} width={112} height={112} sizes="112px" alt={t("footer.logoAlt")} />
+            <Image src={cloudinaryAsset("/images/yt-logo.png")} width={112} height={112} sizes="112px" alt={t("footer.logoAlt")} />
           </a>
           <h2 id="youtube-channel-title">{t("footer.channelTitle")}</h2>
           <p>{t("footer.channelDesc")}</p>
           <a href={channelUrl} target="_blank" rel="noopener noreferrer" className={styles.youtubeButton}>
-            <Image src="/images/youtube-icon.png" width={30} height={30} alt="" aria-hidden="true" />
+            <Image src={cloudinaryAsset("/images/youtube-icon.png")} width={30} height={30} alt="" aria-hidden="true" />
             <span>{t("footer.visitChannel")}</span>
           </a>
         </section>
@@ -52,7 +52,7 @@ export function Footer() {
               <a href="https://github.com/Msr7799" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><GitFork /></a>
               <Link href="/about" aria-label={t("footer.about")}><Globe2 /></Link>
               <a href={channelUrl} target="_blank" rel="noopener noreferrer" aria-label={t("footer.channelTitle")}>
-                <Image src="/images/youtube-icon.png" width={24} height={24} alt="" aria-hidden="true" />
+                <Image src={cloudinaryAsset("/images/youtube-icon.png")} width={24} height={24} alt="" aria-hidden="true" />
               </a>
             </div>
           </section>

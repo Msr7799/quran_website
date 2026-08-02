@@ -1,0 +1,11 @@
+
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+{
+  message: 'File size too large. Got 12409305. Maximum is 10485760.',
+  name: 'Error',
+  http_code: 400
+}
+
+Node.js v24.15.0

@@ -1,0 +1,121 @@
+MongoDB migration complete {
+  datasets: 7,
+  surahs: 114,
+  verses: 6236,
+  audioSources: 114,
+  searchAyahs: 6236,
+  reciters: 10
+}
+Cloudinary reused 1/114: about/i6.svg
+Cloudinary reused 2/114: about/github-wordmark-logo-brandlogos.net_8jszq0y8b.svg
+Cloudinary reused 3/114: about/b3.svg
+Cloudinary reused 4/114: about/my-github.png
+Cloudinary reused 5/114: about/Next.js-OaGXgRZeP_brandlogos.net.svg
+Cloudinary reused 6/114: about/MongoDB.svg
+Cloudinary reused 7/114: about/node.js-logo-brandlogos.net_9gb0f3wp3.svg
+Cloudinary reused 8/114: about/p6.svg
+Cloudinary reused 9/114: about/p5.svg
+Cloudinary reused 10/114: about/postman-logo-brandlogos.net_394yrhhe5.svg
+Cloudinary reused 11/114: about/react-logo-A60AB5e1_brandlogos.net.svg
+Cloudinary reused 12/114: about/SQLite-kATlFTaf_brandlogos.net.svg
+Cloudinary reused 13/114: about/vercel-logo-brandlogos.net_z7tyu1fer.svg
+Cloudinary reused 14/114: about/tailwind-css-logo-brandlogos.net_lx9ncaaci.svg
+Cloudinary reused 15/114: about/window.svg
+Cloudinary reused 16/114: books-pdf.svg
+Cloudinary reused 17/114: alf.png
+Cloudinary reused 18/114: about/about-me.gif
+Cloudinary reused 19/114: images/basmalh-dark.svg
+Cloudinary reused 20/114: images/basmalh-light.svg
+Cloudinary reused 21/114: images/google-btn-dark.svg
+Cloudinary reused 22/114: images/google-btn-light.svg
+Cloudinary reused 23/114: images/google-btn-muted.svg
+Cloudinary reused 24/114: images/heroes/1b50f54c-75d1-4de9-8c5d-dc78ebfaf7cc.png
+Cloudinary reused 25/114: images/heroes/hero.mp4
+Cloudinary reused 26/114: images/heroes/hero1.png
+Cloudinary reused 27/114: images/heroes/hero2.png
+Cloudinary reused 28/114: images/heroes/hero3.png
+Cloudinary reused 29/114: images/heroes/mobile-hero-1.mp4
+Cloudinary reused 30/114: images/heroes/mobile-hero-2.png
+Cloudinary reused 31/114: images/heroes/mobile-hero-3.png
+Cloudinary reused 32/114: images/heroes/mobile-hero-4.png
+Cloudinary reused 33/114: images/heroes/mobile-hero-5.png
+Cloudinary reused 34/114: images/heroes/mobile-hero-6.png
+Cloudinary reused 35/114: images/heroes/mobile-hero-7.png
+Cloudinary reused 36/114: images/heroes/mobile-hero-8.png
+Cloudinary reused 37/114: images/heroes/mobile-hero-9.png
+Cloudinary reused 38/114: images/library/001f.png
+Cloudinary reused 39/114: images/library/001t.png
+Cloudinary reused 40/114: images/library/002f.png
+Cloudinary reused 41/114: images/library/002t.png
+Cloudinary reused 42/114: images/library/003f.png
+Cloudinary reused 43/114: images/library/004f.png
+Cloudinary reused 44/114: images/library/012.png
+Cloudinary reused 45/114: images/library/Al-Fiqh_Al-Islami_Wa_Adillatuh1.png
+Cloudinary reused 46/114: images/library/Al-Fiqh_Al-Islami_Wa_Adillatuh2.png
+Cloudinary reused 47/114: images/library/Al-Fiqh_Al-Islami_Wa_Adillatuh3.png
+Cloudinary reused 48/114: images/library/Al-Fiqh_Al-Islami_Wa_Adillatuh4.png
+Cloudinary reused 49/114: images/library/Al-Fiqh_Al-Islami_Wa_Adillatuh5.png
+Cloudinary reused 50/114: images/library/Al-Fiqh_Al-Islami_Wa_Adillatuh6.png
+Cloudinary reused 51/114: images/library/Al-Fiqh_Al-Islami_Wa_Adillatuh7.png
+Cloudinary reused 52/114: images/library/Al-Fiqh_Al-Islami_Wa_Adillatuh8.png
+Cloudinary reused 53/114: images/library/Ketab_El-Tawheed.png
+Cloudinary reused 54/114: images/library/qesas_al-anbyaa.png
+Cloudinary reused 55/114: images/library/quran_pdf/001.png
+Cloudinary reused 56/114: images/library/quran_pdf/002.png
+Cloudinary reused 57/114: images/library/quran_pdf/003.png
+Cloudinary reused 58/114: images/library/quran_pdf/004.png
+Cloudinary reused 59/114: images/library/quran_pdf/005.png
+Cloudinary reused 60/114: images/library/quran_pdf/006.png
+Cloudinary reused 61/114: images/library/quran_pdf/007.png
+Cloudinary reused 62/114: images/library/quran_pdf/008.png
+Cloudinary reused 63/114: images/library/quran_pdf/010.png
+Cloudinary reused 64/114: images/library/quran_pdf/011.png
+Cloudinary reused 65/114: images/library/quran_pdf/012.png
+Cloudinary reused 66/114: images/library/quran_pdf/013.png
+Cloudinary 67/114: images/library/quran_pdf/تصميم بدون عنوان/تصميم بدون عنوان/4.png
+Cloudinary 68/114: images/library/quran_pdf/تصميم بدون عنوان/تصميم بدون عنوان/2.png
+Cloudinary 69/114: images/library/quran_pdf/09.png
+Cloudinary 70/114: images/library/quran_pdf/تصميم بدون عنوان/تصميم بدون عنوان/5.png
+Cloudinary 71/114: images/library/quran_pdf/تصميم بدون عنوان/تصميم بدون عنوان/6.png
+Cloudinary 72/114: images/library/quran_pdf/تصميم بدون عنوان/تصميم بدون عنوان/7.png
+Cloudinary 73/114: images/library/Sahih_Bukhari.png
+Cloudinary 74/114: images/library/Riyad_El-Saleheen.png
+Cloudinary 75/114: images/library/Sahih_Muslim.png
+Cloudinary 76/114: images/library/Seeret_El-Naby1.png
+Cloudinary 77/114: images/library/quran_pdf/09.svg
+Cloudinary 78/114: images/library/Seeret_El-Naby2.png
+Cloudinary 79/114: images/library/Seeret_El-Naby3.png
+Cloudinary 80/114: images/library/Seeret_El-Naby4.png
+Cloudinary 81/114: images/library/Seeret_El-Naby_Cover.png
+Cloudinary 82/114: images/logo.png
+Cloudinary 83/114: images/library/Seeret_El-Naby5.png
+Cloudinary 84/114: images/youtube-icon.png
+Cloudinary 85/114: images/social-card.png
+Cloudinary 86/114: images/yt-logo.png
+Cloudinary 87/114: images/yt-logo1.png
+Cloudinary 88/114: library/Al-Fiqh_Al-Islami_Wa_Adillatuh1.png
+Cloudinary 89/114: library/Al-Fiqh_Al-Islami_Wa_Adillatuh2.png
+Cloudinary 90/114: library/Al-Fiqh_Al-Islami_Wa_Adillatuh3.png
+Cloudinary 91/114: library/Al-Fiqh_Al-Islami_Wa_Adillatuh4.png
+Cloudinary 92/114: images/page-not-found.svg
+Cloudinary 93/114: library/Al-Fiqh_Al-Islami_Wa_Adillatuh5.png
+Cloudinary 94/114: library/Al-Fiqh_Al-Islami_Wa_Adillatuh6.png
+Cloudinary 95/114: library/Al-Fiqh_Al-Islami_Wa_Adillatuh7.png
+Cloudinary 96/114: library/Al-Fiqh_Al-Islami_Wa_Adillatuh8.png
+Cloudinary 97/114: library/Riyad_El-Saleheen.png
+Cloudinary 98/114: library/qesas_al-anbyaa.png
+Cloudinary 99/114: library/Ketab_El-Tawheed.png
+Cloudinary 100/114: library/Sahih_Bukhari.png
+Cloudinary 101/114: library/Sahih_Muslim.png
+Cloudinary 102/114: library/Seeret_El-Naby1.png
+Cloudinary 103/114: library/Seeret_El-Naby2.png
+Cloudinary 104/114: library/Seeret_El-Naby3.png
+Cloudinary 105/114: library/Seeret_El-Naby4.png
+Cloudinary 106/114: library/Seeret_El-Naby5.png
+Cloudinary 107/114: library/Seeret_El-Naby_Cover.png
+Cloudinary 108/114: moshaf.svg
+Cloudinary 109/114: quran_data_website.png
+Cloudinary 110/114: research.svg
+Cloudinary 111/114: quran-writen-icon.svg
+Cloudinary migration complete: 111 assets
+Verification complete { surahs: 114, verses: 6236, searchAyahs: 6236, media: 112 }

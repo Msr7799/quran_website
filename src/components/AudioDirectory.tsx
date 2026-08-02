@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { cloudinaryAsset } from "@/lib/cloudinary-assets";
 import {
   BookOpen,
   Clock3,
@@ -157,7 +158,7 @@ export function AudioDirectory({ reciters, surahs }: { reciters: Reciter[]; sura
 
       <section className={styles.listeningStage} aria-label={useArabic ? "مشغل التلاوة" : "Recitation player"}>
         <div className={styles.reciterCard}>
-          <span className={styles.reciterLogo}><Image src="/images/logo.png" width={736} height={736} sizes="70px" alt="" /></span>
+          <span className={styles.reciterLogo}><Image src={cloudinaryAsset("/images/logo.png")} width={736} height={736} sizes="70px" alt="" /></span>
           <h2>{reciterName}</h2>
           <p>{narration}</p>
         </div>

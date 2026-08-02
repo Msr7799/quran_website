@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { cloudinaryAsset } from "@/lib/cloudinary-assets";
 import type { ComponentType } from "react";
 import { Bot, CalendarDays, Headphones, Home, Info, Radio } from "lucide-react";
 
@@ -7,10 +8,10 @@ const assetIcon = (src: string, alt: string): IconComponent => function AssetIco
   return <Image className={`nav-asset-icon ${className ?? ""}`} src={src} width={30} height={30} alt={alt} aria-hidden="true" />;
 };
 
-const QuranWrittenIcon = assetIcon("/quran-writen-icon.svg", "");
-const MushafIcon = assetIcon("/moshaf.svg", "");
-const BooksPdfIcon = assetIcon("/books-pdf.svg", "");
-const ResearchIcon = assetIcon("/research.svg", "");
+const QuranWrittenIcon = assetIcon(cloudinaryAsset("/quran-writen-icon.svg"), "");
+const MushafIcon = assetIcon(cloudinaryAsset("/moshaf.svg"), "");
+const BooksPdfIcon = assetIcon(cloudinaryAsset("/books-pdf.svg"), "");
+const ResearchIcon = assetIcon(cloudinaryAsset("/research.svg"), "");
 
 export type NavItem = { href: string; label: string; translationKey: string; icon: IconComponent };
 

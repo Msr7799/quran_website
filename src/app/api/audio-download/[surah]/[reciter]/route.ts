@@ -1,13 +1,10 @@
 import "server-only";
-import { readFile } from "node:fs/promises";
-import path from "node:path";
+import { getAudioSources } from "@/lib/quran";
 
 type AudioReciter = {
   id: number;
   link: string;
 };
-
-const AUDIO_DATA_DIR = path.join(process.cwd(), "public", "data", "audio");
 
 export async function GET(
   request: Request,
@@ -22,8 +19,8 @@ export async function GET(
   }
 
   try {
-    const filePath = path.join(AUDIO_DATA_DIR, `audio_surah_${surah}.json`);
-    const reciters = JSON.parse(await readFile(filePath, "utf8")) as AudioReciter[];
+    const reciters = (await getAudioSources(surah))?.items as AudioReciter[] | undefined;
+    if (!reciters) return new Response("Recitation not found", { status: 404 });
     const selected = reciters.find((item) => item.id === reciter);
     if (!selected) return new Response("Recitation not found", { status: 404 });
 

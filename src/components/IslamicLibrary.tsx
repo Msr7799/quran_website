@@ -3,8 +3,9 @@
 import Image from "next/image";
 import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { BookOpen, Download, ExternalLink } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useLocale } from "@/i18n/LocaleProvider";
+import { cloudinaryAsset } from "@/lib/cloudinary-assets";
 
 const mushafs = [
   { title: "مصحف المدينة المنورة باللون الأزرق", en: "Madinah Mushaf — Blue", image: "001.png", fileSize: "160 MB", year: "1429 للهجرة", color: "أزرق", link: "https://archive.org/download/Quran-Kareem-Khawagah-The-Blue-Page-Quran/Quran-Kareem-Khawagah-The-Blue-Page-Quran.pdf" },
@@ -24,7 +25,7 @@ type JsonFile = { type: string; size?: string; url: string };
 type JsonVolume = { volume: number; files: JsonFile[] };
 type JsonBook = { title: { ar: string; en: string }; files?: JsonFile[]; volumes?: JsonVolume[] };
 type JsonCategory = { name: string; books: JsonBook[] };
-type BooksPayload = { categories: JsonCategory[] };
+export type BooksPayload = { categories: JsonCategory[] };
 type DisplayBook = { title: string; subtitle: string; image: string; href: string; size?: string };
 
 function coverName(book: JsonBook, volume?: number) {
@@ -42,19 +43,19 @@ function HoverBook({ item }: { item: DisplayBook }) {
   const left = useTransform(useSpring(x), [-.5, .5], ["45%", "68%"]); const top = useTransform(useSpring(y), [-.5, .5], ["35%", "65%"]);
   return <motion.a ref={ref} href={item.href} target="_blank" rel="noreferrer" className="library-book-link" initial="idle" whileHover="hover" onMouseMove={(event) => { const box = ref.current?.getBoundingClientRect(); if (box) { x.set((event.clientX - box.left) / box.width - .5); y.set((event.clientY - box.top) / box.height - .5); } }}>
     <span><strong>{item.title}</strong><small>{item.size ? `${item.subtitle} · ${item.size}` : item.subtitle}</small></span><ExternalLink />
-    <motion.div className="hover-book-cover" style={{ left, top }} variants={{ idle: { opacity: 0, scale: .7 }, hover: { opacity: 1, scale: 1 } }}><Image src={`/images/library/${item.image}`} alt={item.title} width={230} height={310} /></motion.div>
+    <motion.div className="hover-book-cover" style={{ left, top }} variants={{ idle: { opacity: 0, scale: .7 }, hover: { opacity: 1, scale: 1 } }}><Image src={cloudinaryAsset(`/images/library/${item.image}`)} alt={item.title} width={230} height={310} /></motion.div>
   </motion.a>;
 }
 
-export function IslamicLibrary() {
-  const { locale, t } = useLocale(); const [open, setOpen] = useState(0); const [bookCategories, setBookCategories] = useState<JsonCategory[]>([]);
-  useEffect(() => { fetch("/images/library/books_url.json").then((response) => response.json()).then((payload: BooksPayload) => setBookCategories(payload.categories)).catch(() => setBookCategories([])); }, []);
+export function IslamicLibrary({ booksPayload }: { booksPayload: unknown }) {
+  const { locale, t } = useLocale(); const [open, setOpen] = useState(0);
+  const bookCategories = (booksPayload as BooksPayload).categories ?? [];
   const localizedTitle = (item: typeof mushafs[number]) => locale === "ar" || locale === "ur" ? item.title : item.en;
   return <div className="library-page">
     <header className="library-hero"><span>{t("library.eyebrow", "المكتبة الإلكترونية")}</span><h1>{t("library.title", "مجموعة من المصاحف المتنوعة")}</h1><p>{t("library.description", "مصاحف وكتب إسلامية منتقاة بروابط مباشرة ونسخ عالية الجودة.")}</p></header>
     <section className="mushaf-accordion" aria-label={t("library.mushafs", "المصاحف المتاحة")}>{mushafs.map((item, index) => <div className={open === index ? "mushaf-panel open" : "mushaf-panel"} key={item.title}>
       <button onClick={() => setOpen(index)} aria-expanded={open === index}><BookOpen /><span>{localizedTitle(item)}</span></button>
-      <AnimatePresence>{open === index && <motion.article initial={{ width: 0, opacity: 0 }} animate={{ width: "100%", opacity: 1 }} exit={{ width: 0, opacity: 0 }} transition={{ type: "spring", damping: 24 }} style={{ backgroundImage: `url(/images/library/quran_pdf/${item.image})` }}><div><h2>{localizedTitle(item)}</h2><p>{t("library.mushafDescription", "نسخة واضحة ومزخرفة من المصحف الشريف مناسبة للقراءة والتحميل.")}</p><div className="mushaf-details"><span>{t("library.fileSize", "حجم الملف")}: {item.fileSize}</span><span>عام الطباعة: {item.year}</span><span>لون الخلفية: {item.color}</span></div><a href={item.link} target="_blank" rel="noreferrer"><Download /> {t("library.download", "تحميل المصحف")}</a></div></motion.article>}</AnimatePresence>
+      <AnimatePresence>{open === index && <motion.article initial={{ width: 0, opacity: 0 }} animate={{ width: "100%", opacity: 1 }} exit={{ width: 0, opacity: 0 }} transition={{ type: "spring", damping: 24 }} style={{ backgroundImage: `url(${cloudinaryAsset(`/images/library/quran_pdf/${item.image}`)})` }}><div><h2>{localizedTitle(item)}</h2><p>{t("library.mushafDescription", "نسخة واضحة ومزخرفة من المصحف الشريف مناسبة للقراءة والتحميل.")}</p><div className="mushaf-details"><span>{t("library.fileSize", "حجم الملف")}: {item.fileSize}</span><span>عام الطباعة: {item.year}</span><span>لون الخلفية: {item.color}</span></div><a href={item.link} target="_blank" rel="noreferrer"><Download /> {t("library.download", "تحميل المصحف")}</a></div></motion.article>}</AnimatePresence>
     </div>)}</section>
     <section className="islamic-books"><h2>{t("library.islamicBooks", "الكتب الإسلامية")}</h2>{bookCategories.map((category) => <div className="book-group" key={category.name}><h3>{category.name}</h3>{flattenCategory(category).map((item) => <HoverBook item={item} key={`${item.title}-${item.href}`} />)}</div>)}</section>
   </div>;

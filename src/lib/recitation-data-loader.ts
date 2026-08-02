@@ -1,89 +1,54 @@
 import "server-only";
-import path from "node:path";
-import { DatabaseSync } from "node:sqlite";
+import { getDatabase } from "./mongodb";
 import { getSynchronizedReciter, type SynchronizedReciter } from "./reciters";
+import { getSurah } from "./quran";
 import type { Surah } from "./types";
 
-const PUBLIC_DATA_REVALIDATE_SECONDS = 86400;
-const HUTHAIFY_DATABASE_PATH = path.join(
-  process.cwd(),
-  "public",
-  "surah-recitation-ali-abdur-rahman-al-huthaify.db",
-  "surah-recitation-ali-abdur-rahman-al-huthaify.db",
-);
+type RecitationDocument = {
+  _id: string;
+  source: "surah-json" | "ayah-json" | "sqlite";
+  audioData: unknown;
+  segmentMap?: unknown;
+};
 
-function normalizePublicPath(relativePath: string) {
-  const slashPath = relativePath.replaceAll("\\", "/");
-  const parts = slashPath.split("/");
-  if (
-    slashPath.startsWith("/")
-    || parts.some((part) => part === "" || part === "." || part === "..")
-  ) {
-    throw new Error(`Invalid public data path: ${relativePath}`);
-  }
-  return parts.join("/");
+async function getRecitationSource(reciterId: string) {
+  const database = await getDatabase();
+  const document = await database.collection<RecitationDocument>("recitation_sources").findOne({ _id: reciterId });
+  if (!document) throw new Error(`MongoDB recitation source is missing: ${reciterId}`);
+  return document;
 }
 
-function publicDataUrl(request: Request, relativePath: string) {
-  const normalizedPath = normalizePublicPath(relativePath);
-  const encodedPath = normalizedPath.split("/").map(encodeURIComponent).join("/");
-  const origin = new URL(request.url).origin;
-  return new URL(`/${encodedPath}`, `${origin}/`);
-}
-
-async function fetchPublicJson<T>(request: Request, relativePath: string, revalidate = true): Promise<T> {
-  const cookie = request.headers.get("cookie");
-  const headers = cookie ? { cookie } : undefined;
-  const response = await fetch(
-    publicDataUrl(request, relativePath),
-    revalidate
-      ? { headers, next: { revalidate: PUBLIC_DATA_REVALIDATE_SECONDS } }
-      : { headers, cache: "no-store" },
-  );
-  if (!response.ok) {
-    throw new Error(`Failed to load public data ${relativePath}: ${response.status}`);
-  }
-  return response.json() as Promise<T>;
-}
-
-export async function loadSurahForRecitation(request: Request, surahNumber: number) {
-  if (!Number.isInteger(surahNumber) || surahNumber < 1 || surahNumber > 114) return null;
-  return fetchPublicJson<Surah>(request, `data/surah/surah_${surahNumber}.json`);
+export async function loadSurahForRecitation(_request: Request, surahNumber: number) {
+  return getSurah(surahNumber) as Promise<Surah | null>;
 }
 
 export async function loadSurahReciterFiles<TAudio, TSegments>(
-  request: Request,
+  _request: Request,
   reciter: Extract<SynchronizedReciter, { source: "surah-json" }>,
 ) {
   const configured = getSynchronizedReciter(reciter.id);
-  if (!configured || configured.source !== "surah-json") {
-    throw new Error(`Unknown surah JSON reciter: ${reciter.id}`);
-  }
-  const folder = normalizePublicPath(configured.folder);
-  const [audioData, segmentMap] = await Promise.all([
-    fetchPublicJson<TAudio>(request, `${folder}/surah.json`, false),
-    fetchPublicJson<TSegments>(request, `${folder}/segments.json`, false),
-  ]);
-  return { audioData, segmentMap };
+  if (!configured || configured.source !== "surah-json") throw new Error(`Unknown reciter: ${reciter.id}`);
+  const document = await getRecitationSource(reciter.id);
+  return { audioData: document.audioData as TAudio, segmentMap: document.segmentMap as TSegments };
 }
 
 export async function loadAyahReciterFile<TAudio>(
-  request: Request,
+  _request: Request,
   reciter: Extract<SynchronizedReciter, { source: "ayah-json" }>,
 ) {
   const configured = getSynchronizedReciter(reciter.id);
-  if (!configured || configured.source !== "ayah-json") {
-    throw new Error(`Unknown ayah JSON reciter: ${reciter.id}`);
-  }
-  return fetchPublicJson<TAudio>(request, normalizePublicPath(configured.file), false);
+  if (!configured || configured.source !== "ayah-json") throw new Error(`Unknown reciter: ${reciter.id}`);
+  return (await getRecitationSource(reciter.id)).audioData as TAudio;
 }
 
-export function openSqliteRecitationDatabase(
+export async function loadSqliteRecitationData(
   reciter: Extract<SynchronizedReciter, { source: "sqlite" }>,
 ) {
   const configured = getSynchronizedReciter(reciter.id);
-  if (!configured || configured.source !== "sqlite" || configured.id !== "ali-abdur-rahman-al-huthaify") {
-    throw new Error(`Unknown SQLite reciter: ${reciter.id}`);
-  }
-  return new DatabaseSync(HUTHAIFY_DATABASE_PATH, { readOnly: true });
+  if (!configured || configured.source !== "sqlite") throw new Error(`Unknown reciter: ${reciter.id}`);
+  const document = await getRecitationSource(reciter.id);
+  return {
+    audioData: document.audioData as Record<string, { audio_url: string; duration: number }>,
+    segmentMap: (document.segmentMap ?? {}) as Record<string, { timestamp_from: number; timestamp_to: number; duration_sec: number; segments?: Array<[number, number, number]> }>,
+  };
 }

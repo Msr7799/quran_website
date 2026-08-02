@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import {
   loadAyahReciterFile,
+  loadSqliteRecitationData,
   loadSurahForRecitation,
   loadSurahReciterFiles,
-  openSqliteRecitationDatabase,
 } from "@/lib/recitation-data-loader";
 import { getSynchronizedReciter, type SynchronizedReciter } from "@/lib/reciters";
 import type { Surah } from "@/lib/types";
@@ -22,8 +22,6 @@ type AyahAudio = Record<string, {
   segments: WordSegment[];
 }>;
 type Track = { ayah: number; audioUrl: string; timestamp_from: number; timestamp_to: number; duration: number };
-type SqliteAudioRow = { audio_url: string; duration: number };
-type SqliteSegmentRow = { ayah_number: number; timestamp_from: number; timestamp_to: number; duration_sec: number; segments: string | null };
 
 function estimatedSegments(surah: Surah, durationSeconds: number) {
   const durationMs = durationSeconds * 1000;
@@ -124,23 +122,20 @@ async function loadAyahJson(request: Request, reciter: Extract<SynchronizedRecit
   return { audioMode: "ayah" as const, audioUrl: tracks[0].audioUrl, duration: cursor / 1000, tracks, segments, estimated: false };
 }
 
-function loadSqlite(reciter: Extract<SynchronizedReciter, { source: "sqlite" }>, surah: Surah) {
-  const database = openSqliteRecitationDatabase(reciter);
-  try {
-    const audio = database.prepare("SELECT audio_url, duration FROM surah_list WHERE surah_number = ?").get(surah.number) as SqliteAudioRow | undefined;
-    if (!audio) return null;
-    const rows = database.prepare("SELECT ayah_number, timestamp_from, timestamp_to, duration_sec, segments FROM segments WHERE surah_number = ? ORDER BY ayah_number").all(surah.number) as SqliteSegmentRow[];
-    const segmentMap: SegmentMap = Object.fromEntries(rows.map((row) => [`${surah.number}:${row.ayah_number}`, {
-      timestamp_from: row.timestamp_from,
-      timestamp_to: row.timestamp_to,
-      duration_ms: row.duration_sec * 1000,
-      segments: row.segments ? JSON.parse(row.segments) as WordSegment[] : [],
+async function loadSqlite(reciter: Extract<SynchronizedReciter, { source: "sqlite" }>, surah: Surah) {
+  const { audioData, segmentMap: storedSegments } = await loadSqliteRecitationData(reciter);
+  const audio = audioData[String(surah.number)];
+  if (!audio) return null;
+  const segmentMap: SegmentMap = Object.fromEntries(Object.entries(storedSegments)
+    .filter(([key]) => key.startsWith(`${surah.number}:`))
+    .map(([key, value]) => [key, {
+      timestamp_from: value.timestamp_from,
+      timestamp_to: value.timestamp_to,
+      duration_ms: value.duration_sec * 1000,
+      segments: value.segments ?? [],
     }]));
     const timing = normalizedSurahSegments(surah, segmentMap, audio.duration);
     return { audioMode: "surah" as const, audioUrl: audio.audio_url, duration: audio.duration, tracks: [] as Track[], ...timing };
-  } finally {
-    database.close();
-  }
 }
 
 export async function GET(request: Request, { params }: { params: Promise<{ reciter: string; surah: string }> }) {
@@ -158,7 +153,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ reci
     ? await loadSurahJson(request, reciter, surah)
     : reciter.source === "ayah-json"
       ? await loadAyahJson(request, reciter, surah)
-      : loadSqlite(reciter, surah);
+      : await loadSqlite(reciter, surah);
   if (!data) return NextResponse.json({ error: "Recitation unavailable" }, { status: 404 });
 
   if (new URL(request.url).searchParams.has("download")) {

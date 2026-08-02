@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Minus, Plus, RotateCcw } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocale } from "@/i18n/LocaleProvider";
+import { cloudinaryAsset } from "@/lib/cloudinary-assets";
 import styles from "./about.module.css";
 
 const DEFAULT_ZOOM = 1.25;
@@ -65,7 +66,7 @@ export function GitHubPreview() {
       >
         <Image
           className={styles.githubImage}
-          src="/about/my-github.png"
+          src={cloudinaryAsset("/about/my-github.png")}
           alt={t("about.githubImageAlt", "صورة كاملة لحساب المطور على GitHub")}
           width={1920}
           height={2805}

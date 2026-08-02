@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
+import { cloudinaryAsset } from "./cloudinary-assets";
 
 export const SITE_NAME = "القرآن المجيد";
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://alquran-almajeed.vercel.app";
-export const SOCIAL_IMAGE = "/images/social-card.png";
+export const SOCIAL_IMAGE = cloudinaryAsset("/images/social-card.png");
 
 type PageMetadata = {
   title: string;

@@ -1,6 +1,6 @@
 import "server-only";
-import { readFile } from "node:fs/promises";
-import path from "node:path";
+import type { Filter } from "mongodb";
+import { getDatabase } from "./mongodb";
 import type { Radio, Reciter, Surah, SurahMeta, Verse } from "./types";
 
 type HafsSmartAyah = {
@@ -15,7 +15,12 @@ type HafsSmartAyah = {
   aya_no: number;
   aya_text: string;
   aya_text_emlaey: string;
+  normalizedText: string;
 };
+
+type DatasetDocument<T> = { _id: string; data: T };
+type SurahDocument = Surah & { _id: number };
+type VerseDocument = Verse & { _id: string; surahNumber: number };
 
 export type QuranSearchResult = {
   id: number;
@@ -30,53 +35,64 @@ export type QuranSearchResult = {
   lineEnd: number;
 };
 
-const HAFS_SMART_FILE = path.join(process.cwd(), "public", "hafs_smart.json");
-const QURAN_DATA_DIR = path.join(process.cwd(), "public", "data");
-const SURAH_DATA_DIR = path.join(QURAN_DATA_DIR, "surah");
-const SURAH_METADATA_FILE = path.join(QURAN_DATA_DIR, "metadata.json");
-const RECITERS_FILE = path.join(QURAN_DATA_DIR, "quranMp3.json");
-const RADIOS_FILE = path.join(QURAN_DATA_DIR, "radios.json");
-let hafsSmartData: Promise<HafsSmartAyah[]> | undefined;
-
-async function readJson<T>(filePath: string): Promise<T> {
-  return JSON.parse(await readFile(filePath, "utf8")) as T;
+async function getDataset<T>(id: string) {
+  const database = await getDatabase();
+  const document = await database.collection<DatasetDocument<T>>("content_datasets").findOne({ _id: id });
+  if (!document) throw new Error(`MongoDB dataset is missing: ${id}`);
+  return document.data;
 }
 
-function getHafsSmartAyahs() {
-  hafsSmartData ??= readJson<HafsSmartAyah[]>(HAFS_SMART_FILE);
-  return hafsSmartData;
-}
-
-export const getSurahs = () => readJson<SurahMeta[]>(SURAH_METADATA_FILE);
+export const getSurahs = () => getDataset<SurahMeta[]>("metadata");
 
 export async function getSurah(id: number) {
   if (!Number.isInteger(id) || id < 1 || id > 114) return null;
-  return readJson<Surah>(path.join(SURAH_DATA_DIR, `surah_${id}.json`));
+  const database = await getDatabase();
+  const document = await database.collection<SurahDocument>("quran_surahs").findOne({ _id: id });
+  if (!document) return null;
+  const { _id, ...surah } = document;
+  void _id;
+  return surah as Surah;
 }
 
-export const getReciters = () => readJson<Reciter[]>(RECITERS_FILE);
+export const getReciters = () => getDataset<Reciter[]>("reciters");
 
 export async function getRadios() {
-  return (await readJson<{ radios: Radio[] }>(RADIOS_FILE)).radios;
+  return (await getDataset<{ radios: Radio[] }>("radios")).radios;
+}
+
+export const getAzkar = () => getDataset<{ data: Array<{ id: number; category: string; zekr: string; reference: string }> }>("azkar");
+export const getCollections = () => getDataset<Array<{ bookNumber: number; bookName: string; aboutBook: string; parts_count: number }>>("collections");
+export const getReligiousEvents = () => getDataset<{ data: Array<{ id: number; title: string; month: number; day: number[]; isReminder: boolean; hadith: Array<{ hadith: string; bookInfo: string }> }> }>("religious-events");
+export const getLibraryBooks = () => getDataset<unknown>("library-books");
+
+export async function getAudioSources(surah: number) {
+  const database = await getDatabase();
+  return database.collection<{ _id: number; items: Array<{ id: number; link: string }> }>("audio_sources").findOne({ _id: surah });
 }
 
 export async function getPage(page: number) {
   if (!Number.isInteger(page) || page < 1 || page > 604) return [];
-  const metadata = await getSurahs();
-  const results: Array<{ surah: SurahMeta; verses: Verse[] }> = [];
-  for (const meta of metadata) {
-    const surah = await getSurah(meta.number);
-    const verses = surah?.verses.filter((verse) => verse.page === page) ?? [];
-    if (verses.length) results.push({ surah: meta, verses });
+  const [metadata, database] = await Promise.all([getSurahs(), getDatabase()]);
+  const verses = await database.collection<VerseDocument>("quran_verses")
+    .find({ page }).sort({ surahNumber: 1, number: 1 }).toArray();
+  const bySurah = new Map<number, Verse[]>();
+  for (const { _id, surahNumber, ...verse } of verses) {
+    void _id;
+    const list = bySurah.get(surahNumber) ?? [];
+    list.push(verse as Verse);
+    bySurah.set(surahNumber, list);
   }
-  return results;
+  return [...bySurah].map(([surahNumber, pageVerses]) => ({
+    surah: metadata[surahNumber - 1],
+    verses: pageVerses,
+  })).filter((item) => item.surah);
 }
 
-function normalizeQuranSearch(value: string) {
+export function normalizeQuranSearch(value: string) {
   return value
     .normalize("NFKD")
     .replace(/[\u0610-\u061a\u064b-\u065f\u0670\u06d6-\u06ed\u0640]/g, "")
-    .replace(/[ٱأإآ]/g, "ا")
+    .replace(/[أإآ]/g, "ا")
     .replace(/ى/g, "ي")
     .replace(/ؤ/g, "و")
     .replace(/ئ/g, "ي")
@@ -88,25 +104,20 @@ function normalizeQuranSearch(value: string) {
 export async function searchQuran(query: string, limit = 80) {
   const clean = normalizeQuranSearch(query);
   if (clean.length < 2) return [];
-  const ayahs = await getHafsSmartAyahs();
-  const results: QuranSearchResult[] = [];
-  for (const ayah of ayahs) {
-    const searchable = normalizeQuranSearch(ayah.aya_text_emlaey);
-    if (searchable.includes(clean)) {
-      results.push({
-        id: ayah.id,
-        surahNumber: ayah.sura_no,
-        surahName: ayah.sura_name_ar,
-        surahNameEn: ayah.sura_name_en,
-        ayahNumber: ayah.aya_no,
-        text: ayah.aya_text_emlaey,
-        page: ayah.page,
-        juz: ayah.jozz,
-        lineStart: ayah.line_start,
-        lineEnd: ayah.line_end,
-      });
-      if (results.length >= limit) break;
-    }
-  }
-  return results;
+  const database = await getDatabase();
+  const escaped = clean.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const filter: Filter<HafsSmartAyah> = { normalizedText: { $regex: escaped } };
+  const ayahs = await database.collection<HafsSmartAyah>("quran_search").find(filter).sort({ id: 1 }).limit(limit).toArray();
+  return ayahs.map((ayah): QuranSearchResult => ({
+    id: ayah.id,
+    surahNumber: ayah.sura_no,
+    surahName: ayah.sura_name_ar,
+    surahNameEn: ayah.sura_name_en,
+    ayahNumber: ayah.aya_no,
+    text: ayah.aya_text_emlaey,
+    page: ayah.page,
+    juz: ayah.jozz,
+    lineStart: ayah.line_start,
+    lineEnd: ayah.line_end,
+  }));
 }
