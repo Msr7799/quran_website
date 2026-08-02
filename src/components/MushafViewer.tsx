@@ -8,7 +8,7 @@ import { SelectDropdown } from "@/components/ui/dropdown-menu";
 import { useLocale } from "@/i18n/LocaleProvider";
 import type { Locale } from "@/i18n/LocaleProvider";
 
-const mushaf = { url: "/Quran_Tafseel-Mawdo_text.pdf", first: 7, last: 610 } as const;
+const mushaf = { url: "/api/documents/quran-tafseel", first: 7, last: 610 } as const;
 const playerStateKey = "mushaf-player-minimized";
 const defaultReciterId = "101";
 type SurahOption = { number: number; name: string; page: number };
@@ -174,7 +174,7 @@ export function MushafViewer({ page }: { page: number }) {
       audio.current?.pause();
       setAudioLoading(true); setPlaying(false); setAudioTime(0); setAudioDuration(0); setAudioReciters([]);
       try {
-        const response = await fetch(`/data/audio/audio_surah_${selectedSurah}.json`, { signal: controller.signal });
+        const response = await fetch(`/api/audio-sources/${selectedSurah}`, { signal: controller.signal });
         if (!response.ok) throw new Error("recitation");
         const items = await response.json() as AudioReciter[];
         setAudioReciters(items);

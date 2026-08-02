@@ -44,6 +44,9 @@
 .reciterLogo img { width: 100%; height: 100%; object-fit: contain; border-radius: 50%; }
 .reciterCard h2 { margin: 5px 0; color: #20262d; font-size: 1.35rem; }
 .reciterCard p { margin: 0; color: #6993bf; }
+:global(:root[data-theme="dark"]) .reciterCard { color: #edf4f0; background: #171b1a; border-color: #424b47; box-shadow: 0 15px 35px #0009; }
+:global(:root[data-theme="dark"]) .reciterCard h2 { color: #f4f8f6; }
+:global(:root[data-theme="dark"]) .reciterCard p { color: #9fb0a7; }
 .playerCard { width: min(420px,96%); padding: 16px; margin-top: 14px; color: #e8edf2; background: #181b1e; border: 1px solid #343a3f; border-radius: 14px; box-shadow: 0 16px 35px #0007; }
 .nowPlaying { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .nowPlaying span { min-width: 0; }

@@ -4,7 +4,7 @@ import Image from "next/image";
 import { cloudinaryAsset } from "@/lib/cloudinary-assets";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Check, Languages, Menu, Moon, Search, Sun, X } from "lucide-react";
+import { Check, Languages, LoaderCircle, Menu, Moon, Search, Sun, X } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
 import { navigation } from "./icons";
 import { localeInfo, useLocale } from "@/i18n/LocaleProvider";
@@ -14,7 +14,9 @@ export function Header() {
   const { locale, setLocale, t } = useLocale();
   const [menu, setMenu] = useState(false); const [languagesOpen, setLanguagesOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false); const [dark, setDark] = useState(true); const [query, setQuery] = useState("");
+  const [navigating, setNavigating] = useState(false);
   useEffect(() => { const saved = localStorage.getItem("theme"); const value = saved ? saved === "dark" : true; queueMicrotask(() => setDark(value)); document.documentElement.dataset.theme = value ? "dark" : "light"; document.documentElement.style.colorScheme = value ? "dark" : "light"; }, []);
+  useEffect(() => { queueMicrotask(() => setNavigating(false)); }, [pathname]);
   function toggleTheme() { const value = !dark; setDark(value); document.documentElement.dataset.theme = value ? "dark" : "light"; document.documentElement.style.colorScheme = value ? "dark" : "light"; localStorage.setItem("theme", value ? "dark" : "light"); }
   function search(event: FormEvent) { event.preventDefault(); if (query.trim()) { router.push(`/search/${encodeURIComponent(query.trim())}`); setSearchOpen(false); } }
   const basmala = <>
@@ -29,9 +31,10 @@ export function Header() {
     <button className="rail-trigger" onClick={() => setMenu(!menu)} aria-label="القائمة">{menu ? <X /> : <Menu />}</button>
     <aside className={menu ? "floating-rail open" : "floating-rail"}>
       <button onClick={() => setSearchOpen(true)} data-label={t("common.search", "البحث")}><Search /></button>
-      {navigation.map((item) => { const Icon = item.icon; const active = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href)); const label = t(item.translationKey, item.label); return active ? <button className="active" type="button" data-label={label} aria-label={label} key={item.href}><Icon /></button> : <Link href={item.href} prefetch={false} data-label={label} aria-label={label} key={item.href}><Icon /></Link>; })}
+      {navigation.map((item) => { const Icon = item.icon; const active = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href)); const label = t(item.translationKey, item.label); return active ? <button className="active" type="button" data-label={label} aria-label={label} key={item.href}><Icon /></button> : <Link href={item.href} prefetch={false} onClick={() => { setNavigating(true); setMenu(false); }} data-label={label} aria-label={label} key={item.href}><Icon /></Link>; })}
       <button className="theme-rail" onClick={toggleTheme} data-label="تبديل المظهر">{dark ? <Sun /> : <Moon />}</button>
     </aside>
+    {navigating && <div className="route-loading-overlay" role="status" aria-live="polite"><span><LoaderCircle className="spin" /></span><strong>{t("common.loading", "جاري التحميل...")}</strong></div>}
     {searchOpen && <div className="search-overlay" onClick={() => setSearchOpen(false)}><form onSubmit={search} onClick={(e) => e.stopPropagation()}><button type="button" onClick={() => setSearchOpen(false)}><X /></button><Search /><input autoFocus value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t("homepage.searchPlaceholder", "ابحث في القرآن الكريم...")} /><button className="search-submit">{t("common.search", "بحث")}</button></form></div>}
   </>;
 }
