@@ -46,6 +46,14 @@ export function HomeContent({ surahs, azkar, collections, youtubeContent }: { su
         </Link>)}
       </div>
     </section>
+    <section className="section muted-section">
+      <div className="section-heading home-arabic-heading">
+        <span className="eyebrow">{t("ui.index", "فهرس القرآن الكريم")}</span>
+        <h2>{t("ui.chooseSurah", "اختر سورة")}</h2>
+        <p>{t("ui.chooseSurahDesc", "انتقل مباشرة إلى السورة التي تريد قراءتها.")}</p>
+      </div>
+      <SurahGrid surahs={surahs} compact />
+    </section>
     <section className="section home-content-section">
       <div className="section-heading home-arabic-heading">
         <span className="eyebrow">{t("ui.daily", "محتوى يومي موثوق")}</span>
@@ -55,13 +63,5 @@ export function HomeContent({ surahs, azkar, collections, youtubeContent }: { su
       <div className="home-data-columns"><AzkarCarousel items={azkar} /><CollectionsCarousel items={collections} /></div>
     </section>
     {youtubeContent && <YouTubeShowcase content={youtubeContent} compact />}
-    <section className="section muted-section">
-      <div className="section-heading home-arabic-heading">
-        <span className="eyebrow">{t("ui.index", "فهرس القرآن الكريم")}</span>
-        <h2>{t("ui.chooseSurah", "اختر سورة")}</h2>
-        <p>{t("ui.chooseSurahDesc", "انتقل مباشرة إلى السورة التي تريد قراءتها.")}</p>
-      </div>
-      <SurahGrid surahs={surahs} compact />
-    </section>
   </>;
 }
