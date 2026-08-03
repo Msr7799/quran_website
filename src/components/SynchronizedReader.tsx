@@ -239,8 +239,12 @@ export function SynchronizedReader({ surah, surahs }: { surah: Surah; surahs: Su
   }
   const isArabic = locale === "ar" || locale === "ur";
   const translationDirection = localeInfo[locale].dir;
+  const activeReciter = synchronizedReciters.find((item) => item.id === reciter) ?? synchronizedReciters[0];
 
   return <div className="sync-reader">
+    <div className="reader-header-portrait" aria-label={`${t("quran.reciter", "القارئ")}: ${isArabic ? activeReciter.ar : activeReciter.en}`} title={isArabic ? activeReciter.ar : activeReciter.en}>
+      <ReciterAvatar reciterId={activeReciter.imageId} name={activeReciter.ar} sizes="128px" />
+    </div>
     <div className="sync-toolbar">
       <div className="reader-selectors">
         <div className="select-label"><span>{t("quran.reciter", "القارئ")}</span><SelectDropdown value={reciter} onValueChange={setReciter} ariaLabel={t("quran.reciter", "القارئ")} className="reader-reciter-trigger" contentClassName="reader-reciter-menu" options={synchronizedReciters.map((item) => ({ value: item.id, label: <span className="reciter-option"><ReciterAvatar reciterId={item.imageId} name={item.ar} sizes="40px" /><span>{isArabic ? item.ar : item.en}</span></span>, searchText: `${item.ar} ${item.en}` }))} /></div>

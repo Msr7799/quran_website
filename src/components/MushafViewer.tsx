@@ -250,6 +250,10 @@ export function MushafViewer({ page }: { page: number }) {
         <button className="mushaf-player-handle" type="button" onPointerDown={(event) => playerDrag.start(event)} aria-label="اسحب لتحريك مشغل التلاوة"><GripHorizontal /><span>حرّك المشغل</span></button>
         <button className="mushaf-player-minimize" type="button" onClick={() => setPlayerSize(true)} aria-label="تصغير مشغل التلاوة" title="تصغير المشغل"><Minimize /></button>
       </div>
+      {selectedReciter && <div className="mushaf-reciter-identity">
+        <ReciterAvatar reciterId={selectedReciter.id} name={selectedReciter.reciter.ar} sizes="76px" />
+        <span><strong>{locale === "ar" ? selectedReciter.reciter.ar : selectedReciter.reciter.en}</strong><small>{locale === "ar" ? selectedReciter.rewaya.ar : selectedReciter.rewaya.en}</small></span>
+      </div>}
       <SelectDropdown value={reciter} ariaLabel="اختر القارئ" options={reciterOptions} onValueChange={changeReciter} />
       <div className="mushaf-audio-controls number-font">
         <button type="button" onClick={() => { if (audio.current) audio.current.currentTime = Math.max(0, audio.current.currentTime - 10); }} aria-label="رجوع عشر ثوان"><RotateCcw /></button>
