@@ -1,7 +1,5 @@
 "use client";
 
-import Image from "next/image";
-import { cloudinaryAsset } from "@/lib/cloudinary-assets";
 import {
   BookOpen,
   Clock3,
@@ -17,6 +15,7 @@ import {
 } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 import { useLocale } from "@/i18n/LocaleProvider";
+import { ReciterAvatar } from "@/components/ReciterAvatar";
 import type { Reciter, SurahMeta } from "@/lib/types";
 import styles from "./AudioDirectory.module.css";
 
@@ -123,7 +122,7 @@ export function AudioDirectory({ reciters, surahs }: { reciters: Reciter[]; sura
                 const active = item.id === reciter.id;
                 return (
                   <button className={active ? styles.activeChoice : ""} type="button" onClick={() => selectReciter(item)} key={item.id} aria-pressed={active}>
-                    <span className={styles.choiceIcon}><UserRound aria-hidden="true" /></span>
+                    <ReciterAvatar className={styles.choiceIcon} reciterId={item.id} name={item.reciter.ar} sizes="36px" />
                     <span><strong>{useArabic ? item.reciter.ar : item.reciter.en}</strong><small>{useArabic ? item.rewaya.ar : item.rewaya.en}</small></span>
                     {active && <i>✓</i>}
                   </button>
@@ -158,7 +157,7 @@ export function AudioDirectory({ reciters, surahs }: { reciters: Reciter[]; sura
 
       <section className={styles.listeningStage} aria-label={useArabic ? "مشغل التلاوة" : "Recitation player"}>
         <div className={styles.reciterCard}>
-          <span className={styles.reciterLogo}><Image src={cloudinaryAsset("/images/logo.png")} width={736} height={736} sizes="70px" alt="" /></span>
+          <ReciterAvatar className={styles.reciterLogo} reciterId={reciter.id} name={reciter.reciter.ar} sizes="76px" />
           <h2>{reciterName}</h2>
           <p>{narration}</p>
         </div>

@@ -34,13 +34,14 @@
 .choiceList i { color: var(--brand); font-style: normal; font-weight: 800; }
 .choiceIcon,.surahNumber { width: 36px; height: 36px; display: grid!important; place-items: center; color: var(--brand); background: var(--bg); border: 1px solid var(--line); border-radius: 50%; }
 .choiceIcon svg { width: 17px; }
+.choiceIcon img { width: 100%; height: 100%; object-fit: cover; }
 .surahNumber { font: 700 .8rem Arial,sans-serif; direction: ltr; }
 .selectionStatus { min-height: 50px; display: flex; align-items: center; justify-content: center; gap: 8px; color: var(--brand); font-size: .9rem; }
 .selectionStatus svg { width: 17px; }
 
 .listeningStage { min-height: 430px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 38px 18px; background: color-mix(in srgb,var(--surface) 84%,#111); border: 1px dashed var(--line); border-radius: 16px; }
 .reciterCard { position: relative; z-index: 1; width: min(270px,90%); padding: 22px; text-align: center; color: #20262d; background: #f5f7fb; border: 2px solid #a6adb4; border-radius: 14px; box-shadow: 0 15px 35px #0005; }
-.reciterLogo { width: 76px; height: 76px; display: grid; place-items: center; padding: 5px; margin: 0 auto 10px; overflow: hidden; background: #050709; border: 3px solid #8d959c; border-radius: 50%; }
+.reciterLogo { width: 96px; height: 96px; display: grid; place-items: center; padding: 3px; margin: 0 auto 12px; overflow: hidden; background: #050709; border: 3px solid #8d959c; border-radius: 50%; }
 .reciterLogo img { width: 100%; height: 100%; object-fit: contain; border-radius: 50%; }
 .reciterCard h2 { margin: 5px 0; color: #20262d; font-size: 1.35rem; }
 .reciterCard p { margin: 0; color: #6993bf; }

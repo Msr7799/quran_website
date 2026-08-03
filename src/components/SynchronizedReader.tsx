@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Surah, SurahMeta } from "@/lib/types";
 import { synchronizedReciters } from "@/lib/reciters";
+import { ReciterAvatar } from "@/components/ReciterAvatar";
 import { localeInfo, useLocale } from "@/i18n/LocaleProvider";
 import { toArabicNumber } from "@/lib/numbers";
 import { SelectDropdown } from "@/components/ui/dropdown-menu";
@@ -242,7 +243,7 @@ export function SynchronizedReader({ surah, surahs }: { surah: Surah; surahs: Su
   return <div className="sync-reader">
     <div className="sync-toolbar">
       <div className="reader-selectors">
-        <div className="select-label"><span>{t("quran.reciter", "القارئ")}</span><SelectDropdown value={reciter} onValueChange={setReciter} ariaLabel={t("quran.reciter", "القارئ")} className="reader-reciter-trigger" contentClassName="reader-reciter-menu" options={synchronizedReciters.map((item) => ({ value: item.id, label: isArabic ? item.ar : item.en, searchText: `${item.ar} ${item.en}` }))} /></div>
+        <div className="select-label"><span>{t("quran.reciter", "القارئ")}</span><SelectDropdown value={reciter} onValueChange={setReciter} ariaLabel={t("quran.reciter", "القارئ")} className="reader-reciter-trigger" contentClassName="reader-reciter-menu" options={synchronizedReciters.map((item) => ({ value: item.id, label: <span className="reciter-option"><ReciterAvatar reciterId={item.imageId} name={item.ar} sizes="40px" /><span>{isArabic ? item.ar : item.en}</span></span>, searchText: `${item.ar} ${item.en}` }))} /></div>
         <div className="select-label"><span>{t("ui.chooseSurah", "اختر سورة")}</span><SelectDropdown value={String(surah.number)} onValueChange={(value) => router.push(`/quran/${value}`)} ariaLabel={t("ui.chooseSurah", "اختر سورة")} className="reader-surah-trigger" contentClassName="reader-surah-menu" options={surahs.map((item) => ({ value: String(item.number), label: <span className="reader-surah-option"><b>{item.number}</b><span>سورة {item.name.ar}</span><small>{item.name.transliteration}</small></span>, searchText: `${item.number} ${item.name.ar} ${item.name.en} ${item.name.transliteration}` }))} /></div>
         <a className="download-surah" href={`/api/recitation/${reciter}/${surah.number}?download=1`} download aria-disabled={!data || loading} onClick={(event) => { if (!data || loading) event.preventDefault(); }}><Download />{t("quran.downloadSurah", "تحميل السورة")}</a>
       </div>

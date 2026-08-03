@@ -5,6 +5,7 @@ import type { PDFDocumentProxy, RenderTask } from "pdfjs-dist";
 import { ChevronLeft, ChevronRight, Download, GripHorizontal, LoaderCircle, Maximize, Minimize, Minus, Pause, Play, Plus, RotateCcw, RotateCw, Volume2 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { SelectDropdown } from "@/components/ui/dropdown-menu";
+import { ReciterAvatar } from "@/components/ReciterAvatar";
 import { useLocale } from "@/i18n/LocaleProvider";
 import type { Locale } from "@/i18n/LocaleProvider";
 
@@ -148,7 +149,7 @@ export function MushafViewer({ page }: { page: number }) {
   const downloadLabel = locale === "ar" ? "تحميل التلاوة" : "Download recitation";
   const reciterOptions = audioReciters.map((item) => ({
     value: String(item.id),
-    label: locale === "ar" ? item.reciter.ar : item.reciter.en,
+    label: <span className="reciter-option"><ReciterAvatar reciterId={item.id} name={item.reciter.ar} sizes="40px" /><span>{locale === "ar" ? item.reciter.ar : item.reciter.en}</span></span>,
     searchText: `${item.reciter.ar} ${item.reciter.en} ${item.rewaya.ar} ${item.rewaya.en}`,
   }));
   const step = () => window.matchMedia("(min-width: 781px)").matches ? 2 : 1;

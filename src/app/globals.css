@@ -102,6 +102,11 @@ body * { font-family: inherit; }
 .site-dropdown-label { min-width: 0; flex: 1; white-space: nowrap; text-align: start; }
 .site-dropdown-search { position: sticky; top: -6px; z-index: 1; padding: 5px; background: var(--surface); }
 .site-dropdown-search input { width: 100%; min-height: 40px; border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; color: var(--text); background: var(--bg); }
+.reciter-avatar { width: 40px; height: 40px; flex: 0 0 40px; display: grid; place-items: center; overflow: hidden; color: var(--brand); background: var(--bg); border: 1px solid var(--line); border-radius: 50%; }
+.reciter-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.reciter-avatar svg { width: 18px; height: 18px; }
+.reciter-option { min-width: 0; display: flex; align-items: center; gap: 10px; }
+.reciter-option > span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 @keyframes dropdown-in { from { opacity: 0; transform: translateY(-4px) scale(.98); } }
 
 .home-content-section { background: var(--bg); }
