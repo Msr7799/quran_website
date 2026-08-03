@@ -12,7 +12,7 @@ export function ReciterAvatar({ reciterId, name, className = "", sizes = "44px" 
 
   return (
     <span className={`reciter-avatar ${className}`} aria-hidden="true">
-      {src ? <Image src={src} width={96} height={96} sizes={sizes} alt={name} /> : <UserRound />}
+      {src ? <Image src={src} width={180} height={180} sizes={sizes} alt={name} /> : <UserRound />}
     </span>
   );
 }

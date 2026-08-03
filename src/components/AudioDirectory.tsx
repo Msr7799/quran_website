@@ -157,7 +157,7 @@ export function AudioDirectory({ reciters, surahs }: { reciters: Reciter[]; sura
 
       <section className={styles.listeningStage} aria-label={useArabic ? "مشغل التلاوة" : "Recitation player"}>
         <div className={styles.reciterCard}>
-          <ReciterAvatar className={styles.reciterLogo} reciterId={reciter.id} name={reciter.reciter.ar} sizes="76px" />
+          <ReciterAvatar className={styles.reciterLogo} reciterId={reciter.id} name={reciter.reciter.ar} sizes="150px" />
           <h2>{reciterName}</h2>
           <p>{narration}</p>
         </div>
