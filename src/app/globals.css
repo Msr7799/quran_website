@@ -1994,7 +1994,7 @@ body:has(.book-viewer) .basmala-header img { width: min(340px, 45vw); height: 82
     height: 90px;
   }
   .language-orb {
-    position: fixed;
+    position: absolute;
     z-index: 1201;
     width: 47px;
     height: 47px;
@@ -2021,14 +2021,14 @@ body:has(.book-viewer) .basmala-header img { width: min(340px, 45vw); height: 82
     color: #fff;
     background: rgba(27,31,34,.9);
     box-shadow: 0 10px 28px #0007;
-    transform: translateX(-50%);
+    translate: -50% 0;
     pointer-events: none;
     backdrop-filter: blur(12px);
+    animation: mobileRailSwipeHint 2.5s ease-in-out 2 forwards;
   }
   .mobile-rail-swipe-hint svg {
     width: 24px;
     height: 24px;
-    animation: mobileRailSwipeHint 1.35s ease-in-out infinite;
   }
   .floating-rail {
     left: 8px;
@@ -2133,8 +2133,9 @@ body:has(.book-viewer) .basmala-header img { width: min(340px, 45vw); height: 82
 }
 
 @keyframes mobileRailSwipeHint {
-  0%,100% { transform: translateY(4px); opacity: .45; }
-  50% { transform: translateY(-5px); opacity: 1; }
+  0% { transform: translateY(3px); opacity: .55; }
+  50% { transform: translateY(-4px); opacity: 1; }
+  100% { transform: translateY(0); opacity: .75; }
 }
 
 @media (min-width: 781px) {
@@ -2142,7 +2143,7 @@ body:has(.book-viewer) .basmala-header img { width: min(340px, 45vw); height: 82
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .mobile-rail-swipe-hint svg { animation: none; }
+  .mobile-rail-swipe-hint { animation: none; }
 }
 
 .sync-reader { margin-top: 18px; }
