@@ -4,7 +4,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { ArrowUp, Bot, ExternalLink, Globe2, MessageCircle, Send, Sparkles, Trash2, User, X } from "lucide-react";
+import { Bot, ExternalLink, Globe2, MessageCircle, Send, Sparkles, Trash2, User, X } from "lucide-react";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -20,7 +20,6 @@ export function FloatingTools() {
   const pathname = usePathname();
   const reduceMotion = useReducedMotion();
   const [isOpen, setIsOpen] = useState(false);
-  const [showTop, setShowTop] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -37,14 +36,6 @@ export function FloatingTools() {
       try { setMessages(JSON.parse(saved) as Message[]); } catch { sessionStorage.removeItem("noor-floating-chat"); }
     }, 0);
     return () => window.clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
-    // يحدّث ظهور زر العودة إلى أعلى الصفحة.
-    const onScroll = () => setShowTop(window.scrollY > 320);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
@@ -91,10 +82,6 @@ export function FloatingTools() {
   };
 
   return <div className={styles.layer}>
-    <AnimatePresence>
-      {showTop && <motion.button className={styles.topButton} type="button" aria-label={t("ai.backTop")} title={t("ai.backTop")} initial={{ opacity: 0, scale: .7, y: 12 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: .7, y: 12 }} onClick={() => window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" })}><ArrowUp /></motion.button>}
-    </AnimatePresence>
-
     {pathname !== "/chat-bot" && <>
       <AnimatePresence>
         {isOpen && <motion.section className={styles.panel} role="dialog" aria-label={t("chat.title")} initial={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: .82, y: 28 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: .88, y: 22 }} transition={{ type: "spring", stiffness: 320, damping: 28 }}>
