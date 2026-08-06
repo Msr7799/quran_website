@@ -264,6 +264,10 @@ export function SynchronizedReader({ surah, surahs }: { surah: Surah; surahs: Su
       </div>
       <div className="now-reading"><small>{loading ? t("common.loading", "جاري التحميل...") : currentAyah ? `${t("quran.ayah", "الآية")} ${currentAyah}` : t("quran.listen", "القراءة المتزامنة")}</small><strong>{t("quran.surah", "سورة")} {surah.name.ar}</strong>{data?.estimated && <em>Estimated synchronization</em>}</div>
     </div>
+    <div className="reader-mobile-details">
+      <a className="download-surah" href={`/api/recitation/${reciter}/${surah.number}?download=1`} download aria-disabled={!data || loading} onClick={(event) => { if (!data || loading) event.preventDefault(); }}><Download />{t("quran.downloadSurah", "تحميل السورة")}</a>
+      <div className="now-reading"><small>{loading ? t("common.loading", "جاري التحميل...") : currentAyah ? `${t("quran.ayah", "الآية")} ${currentAyah}` : t("quran.listen", "القراءة المتزامنة")}</small><strong>{t("quran.surah", "سورة")} {surah.name.ar}</strong>{data?.estimated && <em>Estimated synchronization</em>}</div>
+    </div>
     <div className="sync-verses">
       {surah.number !== 1 && surah.number !== 9 && <p className="basmala" lang="ar" dir="rtl">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</p>}
       {visibleVerses.map((verse, index) => <section ref={hasMoreVerses && index === visibleVerses.length - 2 ? loadMoreVerse : undefined} className={currentAyah === verse.number ? "sync-verse active" : "sync-verse"} id={`ayah-${verse.number}`} key={verse.number} onClick={() => seekAyah(verse.number)}>

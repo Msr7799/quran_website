@@ -2027,7 +2027,7 @@ body:has(.book-viewer) .basmala-header img { width: min(340px, 45vw); height: 82
     translate: -50% 0;
     pointer-events: none;
     backdrop-filter: blur(12px);
-    animation: mobileRailSwipeHint 1.25s ease-in-out 4 forwards;
+    animation: mobileRailSwipeHint 1.25s ease-in-out 4 forwards, mobileRailHintHide 5s step-end forwards;
   }
   .mobile-rail-swipe-hint[data-dock="left"] {
     left: 12px;
@@ -2035,7 +2035,7 @@ body:has(.book-viewer) .basmala-header img { width: min(340px, 45vw); height: 82
     bottom: auto;
     translate: 0 -50%;
     border-radius: 8px 18px 18px 8px;
-    animation-name: mobileRailSwipeHintLeft;
+    animation-name: mobileRailSwipeHintLeft, mobileRailHintHide;
   }
   .mobile-rail-swipe-hint[data-dock="right"] {
     right: 12px;
@@ -2044,7 +2044,7 @@ body:has(.book-viewer) .basmala-header img { width: min(340px, 45vw); height: 82
     bottom: auto;
     translate: 0 -50%;
     border-radius: 18px 8px 8px 18px;
-    animation-name: mobileRailSwipeHintRight;
+    animation-name: mobileRailSwipeHintRight, mobileRailHintHide;
   }
   .mobile-rail-swipe-hint[data-dock="floating"] {
     left: var(--mobile-rail-x);
@@ -2245,12 +2245,17 @@ body:has(.book-viewer) .basmala-header img { width: min(340px, 45vw); height: 82
   100% { transform: translateX(0); opacity: .75; }
 }
 
+@keyframes mobileRailHintHide {
+  0% { visibility: visible; }
+  100% { visibility: hidden; }
+}
+
 @media (min-width: 781px) {
   .mobile-rail-swipe-hint { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .mobile-rail-swipe-hint { animation: none; }
+  .mobile-rail-swipe-hint { animation: mobileRailHintHide 5s step-end forwards; }
 }
 
 .sync-reader { margin-top: 18px; }
@@ -2272,6 +2277,7 @@ body:has(.book-viewer) .basmala-header img { width: min(340px, 45vw); height: 82
 .now-reading small { color: var(--brand); }
 .now-reading strong { font-family: Uthmanic, serif; }
 .now-reading em { font-size: .68rem; color: #d39a3e; }
+.reader-mobile-details { display: none; }
 .sync-verses { display: grid; gap: 12px; margin: 18px 0 105px; }
 .sync-verse { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 24px; scroll-margin-top: 120px; cursor: pointer; transition: .25s; }
 .sync-verse:hover { border-color: color-mix(in srgb, var(--brand) 55%, var(--line)); }
@@ -2331,8 +2337,12 @@ body:has(.book-viewer) .basmala-header img { width: min(340px, 45vw); height: 82
   .surah-header { padding-top: 155px; }
   .reader-header-portrait { top: 20px; right: 50%; width: 108px; height: 108px; transform: translateX(50%); }
   .reader-header-portrait,.reader-header-portrait .reciter-avatar { width: 108px; height: 108px; }
-  .sync-toolbar { top: 5px; display: grid; }
-  .reader-selectors { grid-template-columns: 1fr; }
+  .sync-toolbar { top: 5px; display: block; padding: 10px 12px; }
+  .reader-selectors { grid-template-columns: 1fr; gap: 8px; }
+  .sync-toolbar .download-surah,.sync-toolbar .now-reading { display: none; }
+  .reader-mobile-details { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; gap: 10px; margin: 10px 0 0; padding: 10px 12px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+  .reader-mobile-details .download-surah { align-self: center; }
+  .reader-mobile-details .now-reading { min-width: 95px; text-align: right; }
   .reader-reciter-trigger,.reader-surah-trigger { min-width: 0; width: 100%; }
   .reader-reciter-menu,.reader-surah-menu { min-width: min(340px,calc(100vw - 24px)); }
   .sync-toolbar label { justify-content: space-between; }
