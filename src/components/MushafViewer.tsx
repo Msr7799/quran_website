@@ -1,3 +1,4 @@
+// المسار: src/components/MushafViewer.tsx — يعرض صفحات المصحف مع التنقل والتلاوة الصوتية.
 "use client";
 
 import { AnimatePresence, motion, useDragControls } from "motion/react";
@@ -21,6 +22,7 @@ type AudioReciter = {
   link: string;
 };
 
+// يحوّل زمن التشغيل إلى صيغة دقائق وثوانٍ.
 function clock(value: number) {
   if (!Number.isFinite(value)) return "0:00";
   const seconds = Math.max(0, Math.floor(value));
@@ -45,6 +47,7 @@ const mushafText: Record<Locale, { jump: string }> = {
   ko:{jump:"수라로 이동"},
 };
 
+// يرسم صفحة واحدة من ملف المصحف بجودة مناسبة.
 function PdfPage({ document, page, quality }: { document: PDFDocumentProxy; page: number; quality: number }) {
   const canvas = useRef<HTMLCanvasElement>(null);
   const [ready, setReady] = useState(false);
@@ -69,6 +72,7 @@ function PdfPage({ document, page, quality }: { document: PDFDocumentProxy; page
   return <div className={`book-page ${ready ? "ready" : ""}`}><canvas ref={canvas} aria-label={`صفحة ${page} من القرآن الكريم`} /><span>{page}</span></div>;
 }
 
+// يدير تحميل المصحف والتنقل والتكبير والتلاوة.
 export function MushafViewer({ page }: { page: number }) {
   const { locale, t } = useLocale();
   const labels = mushafText[locale];
@@ -115,11 +119,13 @@ export function MushafViewer({ page }: { page: number }) {
   }, []);
 
   useEffect(() => {
+    // يحدّث حالة ملء الشاشة عند تغيرها.
     const changed = () => setFullscreen(document.fullscreenElement === viewer.current);
     document.addEventListener("fullscreenchange", changed);
     return () => document.removeEventListener("fullscreenchange", changed);
   }, []);
 
+  // ينتقل إلى صفحة مصحف صالحة ويحدّث الرابط.
   const go = useCallback((target: number, keepChosenSurah = false) => {
     const safe = Math.max(mushaf.first, Math.min(mushaf.last, target));
     setDirection(safe > current ? 1 : -1);
@@ -130,6 +136,7 @@ export function MushafViewer({ page }: { page: number }) {
   }, [current]);
 
   useEffect(() => {
+    // ينفّذ تنقل لوحة المفاتيح بين صفحات المصحف.
     const keys = (event: KeyboardEvent) => {
       const step = window.matchMedia("(min-width: 781px)").matches ? 2 : 1;
       if (event.key === "ArrowRight") go(current + step);
@@ -152,12 +159,16 @@ export function MushafViewer({ page }: { page: number }) {
     label: <span className="reciter-option"><ReciterAvatar reciterId={item.id} name={item.reciter.ar} sizes="40px" /><span>{locale === "ar" ? item.reciter.ar : item.reciter.en}</span></span>,
     searchText: `${item.reciter.ar} ${item.reciter.en} ${item.rewaya.ar} ${item.rewaya.en}`,
   }));
+  // يحدد عدد الصفحات في خطوة التنقل حسب حجم الشاشة.
   const step = () => window.matchMedia("(min-width: 781px)").matches ? 2 : 1;
+  // يفعّل وضع ملء الشاشة أو ينهيه.
   const toggleFullscreen = async () => fullscreen ? document.exitFullscreen() : viewer.current?.requestFullscreen();
+  // يبدّل حجم مشغّل التلاوة ويحفظ التفضيل.
   const setPlayerSize = (minimized: boolean) => {
     setPlayerMinimized(minimized);
     try { window.localStorage.setItem(playerStateKey, String(minimized)); } catch { /* The player still works without persistence. */ }
   };
+  // يغيّر القارئ ويحفظ الاختيار.
   const changeReciter = (value: string) => {
     audio.current?.pause();
     setPlaying(false);
@@ -189,6 +200,7 @@ export function MushafViewer({ page }: { page: number }) {
     return () => controller.abort();
   }, [selectedSurah]);
 
+  // يشغّل تلاوة الصفحة الحالية أو يوقفها مؤقتًا.
   const toggleAudio = async () => {
     const element = audio.current;
     if (!element || !audioUrl) return;

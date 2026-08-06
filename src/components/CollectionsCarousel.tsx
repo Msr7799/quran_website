@@ -1,3 +1,4 @@
+// المسار: src/components/CollectionsCarousel.tsx — يعرض مجموعات المحتوى في شريط بطاقات متحرك.
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
@@ -12,6 +13,7 @@ type Collection = {
   parts_count: number;
 };
 
+// يفصل الأرقام لتطبيق خطها المخصص داخل النص.
 function TextWithNumberFont({ children }: { children: string }) {
   return (
     <>
@@ -28,6 +30,7 @@ function TextWithNumberFont({ children }: { children: string }) {
   );
 }
 
+// يعرض بطاقات المجموعات ويدير موضع الشريط.
 export function CollectionsCarousel({ items }: { items: Collection[] }) {
   const { t } = useLocale();
   const [index, setIndex] = useState(0);
@@ -42,6 +45,7 @@ export function CollectionsCarousel({ items }: { items: Collection[] }) {
   }, [items.length, playing]);
   const item = items[index];
   if (!item) return null;
+  // يحرّك شريط المجموعات في الاتجاه المطلوب.
   const go = (direction: number) =>
     setIndex((value) => (value + direction + items.length) % items.length);
 

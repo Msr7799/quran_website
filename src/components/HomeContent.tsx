@@ -1,3 +1,4 @@
+// المسار: src/components/HomeContent.tsx — يجمع أقسام ومحتوى الصفحة الرئيسية.
 "use client";
 
 import Link from "next/link";
@@ -27,6 +28,7 @@ const featureDescriptionKeys: Record<string, string> = {
 
 const features = navigation.filter((item) => featureDescriptionKeys[item.href]);
 
+// يركّب أقسام الصفحة الرئيسية من البيانات المتاحة.
 export function HomeContent({ surahs, azkar, collections, youtubeContent }: { surahs: SurahMeta[]; azkar: Zekr[]; collections: Collection[]; youtubeContent: YouTubeHomeContent | null }) {
   const { t } = useLocale();
 

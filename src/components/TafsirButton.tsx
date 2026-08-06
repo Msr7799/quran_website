@@ -1,3 +1,4 @@
+// المسار: src/components/TafsirButton.tsx — يعرض نافذة التفسير ويدير نسخها ومشاركتها.
 "use client";
 
 import { BookOpenText, Check, Copy, LoaderCircle, Share2, Sparkles, X } from "lucide-react";
@@ -11,6 +12,7 @@ const editions = [
 ] as const;
 type Tafsir = { name: string; text: string; source: string; locale: Locale; model: string; aiGenerated: boolean };
 
+// يجلب التفسير ويعرضه حسب اللغة والنسخة المختارة.
 export function TafsirButton({ surah, ayah, surahName, arabicText }: { surah: number; ayah: number; surahName: string; arabicText: string }) {
   const { locale, t } = useLocale();
   const [open, setOpen] = useState(false);
@@ -38,21 +40,27 @@ export function TafsirButton({ surah, ayah, surahName, arabicText }: { surah: nu
     if (!open) return;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    // يغلق نافذة التفسير عند ضغط مفتاح الهروب.
     const closeOnEscape = (event: KeyboardEvent) => { if (event.key === "Escape") setOpen(false); };
     window.addEventListener("keydown", closeOnEscape);
     return () => { document.body.style.overflow = previousOverflow; window.removeEventListener("keydown", closeOnEscape); };
   }, [open]);
 
+  // يعيد تهيئة حالة التفسير قبل جلب نسخة جديدة.
   const reload = () => { setTafsir(null); setLoading(true); setError(false); setCopied(false); };
+  // يغيّر نسخة التفسير ويطلب إعادة تحميلها.
   const changeEdition = (value: string) => { reload(); setEdition(value); };
+  // يغيّر لغة التفسير ويطلب إعادة تحميله.
   const changeLanguage = (value: string) => { reload(); setLanguageOverride(value as Locale); };
   const shareText = tafsir ? `${t("tafsir.title")} — سورة ${surahName} (${surah}:${ayah})\n\n${tafsir.text}\n\n${arabicText}` : "";
+  // ينسخ نص التفسير ومرجع الآية إلى الحافظة.
   async function copyTafsir() {
     if (!shareText || !navigator.clipboard) return;
     await navigator.clipboard.writeText(shareText);
     setCopied(true);
     window.setTimeout(() => setCopied(false), 1800);
   }
+  // يشارك التفسير أو ينسخه عند تعذر المشاركة.
   async function shareTafsir() {
     if (!shareText) return;
     if (navigator.share) await navigator.share({ title: t("tafsir.title"), text: shareText, url: window.location.href }).catch(() => undefined);

@@ -1,3 +1,4 @@
+// المسار: src/components/LiveBroadcast.tsx — يشغّل البث المباشر للقنوات والإذاعات الإسلامية.
 "use client";
 
 import {
@@ -18,18 +19,17 @@ import { SelectDropdown } from "@/components/ui/dropdown-menu";
 import { useLocale } from "@/i18n/LocaleProvider";
 import {
   liveSaudiChannelTranslations,
-  liveSports1ChannelTranslations,
   liveSunnahChannelTranslations,
 } from "@/i18n/footerLiveTranslations";
 import type { Radio as RadioType } from "@/lib/types";
 import styles from "./LiveBroadcast.module.css";
 
+// يدير تشغيل القنوات المرئية والإذاعات المباشرة.
 export function LiveBroadcast({ radios }: { radios: RadioType[] }) {
   const { locale, t } = useLocale();
   const channels = [
     { id: 1, type: "hls" as const, name: t("live.primary") },
     { id: 2, type: "hls" as const, name: liveSunnahChannelTranslations[locale] },
-    { id: 3, type: "hls" as const, name: liveSports1ChannelTranslations[locale] },
     { id: 4, type: "hls" as const, name: liveSaudiChannelTranslations[locale] },
     { id: 5, type: "youtube" as const, name: t("live.backup"), url: "https://www.youtube.com/embed/CmppEPGps1w?autoplay=1&mute=0" },
   ];
@@ -61,27 +61,28 @@ export function LiveBroadcast({ radios }: { radios: RadioType[] }) {
       ? "quran"
       : channelId === 2
         ? "sunnah"
-        : channelId === 3
-          ? "sports1"
-          : channelId === 4
-            ? "saudi"
-            : null;
+        : channelId === 4
+          ? "saudi"
+          : null;
     if (!streamChannel || !video) return;
     let disposed = false;
     let retries = 0;
     let retryTimer: ReturnType<typeof setTimeout> | undefined;
     let hls: import("hls.js").default | null = null;
 
+    // يسجل تعذر تشغيل البث الحالي.
     const fail = () => {
       if (disposed) return;
       setVideoLoading(false);
       setVideoError(true);
     };
+    // يعيد محاولة تحميل البث بعد تأخير قصير.
     const retry = () => {
       if (disposed || retries >= 3) return fail();
       retries += 1;
       retryTimer = setTimeout(() => void loadStream(), 900 * retries);
     };
+    // يثبت نجاح تحميل البث ويزيل حالة الخطأ.
     const ready = () => {
       if (disposed) return;
       retries = 0;
@@ -89,6 +90,7 @@ export function LiveBroadcast({ radios }: { radios: RadioType[] }) {
       setVideoError(false);
       void video.play().catch(() => undefined);
     };
+    // يجلب رابط البث ويهيئ المشغّل المناسب.
     const loadStream = async () => {
       try {
         setVideoLoading(true);
@@ -116,7 +118,9 @@ export function LiveBroadcast({ radios }: { radios: RadioType[] }) {
         hls.loadSource(data.streamUrl);
       } catch { retry(); }
     };
+    // يعالج جاهزية عنصر الفيديو للتشغيل.
     const onCanPlay = () => ready();
+    // يعالج أخطاء التشغيل الأصلي عند غياب HLS.
     const onNativeError = () => { if (!hls) retry(); };
     video.addEventListener("canplay", onCanPlay);
     video.addEventListener("error", onNativeError);
@@ -133,12 +137,14 @@ export function LiveBroadcast({ radios }: { radios: RadioType[] }) {
     };
   }, [channelId]);
 
+  // يختار قناة مرئية ويوقف أي إذاعة نشطة.
   function selectChannel(id: number) {
     setChannelId(id);
     setVideoLoading(true);
     setVideoError(false);
   }
 
+  // يختار إذاعة ويوقف البث المرئي.
   function selectRadio(id: number) {
     audioRef.current?.pause();
     setRadioId(id);
@@ -147,6 +153,7 @@ export function LiveBroadcast({ radios }: { radios: RadioType[] }) {
     setFavorite(false);
   }
 
+  // يبدّل تشغيل الإذاعة المحددة أو إيقافها.
   async function toggleRadio() {
     const audio = audioRef.current;
     if (!audio || !activeRadio) return;
@@ -167,12 +174,14 @@ export function LiveBroadcast({ radios }: { radios: RadioType[] }) {
     }
   }
 
+  // ينتقل إلى الإذاعة السابقة أو التالية.
   function moveRadio(direction: -1 | 1) {
     if (radios.length === 0) return;
     const currentIndex = Math.max(0, radios.findIndex((radio) => radio.id === activeRadio?.id));
     selectRadio(radios[(currentIndex + direction + radios.length) % radios.length].id);
   }
 
+  // يحدّث مستوى الصوت وحالة الكتم.
   function changeVolume(value: number) {
     setVolume(value);
     setMuted(value === 0);
@@ -182,12 +191,14 @@ export function LiveBroadcast({ radios }: { radios: RadioType[] }) {
     }
   }
 
+  // يبدّل كتم صوت الإذاعة.
   function toggleMute() {
     const nextMuted = !muted;
     setMuted(nextMuted);
     if (audioRef.current) audioRef.current.muted = nextMuted;
   }
 
+  // يشارك رابط الإذاعة أو ينسخه عند تعذر المشاركة.
   async function shareRadio() {
     const shareData = { title: activeRadio?.name ?? t("live.radioTitle"), url: window.location.href };
     if (navigator.share) {

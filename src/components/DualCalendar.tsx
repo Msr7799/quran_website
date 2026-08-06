@@ -1,3 +1,4 @@
+// المسار: src/components/DualCalendar.tsx — يعرض التقويمين الميلادي والهجري مع المناسبات الدينية.
 "use client";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -7,11 +8,14 @@ import { useLocale } from "@/i18n/LocaleProvider";
 export type ReligiousEvent = { id: number; key: string; title: string; month: number; day: number[]; hadith: string; bookInfo: string; isReminder: boolean };
 const hijriNumeric = new Intl.DateTimeFormat("en-u-ca-islamic-umalqura", { day: "numeric", month: "numeric", year: "numeric" });
 
+// يعرض أجزاء التاريخ مع تنسيق الأرقام.
 function FormattedDate({ formatter, date }: { formatter: Intl.DateTimeFormat; date: Date }) {
   return <>{formatter.formatToParts(date).map((part, index) => <Fragment key={`${part.type}-${index}`}>{["day", "year"].includes(part.type) ? <span className="number-font">{part.value}</span> : part.value}</Fragment>)}</>;
 }
+// يستخرج اليوم والشهر الهجريين من التاريخ.
 function hijriParts(date: Date) { const parts = hijriNumeric.formatToParts(date); return { day: Number(parts.find((part) => part.type === "day")?.value), month: Number(parts.find((part) => part.type === "month")?.value) }; }
 
+// يبني التقويم المزدوج ويربط الأيام بالمناسبات.
 export function DualCalendar({ events }: { events: ReligiousEvent[] }) {
   const { locale, t } = useLocale();
   const today = new Date();
@@ -29,6 +33,7 @@ export function DualCalendar({ events }: { events: ReligiousEvent[] }) {
   }, [cursor, events]);
   const selectedEvents = days.flatMap((day) => day.events.map((event) => ({ ...event, date: day.date })));
   const selectedDay = days.find((day) => day.date.toDateString() === selected.toDateString());
+  // ينقل التقويم إلى شهر سابق أو لاحق.
   const move = (months: number) => setCursor((value) => { const next = new Date(value.getFullYear(), value.getMonth() + months, 1); setSelected(next); return next; });
 
   return <div className="dual-calendar">

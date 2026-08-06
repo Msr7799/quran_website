@@ -1,3 +1,4 @@
+// المسار: src/components/SynchronizedReader.tsx — يزامن عرض آيات السورة وكلماتها مع التلاوة.
 "use client";
 
 import { Download, LoaderCircle, Pause, Play, RotateCcw, RotateCw, Volume2, VolumeX } from "lucide-react";
@@ -21,8 +22,10 @@ const EMPTY_TRACKS: AudioTrack[] = [];
 const VERSES_PER_BATCH = 20;
 const RECITER_STORAGE_KEY = "alquran-reader-reciter";
 const PROGRESS_STORAGE_KEY = "alquran-reader-progress";
+// يحوّل زمن الصوت إلى صيغة دقائق وثوانٍ.
 const format = (value: number) => `${Math.floor(value / 60)}:${String(Math.floor(value % 60)).padStart(2, "0")}`;
 
+// يدير مزامنة النص والترجمة والتلاوة والتنقل بين الآيات.
 export function SynchronizedReader({ surah, surahs }: { surah: Surah; surahs: SurahMeta[] }) {
   const { locale, t } = useLocale();
   const router = useRouter();
@@ -156,6 +159,7 @@ export function SynchronizedReader({ surah, surahs }: { surah: Surah; surahs: Su
   useEffect(() => {
     if (!playing) return;
     let frame = 0;
+    // يحدّث زمن التشغيل وشريط التقدم من عنصر الصوت.
     const updateTime = () => {
       if (audio.current) {
         if (activeTrack) {
@@ -172,12 +176,14 @@ export function SynchronizedReader({ surah, surahs }: { surah: Surah; surahs: Su
     return () => cancelAnimationFrame(frame);
   }, [activeTrack, playing]);
   useEffect(() => { if (!currentAyah || !playing) return; document.getElementById(`ayah-${currentAyah}`)?.scrollIntoView({ behavior: "smooth", block: "center" }); }, [currentAyah, playing, visibleVerseCount]);
+  // يشغّل التلاوة أو يوقفها مؤقتًا.
   async function toggle() {
     if (!audio.current || !data) return;
     if (playing) audio.current.pause();
     else await audio.current.play();
     setPlaying(!playing);
   }
+  // ينقل التشغيل إلى زمن محدد داخل التلاوة.
   function seekTo(globalSeconds: number, shouldPlay = playing) {
     if (!audio.current || !data) return;
     const target = Math.max(0, Math.min(duration, globalSeconds));
@@ -201,11 +207,14 @@ export function SynchronizedReader({ surah, surahs }: { surah: Surah; surahs: Su
       setActiveTrackIndex(index);
     }
   }
+  // يتقدم أو يتراجع في التلاوة بعدد ثوانٍ.
   function skip(seconds: number) { seekTo(currentTime + seconds); }
+  // ينقل التشغيل مباشرة إلى بداية آية محددة.
   function seekAyah(ayah: number) {
     const timing = data?.segments.find((item) => item.ayah === ayah);
     if (timing) seekTo(timing.timestamp_from / 1000, true);
   }
+  // يحدّث الآية النشطة أثناء تقدم التلاوة.
   function handleTimeUpdate(element: HTMLAudioElement) {
     if (!activeTrack) {
       setCurrentTime(element.currentTime);
@@ -215,6 +224,7 @@ export function SynchronizedReader({ surah, surahs }: { surah: Surah; surahs: Su
     const localMilliseconds = Math.min(element.currentTime * 1000, Math.max(0, trackDurationMs - 1));
     setCurrentTime((activeTrack.timestamp_from + localMilliseconds) / 1000);
   }
+  // يعالج جاهزية الصوت ويستأنف الموضع المحفوظ.
   function handleCanPlay(element: HTMLAudioElement) {
     if (pendingLocalTime.current !== null) {
       element.currentTime = pendingLocalTime.current;
@@ -226,6 +236,7 @@ export function SynchronizedReader({ surah, surahs }: { surah: Surah; surahs: Su
       setPlaying(true);
     }
   }
+  // ينتقل إلى السورة التالية عند انتهاء التلاوة.
   function handleEnded() {
     if (data?.audioMode === "ayah" && activeTrackIndex < tracks.length - 1) {
       const nextIndex = activeTrackIndex + 1;

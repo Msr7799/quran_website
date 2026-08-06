@@ -1,10 +1,14 @@
+// المسار: src/components/icons.tsx — يوفر مكوّنات الأيقونات المعتمدة على صور المشروع.
 import Image from "next/image";
 import { cloudinaryAsset } from "@/lib/cloudinary-assets";
 import type { ComponentType } from "react";
 import { Bot, CalendarDays, Headphones, Home, Info, Radio, Video } from "lucide-react";
 
 type IconComponent = ComponentType<{ className?: string }>;
-const assetIcon = (src: string, alt: string): IconComponent => function AssetIcon({ className }) {
+// ينشئ مكوّن أيقونة موحدًا من ملف صورة.
+const assetIcon = (src: string, alt: string): IconComponent =>
+  // يعرض ملف الصورة داخل غلاف أيقونة موحد.
+  function AssetIcon({ className }) {
   return <Image className={`nav-asset-icon ${className ?? ""}`} src={src} width={30} height={30} alt={alt} aria-hidden="true" />;
 };
 

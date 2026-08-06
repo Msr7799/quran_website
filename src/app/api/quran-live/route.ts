@@ -14,11 +14,6 @@ const channels = {
     referer: "https://aloula.sba.sa/live/sunna",
     expectedPath: "/ksasunnalive/ksasunna.smil/",
   },
-  sports1: {
-    id: 9,
-    referer: "https://aloula.sba.sa/live/riyadiya1",
-    expectedPath: "/ksasports1live/ksasports1.smil/",
-  },
   saudi: {
     id: 2,
     referer: "https://aloula.sba.sa/live/saudia",

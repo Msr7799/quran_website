@@ -1,3 +1,4 @@
+// المسار: src/components/AzkarCarousel.tsx — يعرض الأذكار داخل شريط متحرك قابل للتنقل.
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
@@ -7,6 +8,7 @@ import { useLocale } from "@/i18n/LocaleProvider";
 
 type Zekr = { id: number; category: string; zekr: string; reference: string };
 
+// يدير عرض الأذكار والتنقل التلقائي بينها.
 export function AzkarCarousel({ items }: { items: Zekr[] }) {
   const { t } = useLocale();
   const [index, setIndex] = useState(0);
@@ -18,6 +20,7 @@ export function AzkarCarousel({ items }: { items: Zekr[] }) {
   }, [items.length, playing]);
   const item = items[index];
   if (!item) return null;
+  // ينقل العرض إلى الذكر السابق أو التالي.
   const go = (direction: number) => setIndex((value) => (value + direction + items.length) % items.length);
 
   return <section className="azkar-carousel" aria-roledescription="carousel" aria-label="أذكار مختارة">

@@ -1,3 +1,4 @@
+// المسار: src/components/FloatingTools.tsx — يوفر أدوات عائمة للصعود والمحادثة السريعة.
 "use client";
 
 import Link from "next/link";
@@ -13,6 +14,7 @@ import styles from "./FloatingTools.module.css";
 
 type Message = { role: "user" | "assistant"; content: string; sources?: ChatSource[] };
 
+// يدير الأدوات العائمة ونافذة المحادثة المصغرة.
 export function FloatingTools() {
   const { locale, t } = useLocale();
   const pathname = usePathname();
@@ -38,6 +40,7 @@ export function FloatingTools() {
   }, []);
 
   useEffect(() => {
+    // يحدّث ظهور زر العودة إلى أعلى الصفحة.
     const onScroll = () => setShowTop(window.scrollY > 320);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -47,6 +50,7 @@ export function FloatingTools() {
   useEffect(() => {
     if (!isOpen) return;
     inputRef.current?.focus();
+    // يغلق نافذة المحادثة عند ضغط مفتاح الهروب.
     const onKeyDown = (event: KeyboardEvent) => { if (event.key === "Escape") setIsOpen(false); };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
@@ -54,6 +58,7 @@ export function FloatingTools() {
 
   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "nearest" }); }, [messages, loading, reduceMotion]);
 
+  // يرسل سؤال المستخدم ويضيف إجابة المساعد.
   async function submit(event?: FormEvent) {
     event?.preventDefault();
     const content = input.trim();
@@ -79,6 +84,7 @@ export function FloatingTools() {
     } finally { setLoading(false); }
   }
 
+  // يمسح سجل المحادثة ويعيد رسالة الترحيب.
   const clearChat = () => {
     setMessages([]); setError("");
     sessionStorage.removeItem("noor-floating-chat");

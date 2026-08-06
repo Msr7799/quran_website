@@ -1,3 +1,4 @@
+// المسار: src/components/YouTubeShowcase.tsx — يعرض محتوى قناة يوتيوب وإحصاءاتها ومقاطعها.
 "use client";
 
 import Image from "next/image";
@@ -6,10 +7,12 @@ import { useState } from "react";
 import { useLocale } from "@/i18n/LocaleProvider";
 import type { YouTubeHomeContent } from "@/lib/youtube-types";
 
+// ينسق أعداد يوتيوب وفق لغة الواجهة.
 function formatCount(value: number, locale: string) {
   return new Intl.NumberFormat(locale, { notation: "compact", maximumFractionDigits: 1 }).format(value);
 }
 
+// يعرض بيانات القناة وقوائم الفيديو المتاحة.
 export function YouTubeShowcase({ content, compact = false }: { content: YouTubeHomeContent | null; compact?: boolean }) {
   const { locale, t } = useLocale();
   const [playingId, setPlayingId] = useState<string | null>(null);

@@ -1,3 +1,4 @@
+// المسار: src/components/NoorChat.tsx — يوفر واجهة المحادثة مع المساعد وإظهار المصادر.
 "use client";
 
 import { Bot, Globe2, Send, Sparkles, Trash2, User } from "lucide-react";
@@ -16,6 +17,7 @@ const models = [
   { value: "gemini-2.0-flash", label: "Gemini 2.0 Flash" },
   { value: "gemini-2.0-flash-lite", label: "Gemini 2.0 Flash-Lite" },
 ];
+// يدير رسائل واجهة المساعد وحالات الإرسال.
 export function NoorChat() {
   const { locale, t } = useLocale();
   const [model, setModel] = useState("gemini-2.5-flash");
@@ -31,6 +33,7 @@ export function NoorChat() {
   const stageLabels = { searching: t("ai.searching"), thinking: t("ai.thinking"), typing: t("ai.typing") };
   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages, stage]);
 
+  // يرسل السؤال إلى واجهة المحادثة ويعرض النتيجة.
   async function submit(event?: FormEvent, suggestion?: string) {
     event?.preventDefault();
     const content = (suggestion ?? input).trim();

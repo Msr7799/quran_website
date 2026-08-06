@@ -1,3 +1,4 @@
+// المسار: src/components/IslamicLibrary.tsx — يعرض كتب ومصاحف المكتبة الإسلامية.
 "use client";
 
 import Image from "next/image";
@@ -28,16 +29,19 @@ type JsonCategory = { name: string; books: JsonBook[] };
 export type BooksPayload = { categories: JsonCategory[] };
 type DisplayBook = { title: string; subtitle: string; image: string; href: string; size?: string };
 
+// يبني اسم ملف غلاف الكتاب أو المجلد.
 function coverName(book: JsonBook, volume?: number) {
   if (book.title.en === "Al-Fiqh_Al-Islami_Wa_Adillatuh") return `Al-Fiqh_Al-Islami_Wa_Adillatuh${volume}.png`;
   if (book.title.en === "Seeret_El-Naby") return volume ? `Seeret_El-Naby${volume}.png` : "Seeret_El-Naby_Cover.png";
   return `${book.title.en}.png`;
 }
 
+// يحوّل تصنيف الكتب ومجلداته إلى قائمة عرض مسطحة.
 function flattenCategory(category: JsonCategory): DisplayBook[] {
   return category.books.flatMap((book) => book.volumes?.map((volume) => ({ title: `${book.title.ar} — الجزء ${volume.volume}`, subtitle: category.name, image: coverName(book, volume.volume), href: volume.files[0]?.url ?? "#", size: volume.files[0]?.size })) ?? [{ title: book.title.ar, subtitle: category.name, image: coverName(book), href: book.files?.[0]?.url ?? "#", size: book.files?.[0]?.size }]);
 }
 
+// يعرض بطاقة كتاب مع تفاصيل تظهر عند التفاعل.
 function HoverBook({ item }: { item: DisplayBook }) {
   const ref = useRef<HTMLAnchorElement>(null); const x = useMotionValue(0); const y = useMotionValue(0);
   const left = useTransform(useSpring(x), [-.5, .5], ["45%", "68%"]); const top = useTransform(useSpring(y), [-.5, .5], ["35%", "65%"]);
@@ -47,9 +51,11 @@ function HoverBook({ item }: { item: DisplayBook }) {
   </motion.a>;
 }
 
+// ينظّم المصاحف والكتب ويعرضها حسب اللغة.
 export function IslamicLibrary({ booksPayload }: { booksPayload: unknown }) {
   const { locale, t } = useLocale(); const [open, setOpen] = useState(0);
   const bookCategories = (booksPayload as BooksPayload).categories ?? [];
+  // يختار عنوان المصحف الملائم للغة الحالية.
   const localizedTitle = (item: typeof mushafs[number]) => locale === "ar" || locale === "ur" ? item.title : item.en;
   return <div className="library-page">
     <header className="library-hero"><span>{t("library.eyebrow", "المكتبة الإلكترونية")}</span><h1>{t("library.title", "مجموعة من المصاحف المتنوعة")}</h1><p>{t("library.description", "مصاحف وكتب إسلامية منتقاة بروابط مباشرة ونسخ عالية الجودة.")}</p></header>

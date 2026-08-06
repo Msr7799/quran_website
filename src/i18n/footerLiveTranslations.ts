@@ -83,24 +83,6 @@ export const liveSunnahChannelTranslations = {
   zh: "直播 - 来自麦地那的先知圣行频道",
 } as const;
 
-export const liveSports1ChannelTranslations = {
-  ar: "بث مباشر - قناة الرياضية 1",
-  en: "Live - KSA Sports 1",
-  de: "Live – KSA Sports 1",
-  es: "En vivo - KSA Sports 1",
-  fr: "En direct - KSA Sports 1",
-  hi: "लाइव - केएसए स्पोर्ट्स 1",
-  id: "Langsung - KSA Sports 1",
-  it: "In diretta - KSA Sports 1",
-  ja: "ライブ - KSAスポーツ1",
-  ko: "라이브 - KSA 스포츠 1",
-  pt: "Ao vivo - KSA Sports 1",
-  ru: "Прямой эфир - KSA Sports 1",
-  tr: "Canlı - KSA Sports 1",
-  ur: "براہِ راست - کے ایس اے اسپورٹس 1",
-  zh: "直播 - KSA体育1台",
-} as const;
-
 export const liveSaudiChannelTranslations = {
   ar: "بث مباشر - قناة السعودية",
   en: "Live - Saudi TV",

@@ -1,3 +1,4 @@
+// المسار: src/components/HeroCarousel.tsx — يعرض وسائط الواجهة الرئيسية في شريط متحرك.
 "use client";
 
 import Image from "next/image";
@@ -18,10 +19,12 @@ type HeroVideoProps = {
   src: string;
 };
 
+// يتحقق مما إذا كان ملف الوسائط مقطع فيديو.
 function isVideo(src: string) {
   return /\.mp4(?:\?|$)/i.test(src);
 }
 
+// يعرض فيديو الواجهة ويتحكم في تشغيله حسب حالة الشريحة.
 function HeroVideo({ active, label, onEnded, playing, preload, src }: HeroVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -61,6 +64,7 @@ function HeroVideo({ active, label, onEnded, playing, preload, src }: HeroVideoP
   );
 }
 
+// يدير الوسائط المتجاوبة والتنقل بين الشرائح.
 export function HeroCarousel({ desktopMedia, mobileMedia }: HeroCarouselProps) {
   const [index, setIndex] = useState(0);
   const [playing, setPlaying] = useState(true);
@@ -71,6 +75,7 @@ export function HeroCarousel({ desktopMedia, mobileMedia }: HeroCarouselProps) {
 
   useEffect(() => {
     const media = window.matchMedia("(max-width: 700px)");
+    // يختار قائمة الوسائط المناسبة لحجم الشاشة.
     const update = () => {
       setIsMobile(media.matches);
       const slideCount = media.matches ? mobileSlides.length : desktopSlides.length;
@@ -89,7 +94,9 @@ export function HeroCarousel({ desktopMedia, mobileMedia }: HeroCarouselProps) {
     return () => window.clearTimeout(timer);
   }, [images, index, playing]);
 
+  // ينتقل إلى الشريحة السابقة.
   const previous = () => setIndex((value) => images.length > 0 ? (value - 1 + images.length) % images.length : 0);
+  // ينتقل إلى الشريحة التالية.
   const next = () => setIndex((value) => images.length > 0 ? (value + 1) % images.length : 0);
 
   return (

@@ -1,9 +1,11 @@
+// المسار: src/components/ChatSources.tsx — يعرض روابط المصادر المرفقة بإجابات المحادثة.
 import { ExternalLink } from "lucide-react";
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import styles from "./ChatSources.module.css";
 
 export type ChatSource = { title?: string; url: string };
 
+// يستخرج اسم النطاق وأيقونته من رابط المصدر.
 function sourceMeta(url: string) {
   try {
     const parsed = new URL(url);
@@ -14,6 +16,7 @@ function sourceMeta(url: string) {
   }
 }
 
+// يعرض رابط مصدر خارجي مع بياناته المرئية.
 export function SmartSourceLink({ href, children, ...props }: ComponentPropsWithoutRef<"a"> & { children?: ReactNode }) {
   const meta = href ? sourceMeta(href) : null;
   return <a {...props} href={href} className={styles.inlineLink} target="_blank" rel="noopener noreferrer">
@@ -22,6 +25,7 @@ export function SmartSourceLink({ href, children, ...props }: ComponentPropsWith
   </a>;
 }
 
+// يزيل المصادر المكررة ويعرض روابطها.
 export function ChatSources({ sources, label }: { sources?: ChatSource[]; label: string }) {
   const unique = [...new Map((sources ?? []).filter((source) => source.url).map((source) => [source.url, source])).values()];
   if (!unique.length) return null;

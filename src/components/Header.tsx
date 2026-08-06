@@ -1,3 +1,4 @@
+// المسار: src/components/Header.tsx — يعرض رأس الموقع وأدوات التنقل والبحث والمظهر.
 "use client";
 
 import Image from "next/image";
@@ -9,6 +10,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { navigation } from "./icons";
 import { localeInfo, useLocale } from "@/i18n/LocaleProvider";
 
+// يدير قائمة التنقل والبحث وتبديل المظهر.
 export function Header() {
   const pathname = usePathname(); const router = useRouter();
   const { locale, setLocale, t } = useLocale();
@@ -17,7 +19,9 @@ export function Header() {
   const [navigating, setNavigating] = useState(false);
   useEffect(() => { const saved = localStorage.getItem("theme"); const value = saved ? saved === "dark" : true; queueMicrotask(() => setDark(value)); document.documentElement.dataset.theme = value ? "dark" : "light"; document.documentElement.style.colorScheme = value ? "dark" : "light"; }, []);
   useEffect(() => { queueMicrotask(() => setNavigating(false)); }, [pathname]);
+  // يبدّل بين المظهر الفاتح والداكن ويحفظ الاختيار.
   function toggleTheme() { const value = !dark; setDark(value); document.documentElement.dataset.theme = value ? "dark" : "light"; document.documentElement.style.colorScheme = value ? "dark" : "light"; localStorage.setItem("theme", value ? "dark" : "light"); }
+  // ينقل المستخدم إلى صفحة نتائج البحث.
   function search(event: FormEvent) { event.preventDefault(); if (query.trim()) { router.push(`/search/${encodeURIComponent(query.trim())}`); setSearchOpen(false); } }
   const basmala = <>
     <Image className="basmala-image basmala-light" src={cloudinaryAsset("/images/basmalh-light.svg")} width={520} height={120} loading="eager" style={{ width: "100%", height: "auto" }} alt="" />

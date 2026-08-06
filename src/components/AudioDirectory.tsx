@@ -1,3 +1,4 @@
+// المسار: src/components/AudioDirectory.tsx — يعرض دليل القراء والسور ويتحكم في تشغيل التلاوات.
 "use client";
 
 import {
@@ -19,10 +20,12 @@ import { ReciterAvatar } from "@/components/ReciterAvatar";
 import type { Reciter, SurahMeta } from "@/lib/types";
 import styles from "./AudioDirectory.module.css";
 
+// يبني رابط ملف التلاوة للسورة المحددة.
 function audioUrl(server: string, surah: number) {
   return `${server.replace(/\/$/, "")}/${String(surah).padStart(3, "0")}.mp3`;
 }
 
+// يحوّل مدة الصوت إلى صيغة دقائق وثوانٍ.
 function formatTime(value: number) {
   if (!Number.isFinite(value)) return "0:00";
   const minutes = Math.floor(value / 60);
@@ -30,6 +33,7 @@ function formatTime(value: number) {
   return `${minutes}:${seconds}`;
 }
 
+// يدير تصفية القراء والسور وتشغيل التلاوات.
 export function AudioDirectory({ reciters, surahs }: { reciters: Reciter[]; surahs: SurahMeta[] }) {
   const { locale, t } = useLocale();
   const audio = useRef<HTMLAudioElement>(null);
@@ -59,6 +63,7 @@ export function AudioDirectory({ reciters, surahs }: { reciters: Reciter[]; sura
   const surahName = useArabic ? surah.name.ar : surah.name.en;
   const source = audioUrl(reciter.server, surah.number);
 
+  // يعيد المشغّل إلى حالته الابتدائية.
   function resetPlayback() {
     audio.current?.pause();
     setPlaying(false);
@@ -67,16 +72,19 @@ export function AudioDirectory({ reciters, surahs }: { reciters: Reciter[]; sura
     setError("");
   }
 
+  // يختار القارئ ويحدّث السورة والتشغيل وفقًا لذلك.
   function selectReciter(item: Reciter) {
     resetPlayback();
     setReciter(item);
   }
 
+  // يختار السورة ويجهّز تلاوتها.
   function selectSurah(item: SurahMeta) {
     resetPlayback();
     setSurah(item);
   }
 
+  // يبدّل بين تشغيل التلاوة وإيقافها مؤقتًا.
   async function togglePlayback() {
     const element = audio.current;
     if (!element) return;
@@ -95,6 +103,7 @@ export function AudioDirectory({ reciters, surahs }: { reciters: Reciter[]; sura
     }
   }
 
+  // ينتقل إلى السورة السابقة أو التالية.
   function changeSurah(offset: number) {
     const next = surahs[surah.number - 1 + offset];
     if (next) selectSurah(next);

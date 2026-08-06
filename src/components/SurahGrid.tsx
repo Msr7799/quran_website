@@ -1,3 +1,4 @@
+// المسار: src/components/SurahGrid.tsx — يعرض شبكة السور مع البحث وتقسيم الصفحات.
 "use client";
 
 import Link from "next/link";
@@ -8,6 +9,7 @@ import type { SurahMeta } from "@/lib/types";
 
 const PAGE_SIZE = 12;
 
+// يرشح السور ويعرضها في شبكة مقسمة إلى صفحات.
 export function SurahGrid({ surahs, compact = false }: { surahs: SurahMeta[]; compact?: boolean }) {
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(0);
@@ -16,6 +18,7 @@ export function SurahGrid({ surahs, compact = false }: { surahs: SurahMeta[]; co
   const searching = Boolean(query.trim());
   const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const visible = searching ? filtered : filtered.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
+  // ينتقل بين صفحات الشبكة مع تحديد اتجاه الحركة.
   const navigate = (nextPage: number) => { setDirection(nextPage > page ? 1 : -1); setPage(nextPage); };
 
   return <div className="surah-directory">

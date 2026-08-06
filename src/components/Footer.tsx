@@ -1,3 +1,4 @@
+// المسار: src/components/Footer.tsx — يعرض تذييل الموقع وروابطه ومعلوماته.
 "use client";
 
 import Image from "next/image";
@@ -9,6 +10,7 @@ import styles from "./Footer.module.css";
 
 const channelUrl = "https://www.youtube.com/channel/UCseM-nFP_VlkEO7LveaD72Q";
 
+// يعرض روابط التذييل وبيانات المشروع.
 export function Footer() {
   const { t } = useLocale();
   const quranLinks = [
