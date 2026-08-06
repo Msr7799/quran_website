@@ -2024,7 +2024,7 @@ body:has(.book-viewer) .basmala-header img { width: min(340px, 45vw); height: 82
     translate: -50% 0;
     pointer-events: none;
     backdrop-filter: blur(12px);
-    animation: mobileRailSwipeHint 2.5s ease-in-out 2 forwards;
+    animation: mobileRailSwipeHint 1.25s ease-in-out 4 forwards;
   }
   .mobile-rail-swipe-hint svg {
     width: 24px;
