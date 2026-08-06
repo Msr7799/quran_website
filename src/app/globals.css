@@ -2033,7 +2033,7 @@ body:has(.book-viewer) .basmala-header img { width: min(340px, 45vw); height: 82
   .floating-rail {
     left: 8px;
     top: auto;
-    bottom: 10px;
+    bottom: 24px;
     width: calc(100% - 58px);
     height: 68px;
     flex-direction: row;
