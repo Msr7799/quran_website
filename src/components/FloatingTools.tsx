@@ -82,7 +82,7 @@ export function FloatingTools() {
   };
 
   return <div className={styles.layer}>
-    {pathname !== "/chat-bot" && <>
+    {pathname === "/" && <>
       <AnimatePresence>
         {isOpen && <motion.section className={styles.panel} role="dialog" aria-label={t("chat.title")} initial={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: .82, y: 28 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: .88, y: 22 }} transition={{ type: "spring", stiffness: 320, damping: 28 }}>
           <header className={styles.header}>

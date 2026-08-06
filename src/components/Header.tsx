@@ -40,6 +40,25 @@ export function Header() {
     } catch { localStorage.removeItem("mobile-navigation-placement"); }
   }, []);
   useEffect(() => {
+    if (!menu || !railRef.current || !window.matchMedia("(max-width: 780px)").matches) return;
+    const rail = railRef.current;
+    let hideTimer = window.setTimeout(() => setMenu(false), 5000);
+    // يعيد احتساب مهلة إخفاء القائمة عند لمسها أو تحريكها.
+    const restartHideTimer = () => {
+      window.clearTimeout(hideTimer);
+      hideTimer = window.setTimeout(() => setMenu(false), 5000);
+    };
+    rail.addEventListener("pointerdown", restartHideTimer, { passive: true });
+    rail.addEventListener("pointermove", restartHideTimer, { passive: true });
+    rail.addEventListener("click", restartHideTimer, { passive: true });
+    return () => {
+      window.clearTimeout(hideTimer);
+      rail.removeEventListener("pointerdown", restartHideTimer);
+      rail.removeEventListener("pointermove", restartHideTimer);
+      rail.removeEventListener("click", restartHideTimer);
+    };
+  }, [menu]);
+  useEffect(() => {
     // يبدأ تتبع السحب من الحافة المرتبطة بموضع القائمة أو من القائمة المفتوحة.
     const onTouchStart = (event: TouchEvent) => {
       if (!window.matchMedia("(max-width: 780px)").matches) return;
