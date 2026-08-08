@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SynchronizedReader } from "@/components/SynchronizedReader";
+import { WaqfGuideLink } from "@/components/WaqfGuideLink";
 import { getSurah, getSurahs } from "@/lib/quran";
 
 type Props = { params: Promise<{ surahId: string }> };
@@ -28,6 +29,7 @@ export default async function SurahPage({ params }: Props) {
   return (
     <article className="reader-shell">
       <header className="surah-header">
+        <WaqfGuideLink />
         <span>سورة رقم {surah.number}</span>
         <h1>سورة {surah.name.ar}</h1>
         <p>

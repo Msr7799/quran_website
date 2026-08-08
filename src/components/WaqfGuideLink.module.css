@@ -1,0 +1,33 @@
+.overlay { position: fixed; z-index: 1300; inset: 0; display: grid; place-items: center; padding: 18px; background: #000c; backdrop-filter: blur(8px); cursor: default; }
+.dialog { width: min(940px,100%); max-height: min(880px,calc(100dvh - 36px)); display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--line); border-radius: 22px; color: var(--text); background: var(--surface); box-shadow: 0 30px 90px #000c; text-align: start; }
+.header { flex: none; display: flex; justify-content: space-between; align-items: center; gap: 18px; padding: 17px 22px; border-bottom: 1px solid var(--line); }
+.heading { min-width: 0; display: flex; align-items: center; gap: 13px; }
+.heading>img { width: 52px; height: 52px; padding: 5px; border-radius: 15px; background: #26352d; }
+.heading small { color: var(--brand); font-weight: 700; }
+.heading h2 { margin: 2px 0 0; font-size: clamp(1.35rem,3vw,2rem); font-weight: 500; line-height: 1.3; }
+.header>button { width: 40px; height: 40px; flex: none; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 50%; color: var(--text); background: var(--surface-2); cursor: pointer; }
+.header>button:hover,.header>button:focus-visible { color: var(--brand); border-color: var(--brand); }
+.header>button svg { width: 18px; }
+.content { min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 20px 22px 26px; scrollbar-width: thin; scrollbar-color: var(--brand) transparent; }
+.intro { position: relative; min-height: 112px; overflow: hidden; display: flex; align-items: center; margin-bottom: 18px; padding: 20px 24px; border: 1px solid color-mix(in srgb,var(--brand) 34%,var(--line)); border-radius: 17px; background: color-mix(in srgb,var(--brand) 8%,var(--surface-2)); }
+.intro>div:first-child { position: relative; z-index: 1; max-width: 78%; }
+.intro h3 { margin: 0 0 5px; font-size: 1.1rem; }
+.intro p { margin: 0; color: var(--muted); line-height: 1.75; }
+.animation { position: absolute; inset-inline-end: -18px; bottom: -42px; width: 170px; opacity: .22; pointer-events: none; }
+.status { min-height: 190px; display: flex; align-items: center; justify-content: center; gap: 9px; color: var(--muted); }
+.status svg { width: 22px; color: var(--brand); }
+.error { min-height: 120px; display: grid; place-items: center; color: #df6666; }
+.grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; }
+.card { min-width: 0; padding: 19px; border: 1px solid var(--line); border-radius: 17px; background: var(--surface-2); }
+.card:last-child { grid-column: 1/-1; }
+.card>header { display: flex; align-items: center; gap: 13px; }
+.signImage { width: 68px; height: 68px; flex: none; display: grid; place-items: center; padding: 4px; overflow: hidden; border: 1px solid color-mix(in srgb,var(--brand) 35%,var(--line)); border-radius: 16px; background: #f7f1e6; }
+.signImage img { width: 100%; height: 100%; object-fit: contain; }
+.card header small { color: var(--brand); font-family: Uthmanic,serif; font-weight: 800; }
+.card h3 { margin: 2px 0 0; font-size: 1.25rem; }
+.card>p { margin: 14px 0; color: var(--muted); line-height: 1.8; }
+.card blockquote { margin: 0; padding: 14px; border: 1px solid var(--line); border-inline-start: 3px solid var(--brand); border-radius: 11px; background: var(--surface); font-family: Uthmanic,serif; font-size: 1.25rem; line-height: 2; text-align: right; }
+.card blockquote span { display: block; margin-bottom: 5px; color: var(--brand); font-family: inherit; font-size: .72rem; font-weight: 700; }
+.note { margin: 20px 0 0; color: var(--muted); font-size: .82rem; line-height: 1.7; text-align: center; }
+@media (max-width: 680px) { .overlay { padding: 7px; }.dialog { max-height: calc(100dvh - 14px); border-radius: 16px; }.header { padding: 13px; }.heading>img { width: 44px; height: 44px; }.content { padding: 13px; }.intro { min-height: 105px; padding: 16px; }.intro>div:first-child { max-width: 86%; }.animation { width: 125px; opacity: .13; }.grid { grid-template-columns: 1fr; }.card:last-child { grid-column: auto; }.card { padding: 15px; }.signImage { width: 58px; height: 58px; } }
+@media (prefers-reduced-motion: reduce) { .animation { display: none; } }

@@ -157,6 +157,15 @@ export function Header() {
   function toggleTheme() { const value = !dark; setDark(value); document.documentElement.dataset.theme = value ? "dark" : "light"; document.documentElement.style.colorScheme = value ? "dark" : "light"; localStorage.setItem("theme", value ? "dark" : "light"); }
   // ينقل المستخدم إلى صفحة نتائج البحث.
   function search(event: FormEvent) { event.preventDefault(); if (query.trim()) { router.push(`/search/${encodeURIComponent(query.trim())}`); setSearchOpen(false); } }
+  // يبني عنصر تنقل واحدًا مع إبقاء الصفحة الحالية مميزة داخل الشريط.
+  function renderRailItem(item: (typeof navigation)[number]) {
+    const Icon = item.icon;
+    const active = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
+    const label = t(item.translationKey, item.label);
+    return active
+      ? <button className="active" type="button" data-label={label} aria-label={label} key={item.href}><Icon /></button>
+      : <Link href={item.href} prefetch={false} onClick={() => { setNavigating(true); setMenu(false); }} data-label={label} aria-label={label} key={item.href}><Icon /></Link>;
+  }
   const basmala = <>
     <Image className="basmala-image basmala-light" src={cloudinaryAsset("/images/basmalh-light.svg")} width={520} height={120} loading="eager" style={{ width: "100%", height: "auto" }} alt="" />
     <Image className="basmala-image basmala-dark" src={cloudinaryAsset("/images/basmalh-dark.svg")} width={520} height={120} loading="eager" style={{ width: "100%", height: "auto" }} alt="" />
@@ -170,8 +179,11 @@ export function Header() {
     {!menu && <div className="mobile-rail-swipe-hint" data-dock={railPlacement.dock} style={{ "--mobile-rail-x": `${railPlacement.x}px`, "--mobile-rail-y": `${railPlacement.y}px` } as CSSProperties} aria-hidden="true">{railPlacement.dock === "left" ? <ChevronsRight /> : railPlacement.dock === "right" ? <ChevronsLeft /> : <ChevronsUp />}</div>}
     <aside ref={railRef} className={menu ? `floating-rail open${railDragging ? " dragging" : ""}` : "floating-rail"} data-dock={railPlacement.dock} style={{ "--mobile-rail-x": `${railPlacement.x}px`, "--mobile-rail-y": `${railPlacement.y}px` } as CSSProperties}>
       <button className="rail-drag-handle" type="button" onPointerDown={startRailDrag} onPointerMove={moveRail} onPointerUp={finishRailDrag} onPointerCancel={cancelRailDrag} aria-label="تحريك قائمة التنقل" title="اسحب لتحريك القائمة"><Grip /></button>
-      <button onClick={() => setSearchOpen(true)} data-label={t("common.search", "البحث")}><Search /></button>
-      {navigation.map((item) => { const Icon = item.icon; const active = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href)); const label = t(item.translationKey, item.label); return active ? <button className="active" type="button" data-label={label} aria-label={label} key={item.href}><Icon /></button> : <Link href={item.href} prefetch={false} onClick={() => { setNavigating(true); setMenu(false); }} data-label={label} aria-label={label} key={item.href}><Icon /></Link>; })}
+      {renderRailItem(navigation[0])}
+      <div className="rail-scroll" role="navigation" aria-label={t("common.navigation", "روابط الموقع")}>
+        <button onClick={() => setSearchOpen(true)} data-label={t("common.search", "البحث")} aria-label={t("common.search", "البحث")}><Search /></button>
+        {navigation.slice(1).map(renderRailItem)}
+      </div>
       <button className="theme-rail" onClick={toggleTheme} data-label="تبديل المظهر">{dark ? <Sun /> : <Moon />}</button>
     </aside>
     {navigating && <div className="route-loading-overlay" role="status" aria-live="polite"><span><LoaderCircle className="spin" /></span><strong>{t("common.loading", "جاري التحميل...")}</strong></div>}
