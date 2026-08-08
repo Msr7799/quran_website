@@ -94,7 +94,7 @@ export function MushafViewer({ page }: { page: number }) {
   const [audioLoading, setAudioLoading] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [audioTime, setAudioTime] = useState(0);
-  const [playerMinimized, setPlayerMinimized] = useState(false);
+  const [playerMinimized, setPlayerMinimized] = useState<boolean | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -223,7 +223,7 @@ export function MushafViewer({ page }: { page: number }) {
         <span>من {max}</span>
         <button title="الصفحة السابقة" aria-label="الصفحة السابقة" disabled={current <= mushaf.first} onClick={() => go(current - step())}><ChevronRight /></button>
       </div>
-      {playerMinimized && <div className="mushaf-mini-player" aria-label="مشغل التلاوة المصغر">
+      {playerMinimized === true && <div className="mushaf-mini-player" aria-label="مشغل التلاوة المصغر">
         <SelectDropdown value={reciter} ariaLabel="اختر القارئ" options={reciterOptions} onValueChange={changeReciter} />
         <span className="mushaf-mini-time number-font" aria-label="توقيت التشغيل">{clock(audioTime)} / {clock(audioDuration)}</span>
         <button className="mushaf-mini-play" type="button" onClick={() => void toggleAudio()} disabled={!audioUrl || audioLoading} aria-label={playing ? "إيقاف مؤقت" : "تشغيل"}>{audioLoading ? <LoaderCircle className="spin" /> : playing ? <Pause /> : <Play />}</button>
@@ -257,7 +257,7 @@ export function MushafViewer({ page }: { page: number }) {
       </AnimatePresence>}
     </div>
 
-    {!playerMinimized && <motion.aside className="mushaf-recitation-panel" drag dragControls={playerDrag} dragListener={false} dragConstraints={viewer} dragElastic={0} dragMomentum={false}>
+    {playerMinimized === false && <motion.aside className="mushaf-recitation-panel" drag dragControls={playerDrag} dragListener={false} dragConstraints={viewer} dragElastic={0} dragMomentum={false}>
       <div className="mushaf-player-head">
         <button className="mushaf-player-handle" type="button" onPointerDown={(event) => playerDrag.start(event)} aria-label="اسحب لتحريك مشغل التلاوة"><GripHorizontal /><span>حرّك المشغل</span></button>
         <button className="mushaf-player-minimize" type="button" onClick={() => setPlayerSize(true)} aria-label="تصغير مشغل التلاوة" title="تصغير المشغل"><Minimize /></button>

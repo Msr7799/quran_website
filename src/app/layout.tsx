@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import Script from "next/script";
 import { Footer } from "@/components/Footer";
 import { FloatingTools } from "@/components/FloatingTools";
 import { Header } from "@/components/Header";
@@ -58,9 +57,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 
   return (
     <html lang="ar" dir="rtl" translate="no" className="notranslate" data-scroll-behavior="smooth" suppressHydrationWarning>
-      <head><meta name="google" content="notranslate" /></head>
+      <head>
+        <meta name="google" content="notranslate" />
+        <script id="theme-initializer" dangerouslySetInnerHTML={{ __html: themeInitializer }} />
+      </head>
       <body>
-        <Script id="theme-initializer" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: themeInitializer }} />
         <LocaleProvider>
           <div id="app-root">
             <a className="skip-link" href="#main">انتقل إلى المحتوى</a>

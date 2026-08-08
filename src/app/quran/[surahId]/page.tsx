@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SynchronizedReader } from "@/components/SynchronizedReader";
@@ -31,7 +32,7 @@ export default async function SurahPage({ params }: Props) {
       <header className="surah-header">
         <WaqfGuideLink />
         <span>سورة رقم {surah.number}</span>
-        <h1>سورة {surah.name.ar}</h1>
+        <h1 className="surah-calligraphy"><span>سورة {surah.name.ar}</span><Image src={`/svg/surah_name/00${surah.number}.svg`} width={280} height={110} alt={`سورة ${surah.name.ar}`} priority /></h1>
         <p>
           {surah.revelation_place.ar} · {surah.verses_count} آية · الجزء{" "}
           {surah.verses[0]?.juz}
