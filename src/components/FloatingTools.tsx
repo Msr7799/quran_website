@@ -10,6 +10,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { ChatSources, SmartSourceLink, type ChatSource } from "./ChatSources";
 import { useLocale } from "@/i18n/LocaleProvider";
+import { LottiePlayer } from "./LottiePlayer";
 import styles from "./FloatingTools.module.css";
 
 type Message = { role: "user" | "assistant"; content: string; sources?: ChatSource[] };
@@ -25,6 +26,8 @@ export function FloatingTools() {
   const [loading, setLoading] = useState(false);
   const [webSearch, setWebSearch] = useState(false);
   const [error, setError] = useState("");
+  const [online, setOnline] = useState(true);
+  const [showScrollTop, setShowScrollTop] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const visibleMessages: Message[] = messages.length ? messages : [{ role: "assistant", content: t("ai.welcome") }];
@@ -48,6 +51,21 @@ export function FloatingTools() {
   }, [isOpen]);
 
   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "nearest" }); }, [messages, loading, reduceMotion]);
+
+  useEffect(() => {
+    const updateNetwork = () => setOnline(navigator.onLine);
+    const updateScroll = () => setShowScrollTop(window.scrollY > 520);
+    updateNetwork();
+    updateScroll();
+    window.addEventListener("online", updateNetwork);
+    window.addEventListener("offline", updateNetwork);
+    window.addEventListener("scroll", updateScroll, { passive: true });
+    return () => {
+      window.removeEventListener("online", updateNetwork);
+      window.removeEventListener("offline", updateNetwork);
+      window.removeEventListener("scroll", updateScroll);
+    };
+  }, []);
 
   // يرسل سؤال المستخدم ويضيف إجابة المساعد.
   async function submit(event?: FormEvent) {
@@ -82,6 +100,8 @@ export function FloatingTools() {
   };
 
   return <div className={styles.layer}>
+    {!online && <div className={styles.offlineNotice} role="status" aria-live="polite"><LottiePlayer src="/lottie/noInternet.json" /><span>{locale === "ar" ? "لا يوجد اتصال بالإنترنت" : "No internet connection"}</span></div>}
+    {showScrollTop && <button className={styles.scrollTop} type="button" onClick={() => window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" })} aria-label={locale === "ar" ? "العودة إلى أعلى الصفحة" : "Back to top"}><LottiePlayer src="/lottie/arrow.json" /></button>}
     {pathname === "/" && <>
       <AnimatePresence>
         {isOpen && <motion.section className={styles.panel} role="dialog" aria-label={t("chat.title")} initial={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: .82, y: 28 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: .88, y: 22 }} transition={{ type: "spring", stiffness: 320, damping: 28 }}>

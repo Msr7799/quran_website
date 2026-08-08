@@ -17,6 +17,7 @@ import {
 import { useMemo, useRef, useState } from "react";
 import { useLocale } from "@/i18n/LocaleProvider";
 import { ReciterAvatar } from "@/components/ReciterAvatar";
+import { LottiePlayer } from "@/components/LottiePlayer";
 import type { Reciter, SurahMeta } from "@/lib/types";
 import styles from "./AudioDirectory.module.css";
 
@@ -112,7 +113,7 @@ export function AudioDirectory({ reciters, surahs }: { reciters: Reciter[]; sura
   return (
     <div className={styles.page}>
       <header className={styles.hero}>
-        <span><Headphones aria-hidden="true" /></span>
+        <span><LottiePlayer className={styles.audioHeroAnimation} src="/lottie/quran_au_ic.json" /><Headphones aria-hidden="true" /></span>
         <h1>{useArabic ? "استماع القرآن الكريم" : t("quran.audioQuran", "Quran Audio")}</h1>
         <p>{t("quran.audioQuranDesc", "اختر قارئًا وسورة واستمتع بتلاوة نقية ومريحة.")}</p>
       </header>
@@ -177,7 +178,7 @@ export function AudioDirectory({ reciters, surahs }: { reciters: Reciter[]; sura
           <div className={styles.timeRow}><span>{formatTime(currentTime)}</span><span>{formatTime(duration)}</span></div>
           <div className={styles.playerControls}>
             <button type="button" onClick={() => changeSurah(-1)} disabled={surah.number === 1} aria-label={useArabic ? "السورة السابقة" : "Previous surah"}><SkipForward /></button>
-            <button className={styles.playControl} type="button" onClick={togglePlayback} aria-label={playing ? (useArabic ? "إيقاف مؤقت" : "Pause") : t("common.listenNow", "تشغيل التلاوة")}>{playing ? <Pause /> : <Play />}</button>
+            <button className={styles.playControl} type="button" onClick={togglePlayback} aria-label={playing ? (useArabic ? "إيقاف مؤقت" : "Pause") : t("common.listenNow", "تشغيل التلاوة")}>{playing ? <Pause /> : <LottiePlayer className={styles.playAnimation} src="/lottie/play_button.json" />}</button>
             <button type="button" onClick={() => changeSurah(1)} disabled={surah.number === 114} aria-label={useArabic ? "السورة التالية" : "Next surah"}><SkipBack /></button>
           </div>
           <label className={styles.volumeControl}><Volume2 aria-hidden="true" /><input type="range" min="0" max="1" step="0.05" value={volume} onChange={(event) => { const next = Number(event.target.value); setVolume(next); if (audio.current) audio.current.volume = next; }} aria-label={useArabic ? "مستوى الصوت" : "Volume"} /></label>

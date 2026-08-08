@@ -1,15 +1,13 @@
 import type { Metadata } from "next";
-import { readFile } from "node:fs/promises";
-import path from "node:path";
 import { DualCalendar, type ReligiousEvent } from "@/components/DualCalendar";
 import { religiousEventTitle } from "@/lib/religious-events";
+import { getReligiousEvents } from "@/lib/quran";
 
 export const metadata: Metadata = { title: "التقويم الهجري والميلادي", description: "تقويم ميلادي وهجري يعرض المناسبات الدينية والأحاديث المرتبطة بها." };
 type EventFile = { data: Array<{ id: number; title: string; month: number; day: number[]; isReminder: boolean; isLottie: boolean; isSvg: boolean; lottiePath: string; svgPath: string; hadith: Array<{ hadith: string; bookInfo: string }> }> };
 
 export default async function CalendarPage() {
-  const raw = await readFile(path.join(process.cwd(), "public", "library", "religious_event.json"), "utf8");
-  const source = JSON.parse(raw) as EventFile;
+  const source = await getReligiousEvents() as EventFile;
   const events: ReligiousEvent[] = source.data.map((item) => ({
     id: item.id, key: item.title, title: religiousEventTitle(item.title), month: item.month, day: item.day, isReminder: item.isReminder,
     hadith: item.hadith[0]?.hadith ?? "", bookInfo: item.hadith[0]?.bookInfo ?? "",

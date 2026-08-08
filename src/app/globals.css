@@ -1,11 +1,11 @@
 @font-face {
   font-family: Uthmanic;
-  src: url("/fonts/uthmanic-hafs.ttf") format("truetype");
+  src: url("/api/media/fonts/uthmanic-hafs.ttf") format("truetype");
   font-display: swap;
 }
 @font-face {
   font-family: "Arabic Home";
-  src: url("/fonts/arabic-font.ttf") format("truetype");
+  src: url("/api/media/fonts/arabic-font.ttf") format("truetype");
   font-style: normal;
   font-weight: 100 900;
   font-display: swap;
@@ -15,14 +15,14 @@ body .hover-book-cover img {
 }
 @font-face {
   font-family: "Google Sans";
-  src: url("/fonts/Google_Sans/GoogleSans-VariableFont_GRAD,opsz,wght.ttf") format("truetype");
+  src: url("/api/media/fonts/Google_Sans/GoogleSans-VariableFont_GRAD%2Copsz%2Cwght.ttf") format("truetype");
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "Google Sans";
-  src: url("/fonts/Google_Sans/GoogleSans-Italic-VariableFont_GRAD,opsz,wght.ttf") format("truetype");
+  src: url("/api/media/fonts/Google_Sans/GoogleSans-Italic-VariableFont_GRAD%2Copsz%2Cwght.ttf") format("truetype");
   font-weight: 100 900;
   font-style: italic;
   font-display: swap;
@@ -962,6 +962,10 @@ main {
   padding: 7px 7px 7px 14px;
   box-shadow: var(--shadow);
 }
+.search-lottie { width:42px; height:42px; flex:none; }
+.azkar-lottie { width:38px; height:38px; flex:none; }
+.share-lottie { width:28px; height:28px; }
+.route-loading-animation { width:64px; height:64px; }
 .large-search svg {
   margin: 0 10px;
   color: var(--muted);

@@ -4,6 +4,7 @@ import { BookOpen, Search } from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
 import { TafsirButton } from "@/components/TafsirButton";
 import { searchQuran } from "@/lib/quran";
+import { LottiePlayer } from "@/components/LottiePlayer";
 
 export const metadata: Metadata = {
   title: "البحث في القرآن الكريم",
@@ -29,6 +30,7 @@ export default async function SearchPage({
       description="اكتب كلمة أو جزءًا من آية للوصول إليها وقراءة تفسيرها."
     />
     <form className="large-search" action="/search" method="get">
+      <LottiePlayer className="search-lottie" src="/lottie/search.json" />
       <Search />
       <input name="q" defaultValue={query} placeholder="مثال: الرحمن، الصابرين..." />
       <button>بحث</button>

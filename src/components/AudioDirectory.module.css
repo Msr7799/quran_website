@@ -7,6 +7,9 @@
 
 .hero { text-align: center; margin-bottom: 34px; }
 .hero > span { display: inline-grid; width: 50px; height: 50px; place-items: center; color: #fff; background: var(--brand); border-radius: 50%; box-shadow: 0 0 0 8px color-mix(in srgb,var(--brand) 12%,transparent); }
+.audioHeroAnimation { position:absolute; width:72px; height:72px; }
+.hero > span { position:relative; }
+.hero > span > svg { opacity:0; }
 .hero svg { width: 26px; }
 .hero h1 { margin: 14px 0 6px; font-size: clamp(1.8rem,3vw,2.65rem); }
 .hero p { margin: 0; color: var(--muted); }
@@ -65,6 +68,7 @@
 .playerControls svg { width: 17px; }
 .playerControls button.playControl { width: 52px; height: 52px; color: #fff; background: #278df0; box-shadow: 0 0 22px #278df077; }
 .playerControls .playControl svg { width: 22px; }
+.playAnimation { width:34px; height:34px; }
 .volumeControl { width: 145px; display: flex; align-items: center; gap: 8px; margin: auto; color: #9ba5ad; direction: ltr; }
 .volumeControl svg { width: 16px; }
 .errorMessage { margin: 10px 0 0; color: #ff8a8a; font-size: .78rem; text-align: center; }

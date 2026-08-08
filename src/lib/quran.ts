@@ -62,7 +62,7 @@ export async function getRadios() {
 
 export const getAzkar = () => getDataset<{ data: Array<{ id: number; category: string; zekr: string; reference: string }> }>("azkar");
 export const getCollections = () => getDataset<Array<{ bookNumber: number; bookName: string; aboutBook: string; parts_count: number }>>("collections");
-export const getReligiousEvents = () => getDataset<{ data: Array<{ id: number; title: string; month: number; day: number[]; isReminder: boolean; hadith: Array<{ hadith: string; bookInfo: string }> }> }>("religious-events");
+export const getReligiousEvents = () => getDataset<{ data: Array<{ id: number; title: string; month: number; day: number[]; isReminder: boolean; isLottie: boolean; isSvg: boolean; lottiePath: string; svgPath: string; hadith: Array<{ hadith: string; bookInfo: string }> }> }>("religious-events");
 export const getLibraryBooks = () => getDataset<unknown>("library-books");
 
 export async function getAudioSources(surah: number) {

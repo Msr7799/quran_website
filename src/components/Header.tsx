@@ -5,7 +5,7 @@ import Image from "next/image";
 import { cloudinaryAsset } from "@/lib/cloudinary-assets";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Check, ChevronsLeft, ChevronsRight, ChevronsUp, Grip, Languages, LoaderCircle, Menu, Search, X } from "lucide-react";
+import { Check, ChevronsLeft, ChevronsRight, ChevronsUp, Grip, Languages, Menu, Search, X } from "lucide-react";
 import { CSSProperties, FormEvent, PointerEvent as ReactPointerEvent, useEffect, useRef, useState } from "react";
 import { navigation } from "./icons";
 import { localeInfo, useLocale } from "@/i18n/LocaleProvider";
@@ -182,12 +182,12 @@ export function Header() {
       <button className="rail-drag-handle" type="button" onPointerDown={startRailDrag} onPointerMove={moveRail} onPointerUp={finishRailDrag} onPointerCancel={cancelRailDrag} aria-label="تحريك قائمة التنقل" title="اسحب لتحريك القائمة"><Grip /></button>
       {renderRailItem(navigation[0])}
       <div className="rail-scroll" role="navigation" aria-label={t("common.navigation", "روابط الموقع")}>
-        <button onClick={() => setSearchOpen(true)} data-label={t("common.search", "البحث")} aria-label={t("common.search", "البحث")}><Image className="rail-local-icon" src="/svg/search_icon.svg" width={33} height={33} alt="" aria-hidden="true" /></button>
+        <button onClick={() => setSearchOpen(true)} data-label={t("common.search", "البحث")} aria-label={t("common.search", "البحث")}><Image className="rail-local-icon" src={cloudinaryAsset("/svg/search_icon.svg")} width={33} height={33} alt="" aria-hidden="true" /></button>
         {navigation.slice(1).map(renderRailItem)}
       </div>
       <button className="theme-rail" onClick={toggleTheme} data-label="تبديل المظهر" aria-label="تبديل المظهر"><LottiePlayer className="rail-theme-animation" src={dark ? "/lottie/sun.json" : "/lottie/moon.json"} /></button>
     </aside>
-    {navigating && <div className="route-loading-overlay" role="status" aria-live="polite"><span><LoaderCircle className="spin" /></span><strong>{t("common.loading", "جاري التحميل...")}</strong></div>}
+    {navigating && <div className="route-loading-overlay" role="status" aria-live="polite"><span><LottiePlayer className="route-loading-animation" src="/lottie/loading.json" /></span><strong>{t("common.loading", "جاري التحميل...")}</strong></div>}
     {searchOpen && <div className="search-overlay" onClick={() => setSearchOpen(false)}><form onSubmit={search} onClick={(e) => e.stopPropagation()}><button type="button" onClick={() => setSearchOpen(false)}><X /></button><Search /><input autoFocus value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t("homepage.searchPlaceholder", "ابحث في القرآن الكريم...")} /><button className="search-submit">{t("common.search", "بحث")}</button></form></div>}
   </>;
 }

@@ -1,6 +1,7 @@
 // المسار: src/components/icons.tsx — يوفر مكوّنات الأيقونات المعتمدة على صور المشروع.
 import Image from "next/image";
 import type { ComponentType } from "react";
+import { cloudinaryAsset } from "@/lib/cloudinary-assets";
 
 type IconComponent = ComponentType<{ className?: string }>;
 // ينشئ مكوّن أيقونة موحدًا من ملف صورة.
@@ -8,7 +9,7 @@ const assetIcon = (src: string, alt: string): IconComponent =>
   // يعرض ملف الصورة داخل غلاف أيقونة موحد.
   function AssetIcon({ className }) {
   const detailedClass = src.startsWith("/svg/nav/") ? " nav-detailed-icon" : "";
-  return <Image className={`nav-asset-icon${detailedClass} ${className ?? ""}`} src={src} width={48} height={48} alt={alt} aria-hidden="true" />;
+  return <Image className={`nav-asset-icon${detailedClass} ${className ?? ""}`} src={cloudinaryAsset(src)} width={48} height={48} alt={alt} aria-hidden="true" />;
 };
 
 const HomeIcon = assetIcon("/svg/home.svg", "");

@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { ChevronLeft, ChevronRight, Pause, Play, Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useLocale } from "@/i18n/LocaleProvider";
+import { LottiePlayer } from "@/components/LottiePlayer";
 
 type Zekr = { id: number; category: string; zekr: string; reference: string };
 
@@ -24,7 +25,7 @@ export function AzkarCarousel({ items }: { items: Zekr[] }) {
   const go = (direction: number) => setIndex((value) => (value + direction + items.length) % items.length);
 
   return <section className="azkar-carousel" aria-roledescription="carousel" aria-label="أذكار مختارة">
-    <header><h3><Sparkles /> {t("ui.azkar", "أذكار مختارة")}</h3><span>{index + 1} / {items.length}</span></header>
+    <header><h3><LottiePlayer className="azkar-lottie" src="/lottie/azkar.json" /><Sparkles aria-hidden="true" /> {t("ui.azkar", "أذكار مختارة")}</h3><span>{index + 1} / {items.length}</span></header>
     <div className="azkar-slide-frame"><AnimatePresence mode="wait" initial={false}><motion.article key={item.id} initial={{ opacity: 0, x: 35 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -35 }} transition={{ duration: .3 }}>
       <small>{item.category}</small><p>{item.zekr}</p><span>{item.reference}</span>
     </motion.article></AnimatePresence></div>
