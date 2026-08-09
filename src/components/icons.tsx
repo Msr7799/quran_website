@@ -8,8 +8,10 @@ type IconComponent = ComponentType<{ className?: string }>;
 const assetIcon = (src: string, alt: string): IconComponent =>
   // يعرض ملف الصورة داخل غلاف أيقونة موحد.
   function AssetIcon({ className }) {
-  const detailedClass = src.startsWith("/svg/nav/") ? " nav-detailed-icon" : "";
-  return <Image className={`nav-asset-icon${detailedClass} ${className ?? ""}`} src={cloudinaryAsset(src)} width={48} height={48} alt={alt} aria-hidden="true" />;
+  const isLocalNavigationIcon = src.startsWith("/svg/nav/");
+  const detailedClass = isLocalNavigationIcon ? " nav-detailed-icon" : "";
+  const imageSrc = isLocalNavigationIcon ? src : cloudinaryAsset(src);
+  return <Image className={`nav-asset-icon${detailedClass} ${className ?? ""}`} src={imageSrc} width={48} height={48} alt={alt} aria-hidden="true" />;
 };
 
 const HomeIcon = assetIcon("/svg/home.svg", "");
