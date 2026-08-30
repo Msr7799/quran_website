@@ -8,7 +8,7 @@ export async function GET(_: Request, { params }: { params: Promise<{ page: stri
   const page = Number((await params).page);
   if (!Number.isInteger(page) || page < 1 || page > 604) return NextResponse.json({ error: "Invalid Quran page" }, { status: 400 });
   try {
-    const response = await fetch(`https://quran-api-msr.vercel.app/api/pages?page=${page}`, { next: { revalidate: 2592000 }, headers: { Accept: "application/json" } });
+    const response = await fetch(`https://msr-quran-data.vercel.app/api/pages?page=${page}`, { next: { revalidate: 2592000 }, headers: { Accept: "application/json" } });
     if (!response.ok) throw new Error(`Quran pages API returned ${response.status}`);
     const payload = await response.json() as PageResponse; const result = payload.result?.[0];
     if (!payload.success || !result) return NextResponse.json({ error: "Quran page unavailable" }, { status: 404 });
